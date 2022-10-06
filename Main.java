@@ -1,32 +1,44 @@
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
 
 
     public static void main(String[] args) {
-        Scanner sc;
+
         try {
-            sc = new Scanner(Paths.get("parser.txt"));
-            while(sc.hasNextLine()) {
-                String s = sc.nextLine();
-                String[] splitBloudem = s.split("\uD83D\uDC2A");
-                if (splitBloudem.length == 1) { // TODO toto neznamena ze tam neni bloud
-                    System.out.println(s);
+            List<String> list = Files.readAllLines(Paths.get("parser.txt"));
+            int bloudi = 0;
+            for(String line : list) { // for each pres vsechny radky v seznamu
+
+                int iBloud = line.indexOf("\uD83D\uDC2A");
+                int iPoust = line.indexOf("\uD83C\uDFDC");
+                if (bloudi != 0 && iBloud == -1){ // bloudi>0 => jsem v blokovym komentari a zaroven indexBlouda neni na aktualni radce
+                    while(iPoust != -1){ // jedem pres indexy pouste
+                        bloudi--;
+                        line = line.substring(iPoust+2);
+                        iPoust = line.indexOf("\uD83C\uDFDC");
+                    }
                 }
-                else {
-                    String[] splitPousti = splitBloudem[1].split("\uD83C\uDFDC");
-                    if(splitPousti.length > 1)
-                        System.out.println(splitPousti[1]);
+                while (iBloud != -1) { // jedem dokud na radce jsou bloudi
+                    bloudi++;
+                    iPoust = line.indexOf("\uD83C\uDFDC");
+                    if (iPoust != -1) bloudi--; // pokud jsem nasel poust odstranim jednoho blouda
+                    line = line.substring(0, iBloud) + line.substring(iPoust + 2);
+                    iBloud = line.indexOf("\uD83D\uDC2A");
+                }
+                if (bloudi == 0) { // nejsem v komentari
+                    System.out.println(line);
                 }
             }
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
+        }
+            catch (IOException e) {
+                e.printStackTrace();
         }
     }
 
