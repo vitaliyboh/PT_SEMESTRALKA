@@ -38,8 +38,24 @@ public class Main {
                     }
 
                 }
-                if (bloudi == 0) { // nejsem v komentari
-                    System.out.println(line);
+                if (bloudi == 0 && !line.isBlank()) { // v line je(jsou) validni udaj(e)
+                    String str = line.replaceAll("[\\s|\\u00A0]+"," "); // nahradi vsechny whitespaces jednou mezerou
+                    String[] split = str.split(" "); // nasoupe hodnoty do pole
+                    int n = 0;
+                    for (String s : split){ // pokud string vypadal takto " 1" v poli je ["",1], toho se zbavime kontrolou zda neni nahodou prvek pole prazdny
+                        if(!s.isBlank()) n++; // vysledne pole bez prazdnych prvku bude mit velikost n
+                    }
+                    String[] udaje = new String[n]; // zde budou uz orezany, neprazdny, osetreny validni udaje
+                    int pom = 0; // prekopirovani validnich, neprazdnych udaju do novyho pole
+                    for (String s : split){
+                        if(!s.isBlank()) {
+                            udaje[pom] = s;
+                            pom++;
+                        }
+                    }
+
+                    System.out.println(Arrays.toString(udaje));
+
                 }
             }
         }
