@@ -29,8 +29,14 @@ public class Main {
                     bloudi++;
                     iPoust = line.indexOf("\uD83C\uDFDC");
                     if (iPoust != -1) bloudi--; // pokud jsem nasel poust odstranim jednoho blouda
+
                     line = line.substring(0, iBloud) + line.substring(iPoust + 2);
                     iBloud = line.indexOf("\uD83D\uDC2A");
+
+                    if(line.indexOf("\uD83C\uDFDC") != -1) { //tenhle if to vyresil :D
+                        iBloud = 0;
+                    }
+
                 }
                 if (bloudi == 0) { // nejsem v komentari
                     System.out.println(line);
