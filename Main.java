@@ -11,7 +11,7 @@ public class Main {
 
 
     public static void main(String[] args) {
-        String fileName = "tutorial.txt";
+        String fileName = "parser.txt";
         Svet svet = reader(fileName);
     }
     public static Svet reader(String fileName) {
@@ -96,6 +96,7 @@ public class Main {
             oazy[i+1] = new Oaza(new Pozice(Integer.parseInt(allUdaje[j]),Integer.parseInt(allUdaje[j+1])));
         }
 
+        // Tvorba grafu
         int indexCest = (pocetOaz*2+indexOaza)  + 1;
         int pocetCest = Integer.parseInt(allUdaje[indexCest]);
         Graph graph = new Graph(pocetOaz+pocetSkladu+1);
