@@ -11,7 +11,7 @@ public class Main {
 
 
     public static void main(String[] args) {
-        String fileName = "parser.txt";
+        String fileName = "tutorial.txt";
         Svet svet = reader(fileName);
     }
     public static Svet reader(String fileName) {
@@ -73,16 +73,31 @@ public class Main {
             e.printStackTrace();
         }
         String[] allUdaje = allUdaje1.toArray(new String[0]);
-
+        // Sklady
         int pocetSkladu = Integer.parseInt(allUdaje[0]);
+        Sklad[] sklady = new Sklad[pocetSkladu+1];
         for (int i = 0; i < pocetSkladu; i++) {
             Pozice pozice = new Pozice(0,0 );
-            int ks, ts, tn;
-            int start = i*5 +1;
-            for (int j = start; j < start + 6; j++) {
-                pozice.setX(Integer.parseInt(allUdaje[j]));
-            } 
+            int j = i*5 +1;
+            pozice.setX(Integer.parseInt(allUdaje[j]));
+            pozice.setY(Integer.parseInt(allUdaje[j+1]));
+            int ks = Integer.parseInt(allUdaje[j+2]);
+            int ts = Integer.parseInt(allUdaje[j+3]);
+            int tn = Integer.parseInt(allUdaje[j+4]);
+            sklady[i+1] = new Sklad(pozice,ks,ts,tn);
         }
+
+        // Oazy
+        int indexOaza = pocetSkladu*5 + 1;
+        int pocetOaz = Integer.parseInt(allUdaje[indexOaza]);
+        Oaza[] oazy = new Oaza[pocetOaz+1];
+        for (int i = 0; i < pocetOaz; i++) {
+            int j = indexOaza + 1 + 2*i;
+            oazy[i+1] = new Oaza(new Pozice(Integer.parseInt(allUdaje[j]),Integer.parseInt(allUdaje[j+1])));
+        }
+
+
+
 
 
 
