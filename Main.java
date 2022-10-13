@@ -105,7 +105,27 @@ public class Main {
             graph.addEdge(Integer.parseInt(allUdaje[j]),Integer.parseInt(allUdaje[j+1]));
         }
 
+        // Velbloudy (druhy)
+        int indexBlouda = (pocetCest*2 + indexCest) + 1;
+        int pocetBloudu = Integer.parseInt(allUdaje[indexBlouda]);
+        DruhVelblouda[] druhyVelblouda = new DruhVelblouda[pocetBloudu+1];
+        for (int i = 0; i < pocetBloudu; i++) {
+            int j = indexBlouda + 1 + 8*i;
+            druhyVelblouda[i+1] = new DruhVelblouda(allUdaje[j], Double.parseDouble(allUdaje[j+1]),
+                    Double.parseDouble(allUdaje[j+2]), Double.parseDouble(allUdaje[j+3]),
+                    Double.parseDouble(allUdaje[j+4]), Double.parseDouble(allUdaje[j+5]),
+                    Double.parseDouble(allUdaje[j+6]), Double.parseDouble(allUdaje[j+7]));
+        }
 
+        // Pozadavky
+        int indexPoz = (pocetBloudu*8 + indexBlouda) + 1;
+        int pocetPoz = Integer.parseInt(allUdaje[indexPoz]);
+        Pozadavek[] pozadavky = new Pozadavek[pocetPoz + 1];
+        for (int i = 0; i < pocetPoz; i++) {
+            int j = indexPoz + 1 + 4*i;
+            pozadavky[i+1] = new Pozadavek(Integer.parseInt(allUdaje[j]), Integer.parseInt(allUdaje[j+1]),
+                    Integer.parseInt(allUdaje[j+2]), Integer.parseInt(allUdaje[j+3]));
+        }
 
 
 
