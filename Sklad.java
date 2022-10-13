@@ -1,4 +1,4 @@
-public class Sklad implements IMisto{
+public class Sklad{
     private Pozice pozice;
     private int ks; // pocet kosu
     private int ts; // uplynuta doba na doplneni
@@ -40,8 +40,4 @@ public class Sklad implements IMisto{
         this.tn = tn;
     }
 
-    @Override
-    public void hovnoFce() {
-
-    }
 }
