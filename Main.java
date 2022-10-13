@@ -96,6 +96,13 @@ public class Main {
             oazy[i+1] = new Oaza(new Pozice(Integer.parseInt(allUdaje[j]),Integer.parseInt(allUdaje[j+1])));
         }
 
+        int indexCest = (pocetOaz*2+indexOaza)  + 1;
+        int pocetCest = Integer.parseInt(allUdaje[indexCest]);
+        Graph graph = new Graph(pocetOaz+pocetSkladu+1);
+        for (int i = 0; i < pocetCest; i++) {
+            int j = indexCest + 1 + 2*i;
+            graph.addEdge(Integer.parseInt(allUdaje[j]),Integer.parseInt(allUdaje[j+1]));
+        }
 
 
 
