@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
@@ -10,9 +11,14 @@ public class Main {
 
 
     public static void main(String[] args) {
-
+        String fileName = "parser.txt";
+        Svet svet = reader(fileName);
+    }
+    public static Svet reader(String fileName) {
         try {
-            List<String> list = Files.readAllLines(Paths.get("parser.txt"));
+            ArrayList<String> allUdaje = new ArrayList<String>();
+
+            List<String> list = Files.readAllLines(Paths.get(fileName));
             int bloudi = 0;
             for(String line : list) { // for each pres vsechny radky v seznamu
 
@@ -38,6 +44,7 @@ public class Main {
                     }
 
                 }
+
                 if (bloudi == 0 && !line.isBlank()) { // v line je(jsou) validni udaj(e)
                     String str = line.replaceAll("[\\s|\\u00A0]+"," "); // nahradi vsechny whitespaces jednou mezerou
                     String[] split = str.split(" "); // nasoupe hodnoty do pole
@@ -53,15 +60,21 @@ public class Main {
                             pom++;
                         }
                     }
-
-                    System.out.println(Arrays.toString(udaje));
-
+                    for(String s: udaje) {
+                        allUdaje.add(s);
+                    }
+                    //System.out.println(Arrays.toString(udaje));
                 }
             }
-        }
-            catch (IOException e) {
-                e.printStackTrace();
-        }
-    }
+            System.out.println(allUdaje.toString());
 
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
+        return null;
+    }
 }
