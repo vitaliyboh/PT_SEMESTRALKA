@@ -11,8 +11,10 @@ public class Main {
 
 
     public static void main(String[] args) {
-        String fileName = "parser.txt";
+        String fileName = "data/dense_huge.txt";
+        long start = System.nanoTime();
         Svet svet = reader(fileName);
+        System.out.println("Duration: " + ((System.nanoTime() - start) / 1000000000.0) + "s");
     }
     public static Svet reader(String fileName) {
         ArrayList<String> allUdaje1 = null;
@@ -79,8 +81,8 @@ public class Main {
         for (int i = 0; i < pocetSkladu; i++) {
             Pozice pozice = new Pozice(0,0 );
             int j = i*5 +1;
-            pozice.setX(Integer.parseInt(allUdaje[j]));
-            pozice.setY(Integer.parseInt(allUdaje[j+1]));
+            pozice.setX(Double.parseDouble(allUdaje[j]));
+            pozice.setY(Double.parseDouble(allUdaje[j+1]));
             int ks = Integer.parseInt(allUdaje[j+2]);
             int ts = Integer.parseInt(allUdaje[j+3]);
             int tn = Integer.parseInt(allUdaje[j+4]);
@@ -93,7 +95,10 @@ public class Main {
         Oaza[] oazy = new Oaza[pocetOaz+1];
         for (int i = 0; i < pocetOaz; i++) {
             int j = indexOaza + 1 + 2*i;
-            oazy[i+1] = new Oaza(new Pozice(Integer.parseInt(allUdaje[j]),Integer.parseInt(allUdaje[j+1])));
+            oazy[i+1] = new Oaza(
+                    new Pozice(
+                            Double.parseDouble(allUdaje[j]),
+                    Double.parseDouble(allUdaje[j+1])));
         }
 
         // Tvorba grafu
