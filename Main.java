@@ -11,7 +11,7 @@ public class Main {
 
 
     public static void main(String[] args) {
-        String fileName = "data/dense_huge.txt";
+        String fileName = "data/tutorial.txt";
         long start = System.nanoTime();
         Svet svet = reader(fileName);
         System.out.println("Duration: " + ((System.nanoTime() - start) / 1000000000.0) + "s");
@@ -104,7 +104,7 @@ public class Main {
         // Tvorba grafu
         int indexCest = (pocetOaz*2+indexOaza)  + 1;
         int pocetCest = Integer.parseInt(allUdaje[indexCest]);
-        Graph graph = new Graph(pocetOaz+pocetSkladu+1);
+        Graph graph = new Graph(pocetOaz+pocetSkladu+1, sklady, oazy);
         for (int i = 0; i < pocetCest; i++) {
             int j = indexCest + 1 + 2*i;
             graph.addEdge(Integer.parseInt(allUdaje[j]),Integer.parseInt(allUdaje[j+1]));
