@@ -31,4 +31,5 @@ public class Velbloud {
         return "Velboud_" + druh.pocet;
     }
 
+
 }
