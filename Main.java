@@ -15,7 +15,12 @@ public class Main {
         long start = System.nanoTime();
         Svet svet = reader(fileName);
         System.out.println("Duration: " + ((System.nanoTime() - start) / 1000000000.0) + "s");
+
     }
+
+
+
+
     public static Svet reader(String fileName) {
         ArrayList<String> allUdaje1 = null;
         try {
@@ -104,7 +109,7 @@ public class Main {
         // Tvorba grafu
         int indexCest = (pocetOaz*2+indexOaza)  + 1;
         int pocetCest = Integer.parseInt(allUdaje[indexCest]);
-        Graph graph = new Graph(pocetOaz+pocetSkladu+1, sklady, oazy);
+        Graph1 graph = new Graph1(pocetOaz+pocetSkladu+1, sklady, oazy);
         for (int i = 0; i < pocetCest; i++) {
             int j = indexCest + 1 + 2*i;
             graph.addEdge(Integer.parseInt(allUdaje[j]),Integer.parseInt(allUdaje[j+1]));
@@ -131,9 +136,6 @@ public class Main {
             pozadavky[i+1] = new Pozadavek(Integer.parseInt(allUdaje[j]), Integer.parseInt(allUdaje[j+1]),
                     Integer.parseInt(allUdaje[j+2]), Integer.parseInt(allUdaje[j+3]));
         }
-
-
-
             return null;
     }
 }
