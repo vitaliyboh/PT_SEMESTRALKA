@@ -11,7 +11,7 @@ public class Main {
 
 
     public static void main(String[] args) {
-        String fileName = "data/tutorial.txt";
+        String fileName = "data/centre_small.txt";
         long start = System.nanoTime();
         Svet svet = reader(fileName);
         System.out.println("Duration: " + ((System.nanoTime() - start) / 1000000000.0) + "s");
@@ -134,8 +134,8 @@ public class Main {
         Pozadavek[] pozadavky = new Pozadavek[pocetPoz + 1];
         for (int i = 0; i < pocetPoz; i++) {
             int j = indexPoz + 1 + 4*i;
-            pozadavky[i+1] = new Pozadavek(Integer.parseInt(allUdaje[j]), Integer.parseInt(allUdaje[j+1]),
-                    Integer.parseInt(allUdaje[j+2]), Integer.parseInt(allUdaje[j+3]));
+            pozadavky[i+1] = new Pozadavek(Double.parseDouble(allUdaje[j]), Integer.parseInt(allUdaje[j+1]),
+                    Integer.parseInt(allUdaje[j+2]), Double.parseDouble(allUdaje[j+3]));
         }
 
             return null;

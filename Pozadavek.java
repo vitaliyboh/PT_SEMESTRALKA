@@ -1,12 +1,12 @@
 public class Pozadavek {
-    private int tz; // cas prichodu pozadavku
+    private double tz; // cas prichodu pozadavku
     private int op; // index oazy do ktere ma byt dorucen
     private int kp; // mnozstvi kosu ktere oaza potrebuje
-    private int tp; // udávající, za jak dlouho po příchodu požadavku musí být koše doručeny
+    private double tp; // udávající, za jak dlouho po příchodu požadavku musí být koše doručeny
     private static int pocet = 0; // pocet instanci
     private int poradi; // poradi instance
 
-    public int getTz() {
+    public double getTz() {
         return tz;
     }
 
@@ -18,7 +18,7 @@ public class Pozadavek {
         return kp;
     }
 
-    public int getTp() {
+    public double getTp() {
         return tp;
     }
 
@@ -30,7 +30,7 @@ public class Pozadavek {
         return poradi;
     }
 
-    public Pozadavek(int tz, int op, int kp, int tp) {
+    public Pozadavek(double tz, int op, int kp, double tp) {
         this.tz = tz;
         this.op = op;
         this.kp = kp;
