@@ -1,12 +1,20 @@
+import org.w3c.dom.Node;
+
+import java.util.Collections;
+import java.util.PriorityQueue;
+
 public class Graph {
     Link[] edges;
     Sklad[] sklady;
     Oaza[] oazy;
 
+
     public Graph(int delka, Sklad[] sklady, Oaza[] oazy) {
         this.sklady = sklady;
         this.oazy = oazy;
         edges = new Link[delka];
+
+
     }
 
     public void addEdge(int i, int j) {

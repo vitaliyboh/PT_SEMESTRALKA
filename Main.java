@@ -114,6 +114,7 @@ public class Main {
             int j = indexCest + 1 + 2*i;
             graph.addEdge(Integer.parseInt(allUdaje[j]),Integer.parseInt(allUdaje[j+1]));
         }
+        graph.floydWarshall();
 
         // Velbloudy (druhy)
         int indexBlouda = (pocetCest*2 + indexCest) + 1;
@@ -136,6 +137,7 @@ public class Main {
             pozadavky[i+1] = new Pozadavek(Integer.parseInt(allUdaje[j]), Integer.parseInt(allUdaje[j+1]),
                     Integer.parseInt(allUdaje[j+2]), Integer.parseInt(allUdaje[j+3]));
         }
+
             return null;
     }
 }
