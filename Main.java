@@ -11,7 +11,7 @@ public class Main {
 
 
     public static void main(String[] args) {
-        String fileName = "data/centre_small.txt";
+        String fileName = "data/tutorial.txt";
         long start = System.nanoTime();
         Svet svet = reader(fileName);
         System.out.println("Duration: " + ((System.nanoTime() - start) / 1000000000.0) + "s");
