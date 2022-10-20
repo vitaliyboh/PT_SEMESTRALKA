@@ -124,6 +124,10 @@ public class Graph1 {
                 pomocna1 = pomocna;
             }
         }
+        if (index == 0) {
+            System.out.println("Pozadavek nelze vykonat!");
+            System.exit(1);
+        }
         return index;
     }
 }

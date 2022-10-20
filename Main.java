@@ -8,7 +8,7 @@ public class Main {
 
 
     public static void main(String[] args) {
-        String fileName = "data/tutorial.txt";
+        String fileName = "data/dense_small.txt";
         long start = System.nanoTime();
         Svet svet = reader(fileName);
         System.out.println("Duration: " + ((System.nanoTime() - start) / 1000000000.0) + "s");
@@ -16,13 +16,22 @@ public class Main {
         while(!svet.pozadavky.isEmpty()){
             Pozadavek aktualni = svet.pozadavky.poll();
 
+            System.out.printf("Cas: %d, Pozadavek: %d, Oaza: %d, Pocet kosu: %d, Deadline: %d%n", ((int)(aktualni.getTz() + 0.5)), aktualni.getPoradi(),
+                    aktualni.getOp(), aktualni.getKp(), ((int)((aktualni.getTz() + aktualni.getTp()) + 0.5)));
+
+
             int indexSkladu = svet.mapa.nejblizsiVrchol(aktualni.getOp() + svet.sklady.length - 1);
             System.out.println(indexSkladu);
 
+            if(svet.sklady[indexSkladu].getKs() >= aktualni.getKp()) {
+                
+            }
+            else {
+
+            }
 
 
-            System.out.printf("Cas: %d, Pozadavek: %d, Oaza: %d, Pocet kosu: %d, Deadline: %d%n", ((int)(aktualni.getTz() + 0.5)), aktualni.getPoradi(),
-                    aktualni.getOp(), aktualni.getKp(), ((int)((aktualni.getTz() + aktualni.getTp()) + 0.5)));
+
 
         }
 
