@@ -2,10 +2,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
 
@@ -15,6 +12,14 @@ public class Main {
         long start = System.nanoTime();
         Svet svet = reader(fileName);
         System.out.println("Duration: " + ((System.nanoTime() - start) / 1000000000.0) + "s");
+
+        while(!svet.pozadavky.isEmpty()){
+            Pozadavek aktualni = svet.pozadavky.poll();
+
+            System.out.printf("Cas: %d, Pozadavek: %d, Oaza: %d, Pocet kosu: %d, Deadline: %d%n", ((int)(aktualni.getTz() + 0.5)), aktualni.getPoradi(),
+                    aktualni.getOp(), aktualni.getKp(), ((int)((aktualni.getTz() + aktualni.getTp()) + 0.5)));
+
+        }
 
     }
 
@@ -131,13 +136,13 @@ public class Main {
         // Pozadavky
         int indexPoz = (pocetBloudu*8 + indexBlouda) + 1;
         int pocetPoz = Integer.parseInt(allUdaje[indexPoz]);
-        Pozadavek[] pozadavky = new Pozadavek[pocetPoz + 1];
+        Queue<Pozadavek> pozadavky = new LinkedList<>();
         for (int i = 0; i < pocetPoz; i++) {
             int j = indexPoz + 1 + 4*i;
-            pozadavky[i+1] = new Pozadavek(Double.parseDouble(allUdaje[j]), Integer.parseInt(allUdaje[j+1]),
-                    Integer.parseInt(allUdaje[j+2]), Double.parseDouble(allUdaje[j+3]));
+            pozadavky.add(new Pozadavek(Double.parseDouble(allUdaje[j]), Integer.parseInt(allUdaje[j+1]),
+                    Integer.parseInt(allUdaje[j+2]), Double.parseDouble(allUdaje[j+3])));
         }
 
-            return null;
+            return new Svet(oazy,sklady,druhyVelblouda, pozadavky, graph);
     }
 }
