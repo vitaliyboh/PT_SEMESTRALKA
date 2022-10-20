@@ -8,9 +8,10 @@ public class Main {
 
 
     public static void main(String[] args) {
-        String fileName = "data/tutorial.txt";
+        String fileName = "data/dense_small.txt";
         long start = System.nanoTime();
         Svet svet = reader(fileName);
+
         System.out.println("Duration: " + ((System.nanoTime() - start) / 1000000000.0) + "s");
 
         while(!svet.pozadavky.isEmpty()){
@@ -18,6 +19,8 @@ public class Main {
 
             int indexSkladu = svet.mapa.nejblizsiVrchol(aktualni.getOp() + svet.sklady.length - 1);
             System.out.println(indexSkladu);
+            System.out.println("Cesta ze skladu <" + indexSkladu + "> do oazy <" + aktualni.getOp() + ">");
+            System.out.println(svet.mapa.cesta(indexSkladu,aktualni.getOp()+ svet.sklady.length - 1));
 
 
 

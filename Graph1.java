@@ -99,16 +99,23 @@ public class Graph1 {
         }
     }
 
-    public void cestaPresVrcholy(int a, int b) {
-        if (naslednici[a][b] != a) {
-            int c = naslednici[a][b];
-            while (naslednici[c][b] != c){
-                System.out.println(c);
-                c = naslednici[c][b];
-            }
-            System.out.println(c);
+    public ArrayList<Integer> cesta(int a, int b) {
+        ArrayList<Integer> cesta = new ArrayList<>();
+        cesta.add(a);
+        if (naslednici[a][b] == a) {
+            cesta.add(b);
+            return cesta;
         }
-        System.out.println(b);
+
+        int c = naslednici[a][b];
+        cesta.add(c);
+        while (naslednici[c][b] != c) {
+            cesta.add(c);
+            c = naslednici[c][b];
+        }
+
+        cesta.add(b);
+        return cesta;
     }
 
     public int nejblizsiVrchol(int vstupniVrchol) {
