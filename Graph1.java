@@ -111,4 +111,19 @@ public class Graph1 {
         System.out.println(b);
     }
 
+    public int nejblizsiVrchol(int vstupniVrchol) {
+        int index = 0;
+        double pomocna;
+        double pomocna1 = Double.MAX_VALUE;
+
+        for (int i = 1; i < matice[0].length; i++) {
+            if (vstupniVrchol == i) continue;
+            pomocna = matice_vzdalenosti[vstupniVrchol][i];
+            if (pomocna < pomocna1 && i <= sklady.length) {
+                index = i;
+                pomocna1 = pomocna;
+            }
+        }
+        return index;
+    }
 }

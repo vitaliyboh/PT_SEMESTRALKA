@@ -16,6 +16,11 @@ public class Main {
         while(!svet.pozadavky.isEmpty()){
             Pozadavek aktualni = svet.pozadavky.poll();
 
+            int indexSkladu = svet.mapa.nejblizsiVrchol(aktualni.getOp() + svet.sklady.length - 1);
+            System.out.println(indexSkladu);
+
+
+
             System.out.printf("Cas: %d, Pozadavek: %d, Oaza: %d, Pocet kosu: %d, Deadline: %d%n", ((int)(aktualni.getTz() + 0.5)), aktualni.getPoradi(),
                     aktualni.getOp(), aktualni.getKp(), ((int)((aktualni.getTz() + aktualni.getTp()) + 0.5)));
 
