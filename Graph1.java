@@ -148,10 +148,13 @@ public class Graph1 {
         for (int i = 1; i < matice[0].length; i++) {
             if (vstupniVrchol == i) continue;
             pomocna = matice_vzdalenosti[vstupniVrchol][i];
-            if ((pomocna < pomocna1 && i <= sklady.length) && !vrcholy.contains(i)) {
+            if ((pomocna < pomocna1 && i <= sklady.length-1) ) {
                 vrcholy.add(i);
-                pomocna1 = pomocna;
+               // pomocna1 = pomocna;
             }
+        }
+        if(vrcholy.size()>1) {
+            bubbleSort(vrcholy, vstupniVrchol);
         }
 
         if (vrcholy.isEmpty()) {
@@ -160,4 +163,23 @@ public class Graph1 {
         }
         return vrcholy;
     }
+
+    public void bubbleSort (ArrayList<Integer> list, int vstupniVrchol) {
+        int n = list.size();
+        int temp = 0;
+        for(int i=0; i < n; i++) {
+            for (int j = 1; j < (n - i); j++) {
+                if (matice_vzdalenosti[vstupniVrchol][list.get(j - 1)] > matice_vzdalenosti[vstupniVrchol][list.get(j)]) {
+                    //swap elements
+                    temp = list.get(j - 1);
+                    list.add(j - 1, list.get(j));
+                    list.remove(j);
+                    list.add(j, temp);
+                    list.remove(j+1);
+                }
+
+            }
+        }
+    }
+
 }

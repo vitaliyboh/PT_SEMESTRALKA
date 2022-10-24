@@ -8,7 +8,7 @@ public class Main {
 
 
     public static void main(String[] args) {
-        String fileName = "data/test.txt";
+        String fileName = "data/centre_small.txt";
         long start = System.nanoTime();
         Svet svet = reader(fileName);
 
@@ -19,7 +19,10 @@ public class Main {
 
             System.out.printf("Cas: %d, Pozadavek: %d, Oaza: %d, Pocet kosu: %d, Deadline: %d%n", ((int)(aktualni.getTz() + 0.5)), aktualni.getPoradi(),
                     aktualni.getOp(), aktualni.getKp(), ((int)((aktualni.getTz() + aktualni.getTp()) + 0.5)));
+
+            long a = System.nanoTime();
             System.out.println(svet.mapa.nejblizsiVrcholy(aktualni.getOp() + svet.sklady.length - 1));
+            System.out.println(System.nanoTime() - a);
 
             /*
             int indexSkladu = svet.mapa.nejblizsiVrchol(aktualni.getOp() + svet.sklady.length - 1);
