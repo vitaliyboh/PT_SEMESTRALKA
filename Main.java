@@ -8,7 +8,7 @@ public class Main {
 
 
     public static void main(String[] args) {
-        String fileName = "data/dense_small.txt";
+        String fileName = "data/test.txt";
         long start = System.nanoTime();
         Svet svet = reader(fileName);
 
@@ -19,19 +19,22 @@ public class Main {
 
             System.out.printf("Cas: %d, Pozadavek: %d, Oaza: %d, Pocet kosu: %d, Deadline: %d%n", ((int)(aktualni.getTz() + 0.5)), aktualni.getPoradi(),
                     aktualni.getOp(), aktualni.getKp(), ((int)((aktualni.getTz() + aktualni.getTp()) + 0.5)));
+            System.out.println(svet.mapa.nejblizsiVrcholy(aktualni.getOp() + svet.sklady.length - 1));
 
-
+            /*
             int indexSkladu = svet.mapa.nejblizsiVrchol(aktualni.getOp() + svet.sklady.length - 1);
             System.out.println(indexSkladu);
             System.out.println("Cesta ze skladu <" + indexSkladu + "> do oazy <" + aktualni.getOp() + ">");
             System.out.println(svet.mapa.cesta(indexSkladu,aktualni.getOp()+ svet.sklady.length - 1));
 
             if(svet.sklady[indexSkladu].getKs() >= aktualni.getKp()) {
-                
+
             }
             else {
                 // neco ma tady byt, siuuu
             }
+
+             */
 
 
 

@@ -1,8 +1,11 @@
+import java.util.ArrayList;
+
 public class Sklad{
     private Pozice pozice;
     private int ks; // pocet kosu
     private int ts; // uplynuta doba na doplneni
     private int tn; // doba nalozeni/vylozeni kose
+    private ArrayList<Velbloud> velboudi;
 
     public Sklad(Pozice pozice, int ks, int ts, int tn) {
         this.pozice = pozice;

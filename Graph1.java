@@ -137,4 +137,27 @@ public class Graph1 {
         }
         return index;
     }
+
+    public ArrayList<Integer> nejblizsiVrcholy(int vstupniVrchol) {
+        int index = 0;
+        double pomocna;
+        double pomocna1 = Double.MAX_VALUE;
+        ArrayList<Integer> vrcholy = new ArrayList<>(matice[0].length - 1);
+
+
+        for (int i = 1; i < matice[0].length; i++) {
+            if (vstupniVrchol == i) continue;
+            pomocna = matice_vzdalenosti[vstupniVrchol][i];
+            if ((pomocna < pomocna1 && i <= sklady.length) && !vrcholy.contains(i)) {
+                vrcholy.add(i);
+                pomocna1 = pomocna;
+            }
+        }
+
+        if (vrcholy.isEmpty()) {
+            System.out.println("Pozadavek nelze vykonat!");
+            System.exit(1);
+        }
+        return vrcholy;
+    }
 }
