@@ -8,7 +8,7 @@ public class Main {
 
 
     public static void main(String[] args) {
-        String fileName = "data/centre_small.txt";
+        String fileName = "data/tutorial.txt";
         long start = System.nanoTime();
         Svet svet = reader(fileName);
 
@@ -20,9 +20,33 @@ public class Main {
             System.out.printf("Cas: %d, Pozadavek: %d, Oaza: %d, Pocet kosu: %d, Deadline: %d%n", ((int)(aktualni.getTz() + 0.5)), aktualni.getPoradi(),
                     aktualni.getOp(), aktualni.getKp(), ((int)((aktualni.getTz() + aktualni.getTp()) + 0.5)));
 
-            long a = System.nanoTime();
-            System.out.println(svet.mapa.nejblizsiVrcholy(aktualni.getOp() + svet.sklady.length - 1));
-            System.out.println(System.nanoTime() - a);
+            ArrayList<Integer> list = svet.mapa.nejblizsiVrcholy(aktualni.getOp() + svet.sklady.length - 1);
+
+            for (Integer indexSkladu : list) {
+                if(svet.sklady[indexSkladu].getKs() < aktualni.getKp()) {
+                    continue;
+                }
+                ArrayList<Integer> cesta = svet.mapa.cesta(indexSkladu, aktualni.getOp());
+                double pomocna = Double.POSITIVE_INFINITY;
+                Velbloud velbloudFinalni = null;
+
+                for (Velbloud velbloud : svet.sklady[indexSkladu].getVelboudi()) {
+                    if( velbloud.isNaCeste() ) { continue;}
+                    double cas = svet.mapa.cestaVelblouda(velbloud, cesta, aktualni);
+                    if (cas < pomocna && cas != -1 ) {
+                        pomocna = cas;
+                        velbloudFinalni = velbloud;
+                    }
+                }
+
+
+                velbloudFinalni.setNaCeste(true);
+
+
+            }
+//            System.out.println(svet.mapa.nejblizsiVrcholy(aktualni.getOp() + svet.sklady.length - 1));
+
+
 
             /*
             int indexSkladu = svet.mapa.nejblizsiVrchol(aktualni.getOp() + svet.sklady.length - 1);

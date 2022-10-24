@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Velbloud {
@@ -7,9 +8,14 @@ public class Velbloud {
     private double d; // vzdalenost na jedno napiti
     private double td; // doba napiti
     private int kd; // maximalni pocet kosu, ktere bloud unese
+    private  int indexSkladu;
+    private double energie;
+    private boolean naCeste;
+
     Random r = new Random();
 
-    public Velbloud(DruhVelblouda druh, double v, double d, double td, int kd) {
+
+    public Velbloud(DruhVelblouda druh, double v, double d, double td, int kd, int indexSkladu) {
         this.druh = druh;
         this.v = generateV();
         this.d = generateD();
@@ -17,6 +23,8 @@ public class Velbloud {
         this.kd = kd;
         druh.pocet++;
         this.jmeno = generateName();
+        this.indexSkladu = indexSkladu;
+        this.energie = d;
     }
 
     public double generateV() {
@@ -31,5 +39,50 @@ public class Velbloud {
         return "Velboud_" + druh.pocet;
     }
 
+    public String getJmeno() {
+        return jmeno;
+    }
 
+    public DruhVelblouda getDruh() {
+        return druh;
+    }
+
+    public double getV() {
+        return v;
+    }
+    public boolean isNaCeste() {
+        return naCeste;
+    }
+
+    public void setNaCeste(boolean naCeste) {
+        this.naCeste = naCeste;
+    }
+
+    public double getD() {
+        return d;
+    }
+
+    public double getTd() {
+        return td;
+    }
+
+    public int getKd() {
+        return kd;
+    }
+
+    public int getIndexSkladu() {
+        return indexSkladu;
+    }
+
+    public Random getR() {
+        return r;
+    }
+
+    public void setEnergie(double energie) {
+        this.energie = energie;
+    }
+
+    public double getEnergie() {
+        return energie;
+    }
 }

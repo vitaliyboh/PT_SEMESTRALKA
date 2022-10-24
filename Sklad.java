@@ -7,6 +7,8 @@ public class Sklad{
     private int tn; // doba nalozeni/vylozeni kose
     private ArrayList<Velbloud> velboudi;
 
+
+
     public Sklad(Pozice pozice, int ks, int ts, int tn) {
         this.pozice = pozice;
         this.ks = ks;
@@ -43,4 +45,7 @@ public class Sklad{
         this.tn = tn;
     }
 
+    public ArrayList<Velbloud> getVelboudi() {
+        return velboudi;
+    }
 }

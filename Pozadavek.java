@@ -6,6 +6,16 @@ public class Pozadavek {
     private static int pocet = 0; // pocet instanci
     private int poradi; // poradi instance
 
+
+    public Pozadavek(double tz, int op, int kp, double tp) {
+        this.tz = tz;
+        this.op = op;
+        this.kp = kp;
+        this.tp = tp;
+        pocet += 1;
+        poradi = pocet;
+    }
+
     public double getTz() {
         return tz;
     }
@@ -28,14 +38,5 @@ public class Pozadavek {
 
     public int getPoradi() {
         return poradi;
-    }
-
-    public Pozadavek(double tz, int op, int kp, double tp) {
-        this.tz = tz;
-        this.op = op;
-        this.kp = kp;
-        this.tp = tp;
-        pocet += 1;
-        poradi = pocet;
     }
 }

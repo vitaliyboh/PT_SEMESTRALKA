@@ -182,4 +182,25 @@ public class Graph1 {
         }
     }
 
+    public double cestaVelblouda (Velbloud velbloud, ArrayList<Integer> cesta, Pozadavek pozadavek) {
+        int i = velbloud.getIndexSkladu();
+        double cas = 0;
+
+        for (Integer j: cesta) {
+            if (matice_vzdalenosti[i][j] > velbloud.getD()){
+                return -1;
+            }
+            cas += velbloud.getV()*matice_vzdalenosti[i][j];
+            velbloud.setEnergie(velbloud.getEnergie() - matice_vzdalenosti[i][j]);
+            if (velbloud.getEnergie() <= 0) {
+                cas += velbloud.getTd();
+                velbloud.setEnergie(velbloud.getD());
+            }
+            i = j;
+        }
+        cas += pozadavek.getKp()* sklady[velbloud.getIndexSkladu()].getTn();
+
+        return cas > (pozadavek.getTp() + pozadavek.getTz()) ? -1 : cas;
+    }
+
 }
