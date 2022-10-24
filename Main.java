@@ -1,8 +1,10 @@
+import java.awt.*;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.List;
 
 public class Main {
 
@@ -22,13 +24,15 @@ public class Main {
 
             ArrayList<Integer> list = svet.mapa.nejblizsiVrcholy(aktualni.getOp() + svet.sklady.length - 1);
 
+            Velbloud velbloudFinalni = null;
+
             for (Integer indexSkladu : list) {
                 if(svet.sklady[indexSkladu].getKs() < aktualni.getKp()) {
                     continue;
                 }
-                ArrayList<Integer> cesta = svet.mapa.cesta(indexSkladu, aktualni.getOp());
+                ArrayList<Integer> cesta = svet.mapa.cesta(indexSkladu, aktualni.getOp() + svet.sklady.length - 1);
                 double pomocna = Double.POSITIVE_INFINITY;
-                Velbloud velbloudFinalni = null;
+                if (svet.sklady[indexSkladu].getVelboudi() == null) continue;
 
                 for (Velbloud velbloud : svet.sklady[indexSkladu].getVelboudi()) {
                     if( velbloud.isNaCeste() ) { continue;}
@@ -38,36 +42,37 @@ public class Main {
                         velbloudFinalni = velbloud;
                     }
                 }
-
-
-                velbloudFinalni.setNaCeste(true);
-
-
-            }
-//            System.out.println(svet.mapa.nejblizsiVrcholy(aktualni.getOp() + svet.sklady.length - 1));
-
-
-
-            /*
-            int indexSkladu = svet.mapa.nejblizsiVrchol(aktualni.getOp() + svet.sklady.length - 1);
-            System.out.println(indexSkladu);
-            System.out.println("Cesta ze skladu <" + indexSkladu + "> do oazy <" + aktualni.getOp() + ">");
-            System.out.println(svet.mapa.cesta(indexSkladu,aktualni.getOp()+ svet.sklady.length - 1));
-
-            if(svet.sklady[indexSkladu].getKs() >= aktualni.getKp()) {
-
-            }
-            else {
-                // neco ma tady byt, siuuu
             }
 
-             */
+            while (true) {
+                if(velbloudFinalni != null) break;
+                int celkovyPocetBloudu = 0;
+                for (DruhVelblouda druh : svet.druhyVelbloudu) {
+                    celkovyPocetBloudu += druh.getPocet();
+                }
 
+                for (DruhVelblouda druh : svet.druhyVelbloudu) {
+                    if (druh.getPocet() <= celkovyPocetBloudu * druh.getPd() || celkovyPocetBloudu == 0) {
+                        velbloudFinalni = new Velbloud(druh, list.get(0));
+                        double cas = svet.mapa.cestaVelblouda(velbloudFinalni, list, aktualni);
+                        if (cas == -1) {
+                            velbloudFinalni = null;
+                            continue;
+                        }
+                        break;
+                        // pocet tohoto druhu je mensi nez by mel byt => generuj
+                    }
+                    // pokud je vetsi => jedem dal
+                }
+            }
 
-
-
+            System.out.printf("Cas: %d, Velbloud: %d, Sklad: %d, Nalozeno kosu: %d, Odchod v: %d, Druh blouda: %s\n", (int)(aktualni.getTz() + 0.5), velbloudFinalni.getPoradi(),
+                    velbloudFinalni.getIndexSkladu(), aktualni.getKp(), (int)(aktualni.getTz() + aktualni.getKp()*svet.sklady[velbloudFinalni.getIndexSkladu()].getTn() + 0.5), velbloudFinalni.getDruh().getJmeno());
+            velbloudFinalni.setNaCeste(true);
+            System.out.println();
         }
-
+        //TODO simulace casu, maximalni zatizeni bloudu,  zapocitat dobu pro vynalozeni kosu, cesta velblouda zpet,
+        // pozadavky kde je zapotrebi vic kosu nez unese jeden velbloud
     }
 
 
@@ -171,10 +176,10 @@ public class Main {
         // Velbloudy (druhy)
         int indexBlouda = (pocetCest*2 + indexCest) + 1;
         int pocetBloudu = Integer.parseInt(allUdaje[indexBlouda]);
-        DruhVelblouda[] druhyVelblouda = new DruhVelblouda[pocetBloudu+1];
+        DruhVelblouda[] druhyVelblouda = new DruhVelblouda[pocetBloudu];
         for (int i = 0; i < pocetBloudu; i++) {
             int j = indexBlouda + 1 + 8*i;
-            druhyVelblouda[i+1] = new DruhVelblouda(allUdaje[j], Double.parseDouble(allUdaje[j+1]),
+            druhyVelblouda[i] = new DruhVelblouda(allUdaje[j], Double.parseDouble(allUdaje[j+1]),
                     Double.parseDouble(allUdaje[j+2]), Double.parseDouble(allUdaje[j+3]),
                     Double.parseDouble(allUdaje[j+4]), Double.parseDouble(allUdaje[j+5]),
                     Double.parseDouble(allUdaje[j+6]), Double.parseDouble(allUdaje[j+7]));

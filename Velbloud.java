@@ -7,27 +7,35 @@ public class Velbloud {
     private double v; // rychlost
     private double d; // vzdalenost na jedno napiti
     private double td; // doba napiti
-    private int kd; // maximalni pocet kosu, ktere bloud unese
+    private double kd; // maximalni pocet kosu, ktere bloud unese
     private  int indexSkladu;
     private double energie;
     private boolean naCeste;
 
+
+
+    private int poradi;
+
     Random r = new Random();
 
 
-    public Velbloud(DruhVelblouda druh, double v, double d, double td, int kd, int indexSkladu) {
+    public Velbloud(DruhVelblouda druh, int indexSkladu) {
         this.druh = druh;
         this.v = generateV();
         this.d = generateD();
-        this.td = td;
-        this.kd = kd;
+        this.td = druh.getTd();
+        this.kd = druh.getKd();
         druh.pocet++;
+        poradi = druh.pocet;
         this.jmeno = generateName();
         this.indexSkladu = indexSkladu;
         this.energie = d;
     }
 
     public double generateV() {
+        if (druh.getV_min() == druh.getV_max()) {
+            return druh.getV_min();
+        }
         return r.nextDouble(druh.getV_max() + Double.MIN_VALUE - druh.getV_min()) + druh.getV_min();
     }
 
@@ -53,6 +61,9 @@ public class Velbloud {
     public boolean isNaCeste() {
         return naCeste;
     }
+    public int getPoradi() {
+        return poradi;
+    }
 
     public void setNaCeste(boolean naCeste) {
         this.naCeste = naCeste;
@@ -66,7 +77,7 @@ public class Velbloud {
         return td;
     }
 
-    public int getKd() {
+    public double getKd() {
         return kd;
     }
 
