@@ -203,8 +203,50 @@ public class Graph1 {
             i = j;
         }
         cas += 2*pozadavek.getKp()* sklady[velbloud.getIndexSkladu()].getTn();
-
-        return cas > (pozadavek.getTp() + pozadavek.getTz()) ? -1 : cas;
+        velbloud.setEnergie(velbloud.getD());
+        return (cas + pozadavek.getTz()) > (pozadavek.getTp() + pozadavek.getTz()) ? -1 : cas;
     }
+    
+    public void vypisCestyVelblouda (Velbloud velbloud, ArrayList<Integer> cesta, Pozadavek pozadavek, double cas) throws InterruptedException {
+        int i = velbloud.getIndexSkladu();
+
+        if(cesta.size()==1) {
+            int casDorazu = (int) (pozadavek.getTz() + cas + 0.5);
+            int casVylozeni = (int) (casDorazu + sklady[velbloud.getIndexSkladu()].getTn() * pozadavek.getKp() + 0.5);
+            int casovaRezerva = (int) (pozadavek.getTp() + pozadavek.getTz() - casVylozeni + 0.5);
+            Thread.sleep(1000);
+            System.out.printf("Cas: %d, Velbloud: %d, Oaza: %d, Vylozeno kosu: %d, Vylozeno v: %d, Casova rezerva: %d\n",
+                    casDorazu, velbloud.getPoradi(), pozadavek.getOp(), pozadavek.getKp(), casVylozeni, casovaRezerva);
+            velbloud.setEnergie(velbloud.getD() - matice_vzdalenosti[i][cesta.get(0)]);
+            return;
+        }
+
+        for (Integer j: cesta) {
+            String misto = "";
+            if (j > sklady.length) {
+                misto = "Oaza";
+            }
+            else {
+                misto = "Sklad";
+            }
+
+            cas += matice_vzdalenosti[i][j]/velbloud.getV();
+
+            // cas += velbloud.getV()*matice_vzdalenosti[i][j];
+            velbloud.setEnergie(velbloud.getEnergie() - matice_vzdalenosti[i][j]);
+            Thread.sleep(1000);
+            if (velbloud.getEnergie() <= 0) {
+                System.out.printf("Cas: %d, Velbloud: %d, %s: %d, Ziznivy %s, Pokracovani mozne v: %d\n", (int)(cas +0.5), velbloud.getPoradi(),
+                        misto, j, velbloud.getDruh().getJmeno(), (int)(cas + velbloud.getTd()));
+                cas += velbloud.getTd();
+                velbloud.setEnergie(velbloud.getD());
+            }
+            else {
+                System.out.printf("Cas: %d, Velbloud: %d, %s: %d, Kuk na velblouda\n", (int)(cas+0.5), velbloud.getPoradi(), misto, j);
+            }
+            i = j;
+        }
+    }
+    
 
 }

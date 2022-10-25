@@ -16,11 +16,12 @@ public class Velbloud {
 
     private int poradi;
 
-    Random r = new Random();
+    Random r;
 
 
-    public Velbloud(DruhVelblouda druh, int indexSkladu) {
+    public Velbloud(DruhVelblouda druh, int indexSkladu, Random r) {
         this.druh = druh;
+        this.r = r;
         this.v = generateV();
         this.d = generateD();
         this.td = druh.getTd();

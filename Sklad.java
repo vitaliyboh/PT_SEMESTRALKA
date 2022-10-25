@@ -14,6 +14,7 @@ public class Sklad{
         this.ks = ks;
         this.ts = ts;
         this.tn = tn;
+        velboudi = new ArrayList<Velbloud>();
     }
 
     public Pozice getPozice() {
