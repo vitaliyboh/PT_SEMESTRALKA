@@ -100,8 +100,9 @@ public class Graph1 {
     }
 
     public ArrayList<Integer> cesta(int a, int b) {
+       // b += sklady.length-1;
         ArrayList<Integer> cesta = new ArrayList<>();
-        cesta.add(a);
+        //cesta.add(a);
         if (naslednici[a][b] == a) {
             cesta.add(b);
             return cesta;
@@ -187,10 +188,13 @@ public class Graph1 {
         double cas = 0;
 
         for (Integer j: cesta) {
+            if (i==j) continue;
             if (matice_vzdalenosti[i][j] > velbloud.getD()){
                 return -1;
             }
-            cas += velbloud.getV()*matice_vzdalenosti[i][j];
+            cas += matice_vzdalenosti[i][j]/velbloud.getV();
+
+           // cas += velbloud.getV()*matice_vzdalenosti[i][j];
             velbloud.setEnergie(velbloud.getEnergie() - matice_vzdalenosti[i][j]);
             if (velbloud.getEnergie() <= 0) {
                 cas += velbloud.getTd();
@@ -198,7 +202,7 @@ public class Graph1 {
             }
             i = j;
         }
-        cas += pozadavek.getKp()* sklady[velbloud.getIndexSkladu()].getTn();
+        cas += 2*pozadavek.getKp()* sklady[velbloud.getIndexSkladu()].getTn();
 
         return cas > (pozadavek.getTp() + pozadavek.getTz()) ? -1 : cas;
     }

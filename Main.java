@@ -43,7 +43,7 @@ public class Main {
                     }
                 }
             }
-
+            double cas = -1;
             while (true) {
                 if(velbloudFinalni != null) break;
                 int celkovyPocetBloudu = 0;
@@ -54,7 +54,7 @@ public class Main {
                 for (DruhVelblouda druh : svet.druhyVelbloudu) {
                     if (druh.getPocet() <= celkovyPocetBloudu * druh.getPd() || celkovyPocetBloudu == 0) {
                         velbloudFinalni = new Velbloud(druh, list.get(0));
-                        double cas = svet.mapa.cestaVelblouda(velbloudFinalni, list, aktualni);
+                        cas = svet.mapa.cestaVelblouda(velbloudFinalni, svet.mapa.cesta(velbloudFinalni.getIndexSkladu(), aktualni.getOp() + svet.sklady.length - 1), aktualni);
                         if (cas == -1) {
                             velbloudFinalni = null;
                             continue;
@@ -66,8 +66,26 @@ public class Main {
                 }
             }
 
+            ArrayList<Integer> finalniCesta = svet.mapa.cesta(velbloudFinalni.getIndexSkladu(), aktualni.getOp() + svet.sklady.length - 1);
+
+            System.out.println("Cas velblouda za ktery urazi cestu do oazy: " + cas);
+
             System.out.printf("Cas: %d, Velbloud: %d, Sklad: %d, Nalozeno kosu: %d, Odchod v: %d, Druh blouda: %s\n", (int)(aktualni.getTz() + 0.5), velbloudFinalni.getPoradi(),
                     velbloudFinalni.getIndexSkladu(), aktualni.getKp(), (int)(aktualni.getTz() + aktualni.getKp()*svet.sklady[velbloudFinalni.getIndexSkladu()].getTn() + 0.5), velbloudFinalni.getDruh().getJmeno());
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            if(finalniCesta.size() == 1) {
+                int casDorazu = (int)(aktualni.getTz()+cas +0.5);
+                int casVylozeni = (int)(casDorazu + svet.sklady[velbloudFinalni.getIndexSkladu()].getTn()* aktualni.getKp() + 0.5);
+                int casovaRezerva = (int)(aktualni.getTp() + aktualni.getTz() - casVylozeni + 0.5);
+
+                System.out.printf("Cas: %d, Velbloud: %d, Oaza: %d, Vylozeno kosu: %d, Vylozeno v: %d, Casova rezerva: %d",
+                        casDorazu, velbloudFinalni.getPoradi(), aktualni.getOp(), aktualni.getKp(),casVylozeni , casovaRezerva);
+                System.out.println();
+            }
             velbloudFinalni.setNaCeste(true);
             System.out.println();
         }
