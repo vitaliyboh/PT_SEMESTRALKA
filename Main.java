@@ -30,6 +30,7 @@ public class Main {
             double cas = -1; // nejrychlejsi mozny cas, za ktery to dany velbloud ujde
             for (Integer indexSkladu : list) {
                 if(svet.sklady[indexSkladu].getKs() < aktualni.getKp()) {
+                    list.remove(indexSkladu);
                     continue;
                 }
                 ArrayList<Integer> cesta = svet.mapa.cesta(indexSkladu, aktualni.getOp() + svet.sklady.length - 1);
@@ -56,6 +57,7 @@ public class Main {
                     if (druh.getPocet() <= celkovyPocetBloudu * druh.getPd() || celkovyPocetBloudu == 0) {
                         velbloudFinalni = new Velbloud(druh, list.get(0),r);
                         svet.sklady[list.get(0)].getVelboudi().add(velbloudFinalni);
+
                         cas = svet.mapa.cestaVelblouda(velbloudFinalni, svet.mapa.cesta(velbloudFinalni.getIndexSkladu(),
                                 aktualni.getOp() + svet.sklady.length - 1), aktualni);
                         if (cas == -1) {

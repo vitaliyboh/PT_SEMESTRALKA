@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Stack;
 
 public class Graph1 {
     double[][] matice;
@@ -102,20 +103,22 @@ public class Graph1 {
     public ArrayList<Integer> cesta(int a, int b) {
        // b += sklady.length-1;
         ArrayList<Integer> cesta = new ArrayList<>();
-        //cesta.add(a);
+        Stack<Integer> stack = new Stack<>();
+        stack.add(b);
         if (naslednici[a][b] == a) {
-            cesta.add(b);
+            cesta.add(stack.pop());
             return cesta;
         }
-
         int c = naslednici[a][b];
-        cesta.add(c);
-        while (naslednici[c][b] != c) {
-            cesta.add(c);
-            c = naslednici[c][b];
+        //stack.add(c);
+        while (naslednici[c][a] != c) {
+            stack.add(c);
+            c = naslednici[c][a];
         }
-
-        cesta.add(b);
+        stack.add(c);
+        while (!stack.isEmpty()) {
+            cesta.add(stack.pop());
+        }
         return cesta;
     }
 
@@ -211,14 +214,15 @@ public class Graph1 {
                                      Pozadavek pozadavek, double cas) throws InterruptedException {
         int i = velbloud.getIndexSkladu();
         velbloud.setNaCeste(true);
-        double casAktualni = pozadavek.getTz(); // zaciname simulovat cestu - zaciname v Tz
+        double casAktualni = pozadavek.getTz() + pozadavek.getKp()*sklady[i].getTn();// zaciname simulovat cestu - zaciname v Tz
         // a postupne po vypisech pricitame do tohohle casu cas cesty, dobu napiti atd
 
         for (Integer j: cesta) {
             velbloud.setEnergie(velbloud.getEnergie() - matice_vzdalenosti[i][j]);
 
             if (j == pozadavek.getOp()+ sklady.length-1){
-                int casDorazu = (int) (casAktualni + cas + 0.5);
+                //int casDorazu = (int) (casAktualni + cas + 0.5);
+                int casDorazu = (int) (casAktualni + matice_vzdalenosti[i][j]/velbloud.getV() + 0.5);
                 int casVylozeni = (int) (casDorazu + sklady[velbloud.getIndexSkladu()].getTn() * pozadavek.getKp() + 0.5);
                 int casovaRezerva = (int) (pozadavek.getTp() + pozadavek.getTz() - casVylozeni + 0.5);
                 Thread.sleep(1000);
@@ -229,22 +233,24 @@ public class Graph1 {
             }
             String misto = "";
 
-            if (j > sklady.length) misto = "Oaza";
+            if (j > sklady.length - 1) misto = "Oaza";
             else misto = "Sklad";
             casAktualni += matice_vzdalenosti[i][j]/velbloud.getV();
            // cas += matice_vzdalenosti[i][j]/velbloud.getV();
 
             Thread.sleep(1000);
+            int indexOazy = j;
+            if( misto.equals("Oaza")) indexOazy = j - sklady.length +1;
             if (velbloud.getEnergie() <= 0) { // bloud se jde napit na danem miste
                 System.out.printf("Cas: %d, Velbloud: %d, %s: %d, Ziznivy %s, Pokracovani mozne v: %d\n",
                         (int)(casAktualni +0.5), velbloud.getPoradi(),
-                        misto, j, velbloud.getDruh().getJmeno(), (int)(casAktualni + velbloud.getTd()));
+                        misto, indexOazy, velbloud.getDruh().getJmeno(), (int)(casAktualni + velbloud.getTd()+0.5));
                 casAktualni += velbloud.getTd();
                 velbloud.setEnergie(velbloud.getD());
             }
             else { // bloud prochazi mistem
                 System.out.printf("Cas: %d, Velbloud: %d, %s: %d, Kuk na velblouda\n",
-                        (int)(casAktualni+0.5), velbloud.getPoradi(), misto, j);
+                        (int)(casAktualni+0.5), velbloud.getPoradi(), misto, indexOazy);
             }
             i = j;
         }
