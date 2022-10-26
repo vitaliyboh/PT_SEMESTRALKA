@@ -11,22 +11,23 @@ public class Main {
 
     public static void main(String[] args) {
         r = new Random();
-        String fileName = "data/test.txt";
+        String fileName = "data/tutorial.txt";
         long start = System.nanoTime();
         Svet svet = reader(fileName);
 
         System.out.println("Duration: " + ((System.nanoTime() - start) / 1000000000.0) + "s");
 
-        while(!svet.pozadavky.isEmpty()){
+        while(!svet.pozadavky.isEmpty()){ // jeden pozadavek bude zpracovan v jednom pruchodu while
             Pozadavek aktualni = svet.pozadavky.poll();
 
-            System.out.printf("Cas: %d, Pozadavek: %d, Oaza: %d, Pocet kosu: %d, Deadline: %d%n", ((int)(aktualni.getTz() + 0.5)), aktualni.getPoradi(),
+            System.out.printf("Cas: %d, Pozadavek: %d, Oaza: %d, Pocet kosu: %d, Deadline: %d%n",
+                    ((int)(aktualni.getTz() + 0.5)), aktualni.getPoradi(),
                     aktualni.getOp(), aktualni.getKp(), ((int)((aktualni.getTz() + aktualni.getTp()) + 0.5)));
 
             ArrayList<Integer> list = svet.mapa.nejblizsiVrcholy(aktualni.getOp() + svet.sklady.length - 1);
 
             Velbloud velbloudFinalni = null;
-            double cas = -1;
+            double cas = -1; // nejrychlejsi mozny cas, za ktery to dany velbloud ujde
             for (Integer indexSkladu : list) {
                 if(svet.sklady[indexSkladu].getKs() < aktualni.getKp()) {
                     continue;
@@ -44,7 +45,7 @@ public class Main {
                     }
                 }
             }
-            int pomocna = 0;
+            int pomocna = 0; // kolik zbytecnych bloudu(pro tento pozadavek) se vygenerovalo
             while (velbloudFinalni == null) {
                 if (pomocna>1000) break;
                 int celkovyPocetBloudu = 0;
@@ -55,31 +56,35 @@ public class Main {
                     if (druh.getPocet() <= celkovyPocetBloudu * druh.getPd() || celkovyPocetBloudu == 0) {
                         velbloudFinalni = new Velbloud(druh, list.get(0),r);
                         svet.sklady[list.get(0)].getVelboudi().add(velbloudFinalni);
-                        cas = svet.mapa.cestaVelblouda(velbloudFinalni, svet.mapa.cesta(velbloudFinalni.getIndexSkladu(), aktualni.getOp() + svet.sklady.length - 1), aktualni);
+                        cas = svet.mapa.cestaVelblouda(velbloudFinalni, svet.mapa.cesta(velbloudFinalni.getIndexSkladu(),
+                                aktualni.getOp() + svet.sklady.length - 1), aktualni);
                         if (cas == -1) {
                             pomocna++;
                             velbloudFinalni = null;
-                            //continue;
                         }
                         break;
                         // pocet tohoto druhu je mensi nez by mel byt => generuj
                     }
                     // pokud je vetsi => jedem dal
                 }
-                //pomocna++;
             }
 
             if (cas == -1) {
-                System.out.printf("Cas: %d, Oaza: %d, Vsichni vymreli, Harpagon zkrachoval, Konec simulace", (int)(aktualni.getTz()+0.5), aktualni.getOp());
+                System.out.printf("Cas: %d, Oaza: %d, Vsichni vymreli, Harpagon zkrachoval, Konec simulace",
+                        (int)(aktualni.getTz()+0.5), aktualni.getOp());
                 System.exit(1);
             }
 
-            ArrayList<Integer> finalniCesta = svet.mapa.cesta(velbloudFinalni.getIndexSkladu(), aktualni.getOp() + svet.sklady.length - 1);
+            ArrayList<Integer> finalniCesta = svet.mapa.cesta(velbloudFinalni.getIndexSkladu(),
+                    aktualni.getOp() + svet.sklady.length - 1);
 
             System.out.println("Cas velblouda za ktery urazi cestu do oazy: " + cas);
 
-            System.out.printf("Cas: %d, Velbloud: %d, Sklad: %d, Nalozeno kosu: %d, Odchod v: %d, Druh blouda: %s\n", (int)(aktualni.getTz() + 0.5), velbloudFinalni.getPoradi(),
-                    velbloudFinalni.getIndexSkladu(), aktualni.getKp(), (int)(aktualni.getTz() + aktualni.getKp()*svet.sklady[velbloudFinalni.getIndexSkladu()].getTn() + 0.5), velbloudFinalni.getDruh().getJmeno());
+            System.out.printf("Cas: %d, Velbloud: %d, Sklad: %d, Nalozeno kosu: %d, Odchod v: %d, Druh blouda: %s\n",
+                    (int)(aktualni.getTz() + 0.5), velbloudFinalni.getPoradi(),
+                    velbloudFinalni.getIndexSkladu(), aktualni.getKp(),
+                    (int)(aktualni.getTz() + aktualni.getKp()*svet.sklady[velbloudFinalni.getIndexSkladu()].getTn() + 0.5),
+                    velbloudFinalni.getDruh().getJmeno());
 
             try {
                 svet.mapa.vypisCestyVelblouda(velbloudFinalni, finalniCesta, aktualni, cas);
@@ -87,7 +92,7 @@ public class Main {
                 throw new RuntimeException(e);
             }
 
-            velbloudFinalni.setNaCeste(true);
+
             System.out.println();
         }
         //TODO simulace casu, maximalni zatizeni bloudu, cesta velblouda zpet,
