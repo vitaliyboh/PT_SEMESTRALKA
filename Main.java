@@ -1,6 +1,4 @@
-import java.awt.*;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -26,13 +24,13 @@ public class Main {
 
             ArrayList<Integer> list = svet.mapa.nejblizsiVrcholy(aktualni.getOp() + svet.sklady.length - 1);
             for (Integer indexSkladu : list) {
-                for (Velbloud velbloud : svet.sklady[indexSkladu].getVelboudi()) {
+                for (Velbloud velbloud : svet.sklady[indexSkladu].getVelboudi()) { // pokud bloud je na ceste ale stihne aktualni pozadavek az se vrati, tak nastavime ze neni na ceste(tj mame s nim pocitat)
                     if(velbloud.isNaCeste() && velbloud.getCasNavratu() <= aktualni.getTz()){
                         velbloud.setNaCeste(false);
                     }
                 }
             }
-            for (Integer indexSkladu : list) {
+            for (Integer indexSkladu : list) { // odstraneni skladu ktere nemaji dostatek kosu
                 if (svet.sklady[indexSkladu].getKs() < aktualni.getKp()) {
                     list.remove(indexSkladu);
                 }
@@ -110,8 +108,7 @@ public class Main {
 
             System.out.println();
         }
-        //TODO simulace casu, maximalni zatizeni bloudu, cesta velblouda zpet,
-        // pozadavky kde je zapotrebi vic kosu nez unese jeden velbloud
+        //TODO maximalni zatizeni bloudu, pozadavky kde je zapotrebi vic kosu nez unese jeden velbloud
     }
 
 

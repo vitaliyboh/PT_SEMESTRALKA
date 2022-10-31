@@ -1,31 +1,26 @@
-import java.util.ArrayList;
 import java.util.Random;
 
 public class Velbloud {
-    private String jmeno;
+    private String jmeno; //jmeno velblouda
     private DruhVelblouda druh; // druh velblouda
     private double v; // rychlost
     private double d; // vzdalenost na jedno napiti
     private double td; // doba napiti
     private double kd; // maximalni pocet kosu, ktere bloud unese
-    private  int indexSkladu;
-    private double energie;
-    private boolean naCeste;
-
-    private double casNavratu;
-
-
-
-    private int poradi;
-
+    private  int indexSkladu; // index domovskeho skladu
+    private double energie;  // na zacatku ma velbloud energii stejnou jako vzdalenost na jedno napiti,
+                             // pak ji prubezne modifikujeme podle vzdalenosti kterou urazil
+    private boolean naCeste;  // booleovska promena indikujici zda je ci neni velbloud na ceste
+    private double casNavratu; // cas navratu velblouda do domovskeho skladu po vykonani pozadavku
+    private int poradi; //  poradi velblouda
     Random r;
 
 
     public Velbloud(DruhVelblouda druh, int indexSkladu, Random r) {
         this.druh = druh;
         this.r = r;
-        this.v = generateV();
-        this.d = generateD();
+        this.v = generateV(); // vygenerujeme rychlost
+        this.d = generateD(); // vygenerujeme vzdalenost na jedno napiti
         this.td = druh.getTd();
         this.kd = druh.getKd();
         druh.pocet++;

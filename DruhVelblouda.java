@@ -1,13 +1,13 @@
 public class DruhVelblouda {
-    private final String jmeno;
-    private final double v_min;
-    private final double v_max;
-    private final double d_min;
-    private final double d_max;
-    private final double td;
-    private final double kd;
-    private final double pd;
-    public int pocet;
+    private final String jmeno; // jmeno druhu velblouda
+    private final double v_min; // minimalni rychlost
+    private final double v_max; // maximalni rychlost
+    private final double d_min; // minimalni vzdalenost na jedno napiti
+    private final double d_max; // maximalni vzdalenost na jedno napiti
+    private final double td; // doba na piti
+    private final double kd; // maximalni pocet kosu, ktere velbloud unese
+    private final double pd; // pomerne zastoupeni druhu
+    public int pocet; // pocet vytvorenych velbloudu daneho druhu
 
     public DruhVelblouda(String jmeno, double v_min, double v_max,
                          double d_min, double d_max, double td,

@@ -1,12 +1,10 @@
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.Stack;
 
 public class Graph1 {
-    double[][] matice;
+    double[][] matice; // matice sousednosti
     Sklad[] sklady;
     Oaza[] oazy;
-
     double[][] naslednici;
     double[][] matice_vzdalenosti;
 

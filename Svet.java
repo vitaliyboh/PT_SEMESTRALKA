@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.Queue;
 
 public class Svet {
@@ -6,7 +5,7 @@ public class Svet {
     Sklad[] sklady;
     DruhVelblouda[] druhyVelbloudu;
     Queue<Pozadavek> pozadavky;
-    Graph1 mapa;
+    Graph1 mapa; // graf reprezentujici cesty mezi oazami a sklady
 
     public Svet(Oaza[] oazy, Sklad[] sklady, DruhVelblouda[] druhyVelbloudu, Queue<Pozadavek> pozadavky, Graph1 mapa) {
         this.oazy = oazy;
