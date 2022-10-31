@@ -115,8 +115,6 @@ public class Main {
     }
 
 
-
-
     public static Svet reader(String fileName) {
         ArrayList<String> allUdaje1 = null;
         try {
@@ -237,4 +235,7 @@ public class Main {
 
             return new Svet(oazy,sklady,druhyVelblouda, pozadavky, graph);
     }
+
 }
+
+
