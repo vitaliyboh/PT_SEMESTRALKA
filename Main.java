@@ -11,7 +11,7 @@ public class Main {
 
     public static void main(String[] args) {
         r = new Random();
-        String fileName = "data/tutorial.txt";
+        String fileName = "data/test.txt";
         long start = System.nanoTime();
         Svet svet = reader(fileName);
 
@@ -163,6 +163,7 @@ public class Main {
             e.printStackTrace();
         }
         String[] allUdaje = allUdaje1.toArray(new String[0]);
+
         // Sklady
         int pocetSkladu = Integer.parseInt(allUdaje[0]);
         Sklad[] sklady = new Sklad[pocetSkladu+1];

@@ -7,7 +7,7 @@ public class Graph1 {
     Sklad[] sklady;
     Oaza[] oazy;
 
-    int[][] naslednici;
+    double[][] naslednici;
     double[][] matice_vzdalenosti;
 
     public Graph1(int pocetVrcholu, Sklad[] sklady, Oaza[] oazy) {
@@ -87,7 +87,13 @@ public class Graph1 {
     }
 
     private void setMaticiNasledniku(int nV) {
-        this.naslednici = new int[nV][nV];
+        for(int i = 0; i < matice.length; i++){
+            for (int j = 0; j < matice[0].length; j++) {
+                matice[i][j] = 0;
+            }
+        }
+
+        this.naslednici = matice;
         int i;
         int j;
         for (i = 0; i < nV; i++) {
@@ -109,11 +115,11 @@ public class Graph1 {
             cesta.add(stack.pop());
             return cesta;
         }
-        int c = naslednici[a][b];
+        int c = (int)naslednici[a][b];
         //stack.add(c);
         while (naslednici[c][a] != c) {
             stack.add(c);
-            c = naslednici[c][a];
+            c = (int)naslednici[c][a];
         }
         stack.add(c);
         while (!stack.isEmpty()) {
