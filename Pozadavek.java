@@ -39,4 +39,8 @@ public class Pozadavek {
     public int getPoradi() {
         return poradi;
     }
+
+    public void setTz(double tz) {
+        this.tz = tz;
+    }
 }

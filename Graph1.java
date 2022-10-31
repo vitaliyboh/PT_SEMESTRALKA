@@ -227,10 +227,9 @@ public class Graph1 {
             velbloud.setEnergie(velbloud.getEnergie() - matice_vzdalenosti[i][j]);
 
             if (j == pozadavek.getOp()+ sklady.length-1){
-                //int casDorazu = (int) (casAktualni + cas + 0.5);
                 int casDorazu = (int) (casAktualni + matice_vzdalenosti[i][j]/velbloud.getV() + 0.5);
                 int casVylozeni = (int) (casDorazu + sklady[velbloud.getIndexSkladu()].getTn() * pozadavek.getKp() + 0.5);
-                int casovaRezerva = (int) (pozadavek.getTp() + pozadavek.getTz() - casVylozeni + 0.5);
+                int casovaRezerva = (int) (pozadavek.getTp() - casVylozeni + 0.5);
                 Thread.sleep(1000);
                 System.out.printf("Cas: %d, Velbloud: %d, Oaza: %d, Vylozeno kosu: %d, Vylozeno v: %d, Casova rezerva: %d\n",
                         casDorazu, velbloud.getPoradi(), pozadavek.getOp(), pozadavek.getKp(), casVylozeni, casovaRezerva);
@@ -272,7 +271,6 @@ public class Graph1 {
                 System.out.printf("Cas: %d, Velbloud: %d, Navrat do skladu: %d\n", cas, velbloud.getPoradi(), velbloud.getIndexSkladu());
                 velbloud.setCasNavratu(cas + velbloud.getTd());
                 velbloud.setEnergie(velbloud.getD());
-                velbloud.setNaCeste(false);
                 return;
             }
             String misto = "";

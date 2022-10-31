@@ -11,11 +11,11 @@ public class Main {
 
     public static void main(String[] args) {
         r = new Random();
-        String fileName = "data/test.txt";
-        long start = System.nanoTime();
+        String fileName = "data/tutorial.txt";
+        //long start = System.nanoTime();
         Svet svet = reader(fileName);
 
-        System.out.println("Duration: " + ((System.nanoTime() - start) / 1000000000.0) + "s");
+        //System.out.println("Read duration: " + ((System.nanoTime() - start) / 1000000000.0) + "s");
 
         while(!svet.pozadavky.isEmpty()){ // jeden pozadavek bude zpracovan v jednom pruchodu while
             Pozadavek aktualni = svet.pozadavky.poll();
@@ -25,21 +25,32 @@ public class Main {
                     aktualni.getOp(), aktualni.getKp(), ((int)((aktualni.getTz() + aktualni.getTp()) + 0.5)));
 
             ArrayList<Integer> list = svet.mapa.nejblizsiVrcholy(aktualni.getOp() + svet.sklady.length - 1);
-
+            for (Integer indexSkladu : list) {
+                for (Velbloud velbloud : svet.sklady[indexSkladu].getVelboudi()) {
+                    if(velbloud.isNaCeste() && velbloud.getCasNavratu() <= aktualni.getTz()){
+                        velbloud.setNaCeste(false);
+                    }
+                }
+            }
+            for (Integer indexSkladu : list) {
+                if (svet.sklady[indexSkladu].getKs() < aktualni.getKp()) {
+                    list.remove(indexSkladu);
+                }
+            }
             Velbloud velbloudFinalni = null;
             double cas = -1; // nejrychlejsi mozny cas, za ktery to dany velbloud ujde
             for (Integer indexSkladu : list) {
-                if(svet.sklady[indexSkladu].getKs() < aktualni.getKp()) {
-                    list.remove(indexSkladu);
-                    continue;
-                }
                 ArrayList<Integer> cesta = svet.mapa.cesta(indexSkladu, aktualni.getOp() + svet.sklady.length - 1);
                 double pomocna = Double.POSITIVE_INFINITY;
                 if (svet.sklady[indexSkladu].getVelboudi() == null) continue;
 
                 for (Velbloud velbloud : svet.sklady[indexSkladu].getVelboudi()) {
-                    if( velbloud.isNaCeste() ) { continue;}
                     cas = svet.mapa.cestaVelblouda(velbloud, cesta, aktualni);
+                    if(velbloud.isNaCeste()) {
+                        if (cas == -1 || (velbloud.getCasNavratu() + cas) > (aktualni.getTz() + aktualni.getTp()))
+                            continue;
+                    }
+
                     if (cas < pomocna && cas != -1 ) {
                         pomocna = cas;
                         velbloudFinalni = velbloud;
@@ -70,6 +81,8 @@ public class Main {
                     // pokud je vetsi => jedem dal
                 }
             }
+
+            if (velbloudFinalni.isNaCeste()) aktualni.setTz(velbloudFinalni.getCasNavratu());
 
             if (cas == -1) {
                 System.out.printf("Cas: %d, Oaza: %d, Vsichni vymreli, Harpagon zkrachoval, Konec simulace",

@@ -23,8 +23,10 @@
 Pomaly 1 1 20 20 1 1 0.5
 Ziznivy 10 10 10 10 10 1 0.5
 🐪 Pocet pozadavku P: 🏜
-1
+2
 🐪 Definice pozadavku (kazda oaza chce jeden kos, moc na to nespechaji) 🏜
 0 3 1 100
+0 2 1 1000
+
 
 
