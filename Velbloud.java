@@ -12,6 +12,8 @@ public class Velbloud {
     private double energie;
     private boolean naCeste;
 
+    private double casNavratu;
+
 
 
     private int poradi;
@@ -96,5 +98,13 @@ public class Velbloud {
 
     public double getEnergie() {
         return energie;
+    }
+
+    public void setCasNavratu(double casNavratu) {
+        this.casNavratu = casNavratu;
+    }
+
+    public double getCasNavratu() {
+        return casNavratu;
     }
 }

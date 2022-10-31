@@ -80,7 +80,7 @@ public class Main {
             ArrayList<Integer> finalniCesta = svet.mapa.cesta(velbloudFinalni.getIndexSkladu(),
                     aktualni.getOp() + svet.sklady.length - 1);
 
-            System.out.println("Cas velblouda za ktery urazi cestu do oazy: " + cas);
+            //System.out.println("Cas velblouda za ktery urazi cestu do oazy: " + cas);
 
             System.out.printf("Cas: %d, Velbloud: %d, Sklad: %d, Nalozeno kosu: %d, Odchod v: %d, Druh blouda: %s\n",
                     (int)(aktualni.getTz() + 0.5), velbloudFinalni.getPoradi(),
@@ -89,7 +89,7 @@ public class Main {
                     velbloudFinalni.getDruh().getJmeno());
 
             try {
-                svet.mapa.vypisCestyVelblouda(velbloudFinalni, finalniCesta, aktualni, cas);
+                svet.mapa.vypisCestyVelblouda(velbloudFinalni, finalniCesta, aktualni);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
