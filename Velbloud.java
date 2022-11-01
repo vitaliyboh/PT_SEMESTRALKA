@@ -25,6 +25,7 @@ public class Velbloud {
         this.td = druh.getTd();
         this.kd = druh.getKd();
         pocet++;
+        druh.pocet++;
         poradi = pocet;
         this.jmeno = generateName();
         this.indexSkladu = indexSkladu;
@@ -44,6 +45,10 @@ public class Velbloud {
 
     public String generateName() {
         return "Velboud_" + pocet;
+    }
+
+    public static int getPocet() {
+        return pocet;
     }
 
     public String getJmeno() {

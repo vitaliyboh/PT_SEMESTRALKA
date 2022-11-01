@@ -9,47 +9,52 @@ public class Main {
 
     public static void main(String[] args) {
         r = new Random();
-        String fileName = "data/test.txt";
-        //long start = System.nanoTime();
+        String fileName = "data/parser.txt";
         Svet svet = reader(fileName);
-
-        //System.out.println("Read duration: " + ((System.nanoTime() - start) / 1000000000.0) + "s");
         double casPredchozihoPozadavku = 0;
-        while(!svet.pozadavky.isEmpty()){ // jeden pozadavek bude zpracovan v jednom pruchodu while
+        // VYRIZOVANI POZADAVKU
+        while (!svet.pozadavky.isEmpty()) { // jeden pozadavek bude zpracovan v jednom pruchodu while
             Pozadavek aktualni = svet.pozadavky.poll();
 
             System.out.printf("Cas: %d, Pozadavek: %d, Oaza: %d, Pocet kosu: %d, Deadline: %d%n",
-                    ((int)(aktualni.getTz() + 0.5)), aktualni.getPoradi(),
-                    aktualni.getOp(), aktualni.getKp(), ((int)((aktualni.getTz() + aktualni.getTp()) + 0.5)));
+                    ((int) (aktualni.getTz() + 0.5)), aktualni.getPoradi(),
+                    aktualni.getOp(), aktualni.getKp(), ((int) ((aktualni.getTz() + aktualni.getTp()) + 0.5)));
 
+            // zde mame sklady serazene od nejblizsiho po nejvzdalenejsi
             ArrayList<Integer> list = svet.mapa.nejblizsiVrcholy(aktualni.getOp() + svet.sklady.length - 1);
 
             ArrayList<Integer> pomocnyList = new ArrayList<>();
             pomocnyList.addAll(list);
 
-            for (int i = list.size()-1; i >=0; i--) {
-                if (svet.sklady[list.get(i)].getAktualniPocetKosu()< aktualni.getKp()) {
-                    list.remove(i);
-                }
-            }
-
-            for (Integer skladyIndex: list) {
+            // obnoveni kosu
+            for (Integer skladyIndex : list) {
                 Sklad sklad = svet.sklady[skladyIndex];
-                if(aktualni.getTz() < sklad.getTs() || sklad.getAktualniPocetKosu() == sklad.getKs()) {
+                if (aktualni.getTz() < sklad.getTs() || sklad.getAktualniPocetKosu() == sklad.getKs()) {
                     continue;
                 }
-                int nasobek1 = (int) (aktualni.getTz()/sklad.getTs());
-                if (casPredchozihoPozadavku <= sklad.getTs()*nasobek1 && sklad.getTs()*nasobek1 <= aktualni.getTz()) {
+                int nasobek1 = (int) (aktualni.getTz() / sklad.getTs());
+                if (casPredchozihoPozadavku <= sklad.getTs() * nasobek1 && sklad.getTs() * nasobek1 <= aktualni.getTz()) {
                     sklad.setAktualniPocetKosu(sklad.getKs());
                     sklad.setNasobek(nasobek1);
                 }
             }
             casPredchozihoPozadavku = aktualni.getTz();
 
+            // z listu sklad odeberu, pokud nema dostatecny pocet kosu
+            for (int i = list.size() - 1; i >= 0; i--) {
+                if (svet.sklady[list.get(i)].getAktualniPocetKosu() < aktualni.getKp()) {
+                    list.remove(i);
+                }
+            }
+
+            // seznam nejblizsich skladu je prazdny -> kazdej sklad ma malo kosu
+            // overim, zda se nevyplati pockat na dalsi obnoveni (pridam pripadny sklad zpet do seznamu)
             if (list.isEmpty()) {
-                for (Integer indexSkladu: pomocnyList) {
-                    if (aktualni.getKp() > svet.sklady[indexSkladu].getKs()) { continue; }
-                    int nasobek = (int) (aktualni.getTz()/svet.sklady[indexSkladu].getTs()+1 );
+                for (Integer indexSkladu : pomocnyList) {
+                    if (aktualni.getKp() > svet.sklady[indexSkladu].getKs()) {
+                        continue;
+                    }
+                    int nasobek = (int) (aktualni.getTz() / svet.sklady[indexSkladu].getTs() + 1);
                     if (nasobek == svet.sklady[indexSkladu].getNasobek()) {
                         nasobek++;
                     }
@@ -62,6 +67,7 @@ public class Main {
                     svet.sklady[indexSkladu].setAktualniPocetKosu(svet.sklady[indexSkladu].getKs());
                     break;
                 }
+                // pokud i presto je seznam prazdny, nenalezli jsme vhodny sklad
                 if (list.isEmpty()) {
                     System.out.printf("Cas: %d, Oaza: %d, Vsichni vymreli, Harpagon zkrachoval, Konec simulace",
                             (int) (aktualni.getTz() + 0.5), aktualni.getOp());
@@ -69,17 +75,20 @@ public class Main {
                 }
             }
 
-
+            // pokud bloud je na ceste ale stihne aktualni pozadavek az se vrati,
+            // tak nastavime ze neni na ceste(tj mame s nim pocitat)
             for (Integer indexSkladu : list) {
                 for (Velbloud velbloud : svet.sklady[indexSkladu].getVelboudi()) {
-                    if(velbloud.isNaCeste() && velbloud.getCasNavratu() <= aktualni.getTz()){ // pokud bloud je na ceste ale stihne aktualni pozadavek az se vrati,
-                        velbloud.setNaCeste(false);                                          // tak nastavime ze neni na ceste(tj mame s nim pocitat)
+                    if (velbloud.isNaCeste() && velbloud.getCasNavratu() <= aktualni.getTz()) {
+                        velbloud.setNaCeste(false);
                     }
                 }
             }
 
-            Velbloud velbloudFinalni = null;
+            Velbloud velbloudFinalni = null; // finalni bloud, ktery vyrazi na cestu
             double cas = -1; // nejrychlejsi mozny cas, za ktery to dany velbloud ujde
+
+            // projizdim sklady a jejich (jiz existujici)velbloudy
             for (Integer indexSkladu : list) {
                 ArrayList<Integer> cesta = svet.mapa.cesta(indexSkladu, aktualni.getOp() + svet.sklady.length - 1);
                 double pomocna = Double.POSITIVE_INFINITY;
@@ -87,27 +96,29 @@ public class Main {
 
                 for (Velbloud velbloud : svet.sklady[indexSkladu].getVelboudi()) {
                     cas = svet.mapa.cestaVelblouda(velbloud, cesta, aktualni);
-                    if(velbloud.isNaCeste()) {
+                    if (velbloud.isNaCeste()) {
                         if (cas == -1 || (velbloud.getCasNavratu() + cas) > (aktualni.getTz() + aktualni.getTp()))
                             continue;
                     }
 
-                    if (cas < pomocna && cas != -1 ) {
+                    if (cas < pomocna && cas != -1) {
                         pomocna = cas;
                         velbloudFinalni = velbloud;
                     }
                 }
             }
+
             int pomocna = 0; // kolik zbytecnych bloudu(pro tento pozadavek) se vygenerovalo
+
+            // pokud velbloudFinalni je null -> z jiz existujicich bloudu neni vhodny nikdo -> musim generovat
             while (velbloudFinalni == null) {
-                if (pomocna>1000) break;
-                int celkovyPocetBloudu = 0;
-                for (DruhVelblouda druh : svet.druhyVelbloudu) {
-                    celkovyPocetBloudu += druh.getPocet();
-                }
+                if (pomocna > 1000) break; // pokud vygenerujem 1000 zbytecnych bloudu -> konec
+                int celkovyPocetBloudu = Velbloud.getPocet();
+
+                // generovani bloudu
                 for (DruhVelblouda druh : svet.druhyVelbloudu) {
                     if (druh.getPocet() <= celkovyPocetBloudu * druh.getPd() || celkovyPocetBloudu == 0) {
-                        velbloudFinalni = new Velbloud(druh, list.get(0),r);
+                        velbloudFinalni = new Velbloud(druh, list.get(0), r);
                         svet.sklady[list.get(0)].getVelboudi().add(velbloudFinalni);
 
                         cas = svet.mapa.cestaVelblouda(velbloudFinalni, svet.mapa.cesta(velbloudFinalni.getIndexSkladu(),
@@ -123,16 +134,20 @@ public class Main {
                 }
             }
 
+            // pokud nejrychlejsi cas, ktery lze ujit je -1 -> pozadavek nelze splnit
+            if (cas == -1) {
+                System.out.printf("Cas: %d, Oaza: %d, Vsichni vymreli, Harpagon zkrachoval, Konec simulace",
+                        (int) (aktualni.getTz() + 0.5), aktualni.getOp());
+                System.exit(1);
+            }
+
+            // pokud je na ceste, obsluhujeme pozadavek v case jeho navratu
             if (velbloudFinalni.isNaCeste()) aktualni.setTz(velbloudFinalni.getCasNavratu());
 
+            // odecteme pocet kosu ze skladu, ktere bloud nalozil na sebe
             Sklad skladVelbloudaFinalniho = svet.sklady[velbloudFinalni.getIndexSkladu()];
             skladVelbloudaFinalniho.setAktualniPocetKosu(skladVelbloudaFinalniho.getAktualniPocetKosu() - aktualni.getKp());
 
-            if (cas == -1) {
-                System.out.printf("Cas: %d, Oaza: %d, Vsichni vymreli, Harpagon zkrachoval, Konec simulace",
-                        (int)(aktualni.getTz()+0.5), aktualni.getOp());
-                System.exit(1);
-            }
 
             ArrayList<Integer> finalniCesta = svet.mapa.cesta(velbloudFinalni.getIndexSkladu(),
                     aktualni.getOp() + svet.sklady.length - 1);
@@ -140,9 +155,9 @@ public class Main {
             //System.out.println("Cas velblouda za ktery urazi cestu do oazy: " + cas);
 
             System.out.printf("Cas: %d, Velbloud: %d, Sklad: %d, Nalozeno kosu: %d, Odchod v: %d\n",
-                    (int)(aktualni.getTz() + 0.5), velbloudFinalni.getPoradi(),
+                    (int) (aktualni.getTz() + 0.5), velbloudFinalni.getPoradi(),
                     velbloudFinalni.getIndexSkladu(), aktualni.getKp(),
-                    (int)(aktualni.getTz() + aktualni.getKp()*svet.sklady[velbloudFinalni.getIndexSkladu()].getTn() + 0.5));
+                    (int) (aktualni.getTz() + aktualni.getKp() * svet.sklady[velbloudFinalni.getIndexSkladu()].getTn() + 0.5));
 
             try {
                 svet.mapa.vypisCestyVelblouda(velbloudFinalni, finalniCesta, aktualni);
@@ -209,7 +224,7 @@ public class Main {
                     //System.out.println(Arrays.toString(udaje));
                 }
             }
-           // System.out.println(allUdaje1.toString());
+            // System.out.println(allUdaje1.toString());
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -218,63 +233,63 @@ public class Main {
 
         // Sklady
         int pocetSkladu = Integer.parseInt(allUdaje[0]);
-        Sklad[] sklady = new Sklad[pocetSkladu+1];
+        Sklad[] sklady = new Sklad[pocetSkladu + 1];
         for (int i = 0; i < pocetSkladu; i++) {
-            Pozice pozice = new Pozice(0,0 );
-            int j = i*5 +1;
+            Pozice pozice = new Pozice(0, 0);
+            int j = i * 5 + 1;
             pozice.setX(Double.parseDouble(allUdaje[j]));
-            pozice.setY(Double.parseDouble(allUdaje[j+1]));
-            int ks = Integer.parseInt(allUdaje[j+2]);
-            int ts = Integer.parseInt(allUdaje[j+3]);
-            int tn = Integer.parseInt(allUdaje[j+4]);
-            sklady[i+1] = new Sklad(pozice,ks,ts,tn);
+            pozice.setY(Double.parseDouble(allUdaje[j + 1]));
+            int ks = Integer.parseInt(allUdaje[j + 2]);
+            int ts = Integer.parseInt(allUdaje[j + 3]);
+            int tn = Integer.parseInt(allUdaje[j + 4]);
+            sklady[i + 1] = new Sklad(pozice, ks, ts, tn);
         }
 
         // Oazy
-        int indexOaza = pocetSkladu*5 + 1;
+        int indexOaza = pocetSkladu * 5 + 1;
         int pocetOaz = Integer.parseInt(allUdaje[indexOaza]);
-        Oaza[] oazy = new Oaza[pocetOaz+1];
+        Oaza[] oazy = new Oaza[pocetOaz + 1];
         for (int i = 0; i < pocetOaz; i++) {
-            int j = indexOaza + 1 + 2*i;
-            oazy[i+1] = new Oaza(
+            int j = indexOaza + 1 + 2 * i;
+            oazy[i + 1] = new Oaza(
                     new Pozice(
                             Double.parseDouble(allUdaje[j]),
-                    Double.parseDouble(allUdaje[j+1])));
+                            Double.parseDouble(allUdaje[j + 1])));
         }
 
         // Tvorba grafu
-        int indexCest = (pocetOaz*2+indexOaza)  + 1;
+        int indexCest = (pocetOaz * 2 + indexOaza) + 1;
         int pocetCest = Integer.parseInt(allUdaje[indexCest]);
-        Graph1 graph = new Graph1(pocetOaz+pocetSkladu+1, sklady, oazy);
+        Graph1 graph = new Graph1(pocetOaz + pocetSkladu + 1, sklady, oazy);
         for (int i = 0; i < pocetCest; i++) {
-            int j = indexCest + 1 + 2*i;
-            graph.addEdge(Integer.parseInt(allUdaje[j]),Integer.parseInt(allUdaje[j+1]));
+            int j = indexCest + 1 + 2 * i;
+            graph.addEdge(Integer.parseInt(allUdaje[j]), Integer.parseInt(allUdaje[j + 1]));
         }
         graph.floydWarshall();
 
         // Velbloudy (druhy)
-        int indexBlouda = (pocetCest*2 + indexCest) + 1;
+        int indexBlouda = (pocetCest * 2 + indexCest) + 1;
         int pocetBloudu = Integer.parseInt(allUdaje[indexBlouda]);
         DruhVelblouda[] druhyVelblouda = new DruhVelblouda[pocetBloudu];
         for (int i = 0; i < pocetBloudu; i++) {
-            int j = indexBlouda + 1 + 8*i;
-            druhyVelblouda[i] = new DruhVelblouda(allUdaje[j], Double.parseDouble(allUdaje[j+1]),
-                    Double.parseDouble(allUdaje[j+2]), Double.parseDouble(allUdaje[j+3]),
-                    Double.parseDouble(allUdaje[j+4]), Double.parseDouble(allUdaje[j+5]),
-                    Double.parseDouble(allUdaje[j+6]), Double.parseDouble(allUdaje[j+7]));
+            int j = indexBlouda + 1 + 8 * i;
+            druhyVelblouda[i] = new DruhVelblouda(allUdaje[j], Double.parseDouble(allUdaje[j + 1]),
+                    Double.parseDouble(allUdaje[j + 2]), Double.parseDouble(allUdaje[j + 3]),
+                    Double.parseDouble(allUdaje[j + 4]), Double.parseDouble(allUdaje[j + 5]),
+                    Double.parseDouble(allUdaje[j + 6]), Double.parseDouble(allUdaje[j + 7]));
         }
 
         // Pozadavky
-        int indexPoz = (pocetBloudu*8 + indexBlouda) + 1;
+        int indexPoz = (pocetBloudu * 8 + indexBlouda) + 1;
         int pocetPoz = Integer.parseInt(allUdaje[indexPoz]);
         Queue<Pozadavek> pozadavky = new LinkedList<>();
         for (int i = 0; i < pocetPoz; i++) {
-            int j = indexPoz + 1 + 4*i;
-            pozadavky.add(new Pozadavek(Double.parseDouble(allUdaje[j]), Integer.parseInt(allUdaje[j+1]),
-                    Integer.parseInt(allUdaje[j+2]), Double.parseDouble(allUdaje[j+3])));
+            int j = indexPoz + 1 + 4 * i;
+            pozadavky.add(new Pozadavek(Double.parseDouble(allUdaje[j]), Integer.parseInt(allUdaje[j + 1]),
+                    Integer.parseInt(allUdaje[j + 2]), Double.parseDouble(allUdaje[j + 3])));
         }
 
-            return new Svet(oazy,sklady,druhyVelblouda, pozadavky, graph);
+        return new Svet(oazy, sklady, druhyVelblouda, pozadavky, graph);
     }
 
 }
