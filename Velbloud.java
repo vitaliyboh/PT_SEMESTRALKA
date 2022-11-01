@@ -12,6 +12,7 @@ public class Velbloud {
                              // pak ji prubezne modifikujeme podle vzdalenosti kterou urazil
     private boolean naCeste;  // booleovska promena indikujici zda je ci neni velbloud na ceste
     private double casNavratu; // cas navratu velblouda do domovskeho skladu po vykonani pozadavku
+    private static int pocet = 0;
     private int poradi; //  poradi velblouda
     Random r;
 
@@ -23,8 +24,8 @@ public class Velbloud {
         this.d = generateD(); // vygenerujeme vzdalenost na jedno napiti
         this.td = druh.getTd();
         this.kd = druh.getKd();
-        druh.pocet++;
-        poradi = druh.pocet;
+        pocet++;
+        poradi = pocet;
         this.jmeno = generateName();
         this.indexSkladu = indexSkladu;
         this.energie = d;
@@ -42,7 +43,7 @@ public class Velbloud {
     }
 
     public String generateName() {
-        return "Velboud_" + druh.pocet;
+        return "Velboud_" + pocet;
     }
 
     public String getJmeno() {

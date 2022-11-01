@@ -9,7 +9,7 @@ public class Main {
 
     public static void main(String[] args) {
         r = new Random();
-        String fileName = "data/tutorial.txt";
+        String fileName = "data/test.txt";
         //long start = System.nanoTime();
         Svet svet = reader(fileName);
 
@@ -48,17 +48,19 @@ public class Main {
 
             if (list.isEmpty()) {
                 for (Integer indexSkladu: pomocnyList) {
+                    if (aktualni.getKp() > svet.sklady[indexSkladu].getKs()) { continue; }
                     int nasobek = (int) (aktualni.getTz()/svet.sklady[indexSkladu].getTs()+1 );
                     if (nasobek == svet.sklady[indexSkladu].getNasobek()) {
                         nasobek++;
                     }
-                        if (aktualni.getTp()+ aktualni.getTz() <= svet.sklady[indexSkladu].getTs()*nasobek) {
-                            continue;
-                        }
-                        list.add(indexSkladu);
-                        aktualni.setTz(svet.sklady[indexSkladu].getTs()*nasobek);
-                        svet.sklady[indexSkladu].setNasobek(nasobek);
-                        break;
+                    if (aktualni.getTp() + aktualni.getTz() <= svet.sklady[indexSkladu].getTs() * nasobek) {
+                        continue;
+                    }
+                    list.add(indexSkladu);
+                    aktualni.setTz(svet.sklady[indexSkladu].getTs() * nasobek);
+                    svet.sklady[indexSkladu].setNasobek(nasobek);
+                    svet.sklady[indexSkladu].setAktualniPocetKosu(svet.sklady[indexSkladu].getKs());
+                    break;
                 }
                 if (list.isEmpty()) {
                     System.out.printf("Cas: %d, Oaza: %d, Vsichni vymreli, Harpagon zkrachoval, Konec simulace",
@@ -137,11 +139,10 @@ public class Main {
 
             //System.out.println("Cas velblouda za ktery urazi cestu do oazy: " + cas);
 
-            System.out.printf("Cas: %d, Velbloud: %d, Sklad: %d, Nalozeno kosu: %d, Odchod v: %d, Druh blouda: %s\n",
+            System.out.printf("Cas: %d, Velbloud: %d, Sklad: %d, Nalozeno kosu: %d, Odchod v: %d\n",
                     (int)(aktualni.getTz() + 0.5), velbloudFinalni.getPoradi(),
                     velbloudFinalni.getIndexSkladu(), aktualni.getKp(),
-                    (int)(aktualni.getTz() + aktualni.getKp()*svet.sklady[velbloudFinalni.getIndexSkladu()].getTn() + 0.5),
-                    velbloudFinalni.getDruh().getJmeno());
+                    (int)(aktualni.getTz() + aktualni.getKp()*svet.sklady[velbloudFinalni.getIndexSkladu()].getTn() + 0.5));
 
             try {
                 svet.mapa.vypisCestyVelblouda(velbloudFinalni, finalniCesta, aktualni);
