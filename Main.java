@@ -14,7 +14,7 @@ public class Main {
         Svet svet = reader(fileName);
 
         //System.out.println("Read duration: " + ((System.nanoTime() - start) / 1000000000.0) + "s");
-
+        double casPredchozihoPozadavku = 0;
         while(!svet.pozadavky.isEmpty()){ // jeden pozadavek bude zpracovan v jednom pruchodu while
             Pozadavek aktualni = svet.pozadavky.poll();
 
@@ -23,18 +23,59 @@ public class Main {
                     aktualni.getOp(), aktualni.getKp(), ((int)((aktualni.getTz() + aktualni.getTp()) + 0.5)));
 
             ArrayList<Integer> list = svet.mapa.nejblizsiVrcholy(aktualni.getOp() + svet.sklady.length - 1);
+
+            ArrayList<Integer> pomocnyList = new ArrayList<>();
+            pomocnyList.addAll(list);
+
+            for (int i = list.size()-1; i >=0; i--) {
+                if (svet.sklady[list.get(i)].getAktualniPocetKosu()< aktualni.getKp()) {
+                    list.remove(i);
+                }
+            }
+
+            for (Integer skladyIndex: list) {
+                Sklad sklad = svet.sklady[skladyIndex];
+                if(aktualni.getTz() < sklad.getTs() || sklad.getAktualniPocetKosu() == sklad.getKs()) {
+                    continue;
+                }
+                int nasobek1 = (int) (aktualni.getTz()/sklad.getTs());
+                if (casPredchozihoPozadavku <= sklad.getTs()*nasobek1 && sklad.getTs()*nasobek1 <= aktualni.getTz()) {
+                    sklad.setAktualniPocetKosu(sklad.getKs());
+                    sklad.setNasobek(nasobek1);
+                }
+            }
+            casPredchozihoPozadavku = aktualni.getTz();
+
+            if (list.isEmpty()) {
+                for (Integer indexSkladu: pomocnyList) {
+                    int nasobek = (int) (aktualni.getTz()/svet.sklady[indexSkladu].getTs()+1 );
+                    if (nasobek == svet.sklady[indexSkladu].getNasobek()) {
+                        nasobek++;
+                    }
+                        if (aktualni.getTp()+ aktualni.getTz() <= svet.sklady[indexSkladu].getTs()*nasobek) {
+                            continue;
+                        }
+                        list.add(indexSkladu);
+                        aktualni.setTz(svet.sklady[indexSkladu].getTs()*nasobek);
+                        svet.sklady[indexSkladu].setNasobek(nasobek);
+                        break;
+                }
+                if (list.isEmpty()) {
+                    System.out.printf("Cas: %d, Oaza: %d, Vsichni vymreli, Harpagon zkrachoval, Konec simulace",
+                            (int) (aktualni.getTz() + 0.5), aktualni.getOp());
+                    System.exit(1);
+                }
+            }
+
+
             for (Integer indexSkladu : list) {
-                for (Velbloud velbloud : svet.sklady[indexSkladu].getVelboudi()) { // pokud bloud je na ceste ale stihne aktualni pozadavek az se vrati, tak nastavime ze neni na ceste(tj mame s nim pocitat)
-                    if(velbloud.isNaCeste() && velbloud.getCasNavratu() <= aktualni.getTz()){
-                        velbloud.setNaCeste(false);
+                for (Velbloud velbloud : svet.sklady[indexSkladu].getVelboudi()) {
+                    if(velbloud.isNaCeste() && velbloud.getCasNavratu() <= aktualni.getTz()){ // pokud bloud je na ceste ale stihne aktualni pozadavek az se vrati,
+                        velbloud.setNaCeste(false);                                          // tak nastavime ze neni na ceste(tj mame s nim pocitat)
                     }
                 }
             }
-            for (Integer indexSkladu : list) { // odstraneni skladu ktere nemaji dostatek kosu
-                if (svet.sklady[indexSkladu].getKs() < aktualni.getKp()) {
-                    list.remove(indexSkladu);
-                }
-            }
+
             Velbloud velbloudFinalni = null;
             double cas = -1; // nejrychlejsi mozny cas, za ktery to dany velbloud ujde
             for (Integer indexSkladu : list) {
@@ -82,6 +123,9 @@ public class Main {
 
             if (velbloudFinalni.isNaCeste()) aktualni.setTz(velbloudFinalni.getCasNavratu());
 
+            Sklad skladVelbloudaFinalniho = svet.sklady[velbloudFinalni.getIndexSkladu()];
+            skladVelbloudaFinalniho.setAktualniPocetKosu(skladVelbloudaFinalniho.getAktualniPocetKosu() - aktualni.getKp());
+
             if (cas == -1) {
                 System.out.printf("Cas: %d, Oaza: %d, Vsichni vymreli, Harpagon zkrachoval, Konec simulace",
                         (int)(aktualni.getTz()+0.5), aktualni.getOp());
@@ -104,7 +148,6 @@ public class Main {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-
 
             System.out.println();
         }
