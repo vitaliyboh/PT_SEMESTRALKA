@@ -10,7 +10,9 @@ public class Main {
     public static void main(String[] args) {
         r = new Random();
         String fileName = "data/parser.txt";
+        long start = System.nanoTime();
         Svet svet = reader(fileName);
+        System.out.println(((System.nanoTime() - start)/1000000.0) + " ms\n\n\n");
         double casPredchozihoPozadavku = 0;
         // VYRIZOVANI POZADAVKU
         while (!svet.pozadavky.isEmpty()) { // jeden pozadavek bude zpracovan v jednom pruchodu while
@@ -214,20 +216,13 @@ public class Main {
                 if (bloudi == 0 && !line.isBlank()) { // v line je(jsou) validni udaj(e)
                     String str = line.replaceAll("[\\s|\\u00A0]+", " "); // nahradi vsechny whitespaces jednou mezerou
                     String[] split = str.split(" "); // nasoupe hodnoty do pole
-                    int n = 0;
-                    for (String s : split) { // pokud string vypadal takto " 1" v poli je ["",1], toho se zbavime kontrolou zda neni nahodou prvek pole prazdny
-                        if (!s.isBlank()) n++; // vysledne pole bez prazdnych prvku bude mit velikost n
-                    }
-                    String[] udaje = new String[n]; // zde budou uz orezany, neprazdny, osetreny validni udaje
-                    int pom = 0; // prekopirovani validnich, neprazdnych udaju do novyho pole
+
                     for (String s : split) {
                         if (!s.isBlank()) {
-                            udaje[pom] = s;
-                            pom++;
+                            //udaje[pom] = s;
+                            allUdaje1.add(s);
+                            //pom++;
                         }
-                    }
-                    for (String s : udaje) {
-                        allUdaje1.add(s);
                     }
                     //System.out.println(Arrays.toString(udaje));
                 }
@@ -248,8 +243,8 @@ public class Main {
             pozice.setX(Double.parseDouble(allUdaje[j]));
             pozice.setY(Double.parseDouble(allUdaje[j + 1]));
             int ks = Integer.parseInt(allUdaje[j + 2]);
-            int ts = Integer.parseInt(allUdaje[j + 3]);
-            int tn = Integer.parseInt(allUdaje[j + 4]);
+            double ts = Double.parseDouble(allUdaje[j + 3]);
+            double tn = Double.parseDouble(allUdaje[j + 4]);
             sklady[i + 1] = new Sklad(pozice, ks, ts, tn);
         }
 
@@ -284,7 +279,7 @@ public class Main {
             druhyVelblouda[i] = new DruhVelblouda(allUdaje[j], Double.parseDouble(allUdaje[j + 1]),
                     Double.parseDouble(allUdaje[j + 2]), Double.parseDouble(allUdaje[j + 3]),
                     Double.parseDouble(allUdaje[j + 4]), Double.parseDouble(allUdaje[j + 5]),
-                    Double.parseDouble(allUdaje[j + 6]), Double.parseDouble(allUdaje[j + 7]));
+                    Integer.parseInt(allUdaje[j + 6]), Double.parseDouble(allUdaje[j + 7]));
         }
 
         // Pozadavky

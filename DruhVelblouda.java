@@ -5,13 +5,13 @@ public class DruhVelblouda {
     private final double d_min; // minimalni vzdalenost na jedno napiti
     private final double d_max; // maximalni vzdalenost na jedno napiti
     private final double td; // doba na piti
-    private final double kd; // maximalni pocet kosu, ktere velbloud unese
+    private final int kd; // maximalni pocet kosu, ktere velbloud unese
     private final double pd; // pomerne zastoupeni druhu
     public int pocet; // pocet vytvorenych velbloudu daneho druhu
 
     public DruhVelblouda(String jmeno, double v_min, double v_max,
                          double d_min, double d_max, double td,
-                         double kd, double pd) {
+                         int kd, double pd) {
         this.jmeno = jmeno;
         this.v_min = v_min;
         this.v_max = v_max;

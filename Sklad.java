@@ -3,15 +3,15 @@ import java.util.ArrayList;
 public class Sklad{
     private Pozice pozice;
     private int ks; // pocet kosu
-    private int ts; // uplynuta doba na doplneni
-    private int tn; // doba nalozeni/vylozeni kose
+    private double ts; // uplynuta doba na doplneni
+    private double tn; // doba nalozeni/vylozeni kose
     private ArrayList<Velbloud> velboudi; // list velbloudu, ktere maji tento sklad jako domovsky
 
     private int aktualniPocetKosu;
 
     private int nasobek;
 
-    public Sklad(Pozice pozice, int ks, int ts, int tn) {
+    public Sklad(Pozice pozice, int ks, double ts, double tn) {
         this.pozice = pozice;
         this.ks = ks;
         this.ts = ts;
@@ -48,7 +48,7 @@ public class Sklad{
         return aktualniPocetKosu;
     }
 
-    public int getTs() {
+    public double getTs() {
         return ts;
     }
 
@@ -56,7 +56,7 @@ public class Sklad{
         this.ts = ts;
     }
 
-    public int getTn() {
+    public double getTn() {
         return tn;
     }
 
