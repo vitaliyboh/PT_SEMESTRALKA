@@ -190,19 +190,24 @@ public class Main {
                     }
                 }
                 int iBloudPomocna = iBloud;
-                while (iBloudPomocna != -1) { // jedem dokud na radce jsou bloudi
+                while (iBloud != -1) { // jedem dokud na radce jsou bloudi
                     bloudi++;
                     iPoust = line.indexOf("\uD83C\uDFDC");
                     if (iPoust != -1) bloudi--; // pokud jsem nasel poust odstranim jednoho blouda
 
-                    line = line.substring(0, iBloudPomocna) + " " + line.substring(iPoust + 2);
-                    //iBloud = line.indexOf("\uD83D\uDC2A");
+                    iBloudPomocna = iBloud;
 
-                    if (line.indexOf("\uD83C\uDFDC") != -1) { //tenhle if to vyresil :D
-                        iBloudPomocna = line.substring(0, iBloudPomocna).length();
+                    line = line.substring(0, iBloudPomocna) + " " + line.substring(iPoust + 2);
+
+                    int indexPousteNovyString = line.indexOf("\uD83C\uDFDC");
+                    if (indexPousteNovyString != -1) { //tenhle if to vyresil :D
+                        int indexBloudaNovyString = line.indexOf("\uD83D\uDC2A");
+                        if (indexBloudaNovyString < indexPousteNovyString && indexBloudaNovyString != -1) {
+                            iBloud = indexBloudaNovyString;
+                        }
                         continue;
                     }
-                    iBloudPomocna = line.indexOf("\uD83D\uDC2A");
+                    iBloud = line.indexOf("\uD83D\uDC2A");
 
                 }
 
