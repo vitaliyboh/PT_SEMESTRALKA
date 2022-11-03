@@ -189,17 +189,20 @@ public class Main {
                         iPoust = line.indexOf("\uD83C\uDFDC");
                     }
                 }
-                while (iBloud != -1) { // jedem dokud na radce jsou bloudi
+                int iBloudPomocna = iBloud;
+                while (iBloudPomocna != -1) { // jedem dokud na radce jsou bloudi
                     bloudi++;
                     iPoust = line.indexOf("\uD83C\uDFDC");
                     if (iPoust != -1) bloudi--; // pokud jsem nasel poust odstranim jednoho blouda
 
-                    line = line.substring(0, iBloud) + " " + line.substring(iPoust + 2);
-                    iBloud = line.indexOf("\uD83D\uDC2A");
+                    line = line.substring(0, iBloudPomocna) + " " + line.substring(iPoust + 2);
+                    //iBloud = line.indexOf("\uD83D\uDC2A");
 
                     if (line.indexOf("\uD83C\uDFDC") != -1) { //tenhle if to vyresil :D
-                        iBloud = 0;
+                        iBloudPomocna = line.substring(0, iBloudPomocna).length();
+                        continue;
                     }
+                    iBloudPomocna = line.indexOf("\uD83D\uDC2A");
 
                 }
 
