@@ -6,7 +6,6 @@ public class Velbloud {
     private double v; // rychlost
     private double d; // vzdalenost na jedno napiti
     private double td; // doba napiti
-    private double kd; // maximalni pocet kosu, ktere bloud unese
     private  int indexSkladu; // index domovskeho skladu
     private double energie;  // na zacatku ma velbloud energii stejnou jako vzdalenost na jedno napiti,
                              // pak ji prubezne modifikujeme podle vzdalenosti kterou urazil
@@ -23,7 +22,6 @@ public class Velbloud {
         this.v = generateV(); // vygenerujeme rychlost
         this.d = generateD(); // vygenerujeme vzdalenost na jedno napiti
         this.td = druh.getTd();
-        this.kd = druh.getKd();
         pocet++;
         druh.pocet++;
         poradi = pocet;
@@ -81,8 +79,8 @@ public class Velbloud {
         return td;
     }
 
-    public double getKd() {
-        return kd;
+    public int getKd() {
+        return druh.getKd();
     }
 
     public int getIndexSkladu() {

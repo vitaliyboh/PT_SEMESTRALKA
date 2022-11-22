@@ -47,7 +47,7 @@ public class DruhVelblouda {
         return td;
     }
 
-    public double getKd() {
+    public int getKd() {
         return kd;
     }
 
