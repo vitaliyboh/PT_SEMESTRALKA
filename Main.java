@@ -120,7 +120,14 @@ public class Main {
                 }
 
                 if (velbloudFinalni == null || finalniBloudi.contains(velbloudFinalni)) break;
-                pocetKosu -= velbloudFinalni.getKd();
+                if ((pocetKosu - velbloudFinalni.getDruh().getKd()) >= 0){
+                    velbloudFinalni.setKd(velbloudFinalni.getDruh().getKd());
+                    pocetKosu -= velbloudFinalni.getKd();
+                }
+                else {
+                    velbloudFinalni.setKd(pocetKosu);
+                    pocetKosu = 0;
+                }
                 finalniBloudi.add(velbloudFinalni);
             }
 
@@ -146,8 +153,15 @@ public class Main {
                             pomocna++;
                         }
                         else {
+                            if ((pocetKosu - velbloudFinalni.getDruh().getKd()) >= 0){
+                                velbloudFinalni.setKd(velbloudFinalni.getDruh().getKd());
+                                pocetKosu -= velbloudFinalni.getKd();
+                            }
+                            else {
+                                velbloudFinalni.setKd(pocetKosu);
+                                pocetKosu = 0;
+                            }
                             finalniBloudi.add(velbloudFinalni);
-                            pocetKosu -= velbloudFinalni.getKd();
                         }
 
                         break;
@@ -158,7 +172,7 @@ public class Main {
             }
 
             // pokud nejrychlejsi cas, ktery lze ujit je -1 -> pozadavek nelze splnit
-            if (cas == -1) {
+            if (finalniBloudi.isEmpty()) {
                 System.out.printf("Cas: %d, Oaza: %d, Vsichni vymreli, Harpagon zkrachoval, Konec simulace",
                         (int) (aktualni.getTz() + 0.5), aktualni.getOp());
                 System.exit(1);
@@ -170,7 +184,7 @@ public class Main {
 
                 // odecteme pocet kosu ze skladu, ktere bloud nalozil na sebe
                 Sklad skladVelbloudaFinalniho = svet.sklady[velbloud.getIndexSkladu()];
-                skladVelbloudaFinalniho.setAktualniPocetKosu(skladVelbloudaFinalniho.getAktualniPocetKosu() - aktualni.getKp());
+                skladVelbloudaFinalniho.setAktualniPocetKosu(skladVelbloudaFinalniho.getAktualniPocetKosu() - velbloud.getKd());
 
 
                 ArrayList<Integer> finalniCesta = svet.mapa.cesta(velbloud.getIndexSkladu(),
@@ -178,8 +192,8 @@ public class Main {
 
                 System.out.printf("Cas: %d, Velbloud: %d, Sklad: %d, Nalozeno kosu: %d, Odchod v: %d\n",
                         (int) (aktualni.getTz() + 0.5), velbloud.getPoradi(),
-                        velbloud.getIndexSkladu(), aktualni.getKp(),
-                        (int) (aktualni.getTz() + aktualni.getKp() * svet.sklady[velbloud.getIndexSkladu()].getTn() + 0.5));
+                        velbloud.getIndexSkladu(), velbloud.getKd(),
+                        (int) (aktualni.getTz() + velbloud.getKd() * svet.sklady[velbloud.getIndexSkladu()].getTn() + 0.5));
 
                 try {
                     svet.mapa.vypisCestyVelblouda(velbloud, finalniCesta, aktualni);
@@ -190,7 +204,6 @@ public class Main {
             }
             System.out.println();
         }
-        //TODO maximalni zatizeni bloudu, pozadavky kde je zapotrebi vic kosu nez unese jeden velbloud
     }
 
 

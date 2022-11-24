@@ -14,6 +14,8 @@ public class Velbloud {
     private static int pocet = 0;
     private int poradi; //  poradi velblouda
     Random r;
+    private int kd; // aktualni zatizeni velblouda
+
 
 
     public Velbloud(DruhVelblouda druh, int indexSkladu, Random r) {
@@ -80,7 +82,7 @@ public class Velbloud {
     }
 
     public int getKd() {
-        return druh.getKd();
+        return kd;
     }
 
     public int getIndexSkladu() {
@@ -105,5 +107,8 @@ public class Velbloud {
 
     public double getCasNavratu() {
         return casNavratu;
+    }
+    public void setKd(int kd) {
+        this.kd = kd;
     }
 }

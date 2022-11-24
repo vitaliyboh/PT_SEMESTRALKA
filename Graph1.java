@@ -209,7 +209,7 @@ public class Graph1 {
             }
             i = j;
         }
-        cas += 2*pozadavek.getKp()* sklady[velbloud.getIndexSkladu()].getTn();
+        cas += 2*velbloud.getKd()* sklady[velbloud.getIndexSkladu()].getTn();
         velbloud.setEnergie(velbloud.getD());
         return (cas + pozadavek.getTz()) > (pozadavek.getTp() + pozadavek.getTz()) ? -1 : cas;
     }
@@ -218,7 +218,7 @@ public class Graph1 {
                                      Pozadavek pozadavek) throws InterruptedException {
         int i = velbloud.getIndexSkladu();
         velbloud.setNaCeste(true);
-        double casAktualni = pozadavek.getTz() + pozadavek.getKp()*sklady[i].getTn();// zaciname simulovat cestu - zaciname v Tz
+        double casAktualni = pozadavek.getTz() + velbloud.getKd()*sklady[i].getTn();// zaciname simulovat cestu - zaciname v Tz
         // a postupne po vypisech pricitame do tohohle casu cas cesty, dobu napiti atd
 
         for (Integer j: cesta) {
@@ -226,11 +226,11 @@ public class Graph1 {
 
             if (j == pozadavek.getOp()+ sklady.length-1){
                 int casDorazu = (int) (casAktualni + matice_vzdalenosti[i][j]/velbloud.getV() + 0.5);
-                int casVylozeni = (int) (casDorazu + sklady[velbloud.getIndexSkladu()].getTn() * pozadavek.getKp() + 0.5);
+                int casVylozeni = (int) (casDorazu + sklady[velbloud.getIndexSkladu()].getTn() * velbloud.getKd() + 0.5);
                 int casovaRezerva = (int) (pozadavek.getTp() - casVylozeni + 0.5);
                 Thread.sleep(1000);
                 System.out.printf("Cas: %d, Velbloud: %d, Oaza: %d, Vylozeno kosu: %d, Vylozeno v: %d, Casova rezerva: %d\n",
-                        casDorazu, velbloud.getPoradi(), pozadavek.getOp(), pozadavek.getKp(), casVylozeni, casovaRezerva);
+                        casDorazu, velbloud.getPoradi(), pozadavek.getOp(), velbloud.getKd(), casVylozeni, casovaRezerva);
                 cestaVelbloudaZpet(velbloud,cesta, pozadavek, casVylozeni);
                 return;
             }
