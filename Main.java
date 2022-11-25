@@ -6,14 +6,19 @@ import java.util.List;
 
 public class Main {
     static Random r;
+    static boolean sonic;
 
     public static void main(String[] args) {
         r = new Random();
-        String fileName = "data/tutorial.txt";
+        String fileName = "data/test.txt";
         long start = System.nanoTime();
         Svet svet = reader(fileName);
         System.out.println(((System.nanoTime() - start)/1000000.0) + " ms\n\n");
         double casPredchozihoPozadavku = 0;
+//        System.out.println("Nacteno, chcete spustit sonic rezim? {true,false} :)");
+//        Scanner sc = new Scanner(System.in);
+//        sonic = sc.nextBoolean();
+        sonic = true;
 
         /////////////////////////// VYRIZOVANI POZADAVKU  /////////////////////////////
 
@@ -58,6 +63,7 @@ public class Main {
 //                    if (aktualni.getKp() > svet.sklady[indexSkladu].getKs()) {
 //                        continue;
 //                    }
+                    if (svet.sklady[indexSkladu].getKs() == 0) continue; // nema cenu obnovovat kose u skladu s poctem kosu 0
                     int nasobek = (int) (aktualni.getTz() / svet.sklady[indexSkladu].getTs() + 1);
                     if (nasobek == svet.sklady[indexSkladu].getNasobek()) {
                         nasobek++;
@@ -73,8 +79,9 @@ public class Main {
                 }
                 // pokud i presto je seznam prazdny, nenalezli jsme vhodny sklad
                 if (list.isEmpty()) {
-                    System.out.printf("Cas: %d, Oaza: %d, Vsichni vymreli, Harpagon zkrachoval, Konec simulace",
+                    System.out.printf("Cas: %d, Oaza: %d, Vsichni vymreli, Harpagon zkrachoval, Konec simulace\n",
                             (int) (aktualni.getTz() + 0.5), aktualni.getOp());
+                    System.out.println("Duvod: Nenasel se vhodny sklad");
                     System.exit(1);
                 }
             }
@@ -173,8 +180,9 @@ public class Main {
 
             // pokud nejrychlejsi cas, ktery lze ujit je -1 -> pozadavek nelze splnit
             if (finalniBloudi.isEmpty()) {
-                System.out.printf("Cas: %d, Oaza: %d, Vsichni vymreli, Harpagon zkrachoval, Konec simulace",
+                System.out.printf("Cas: %d, Oaza: %d, Vsichni vymreli, Harpagon zkrachoval, Konec simulace\n",
                         (int) (aktualni.getTz() + 0.5), aktualni.getOp());
+                System.out.println("Duvod: Nenasel se vhodny velbloud");
                 System.exit(1);
             }
 

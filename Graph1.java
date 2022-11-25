@@ -228,7 +228,7 @@ public class Graph1 {
                 int casDorazu = (int) (casAktualni + matice_vzdalenosti[i][j]/velbloud.getV() + 0.5);
                 int casVylozeni = (int) (casDorazu + sklady[velbloud.getIndexSkladu()].getTn() * velbloud.getKd() + 0.5);
                 int casovaRezerva = (int) (pozadavek.getTp() - casVylozeni + 0.5);
-                Thread.sleep(1000);
+                if (!Main.sonic) Thread.sleep(1000);
                 System.out.printf("Cas: %d, Velbloud: %d, Oaza: %d, Vylozeno kosu: %d, Vylozeno v: %d, Casova rezerva: %d\n",
                         casDorazu, velbloud.getPoradi(), pozadavek.getOp(), velbloud.getKd(), casVylozeni, casovaRezerva);
                 cestaVelbloudaZpet(velbloud,cesta, pozadavek, casVylozeni);
@@ -240,7 +240,7 @@ public class Graph1 {
             else misto = "Sklad";
             casAktualni += matice_vzdalenosti[i][j]/velbloud.getV();
 
-            Thread.sleep(1000);
+            if (!Main.sonic)Thread.sleep(1000);
             int indexOazy = j;
             if( misto.equals("Oaza")) indexOazy = j - sklady.length +1;
             if (velbloud.getEnergie() <= 0) { // bloud se jde napit na danem miste
@@ -265,7 +265,7 @@ public class Graph1 {
         for (int j = cesta.size(); j >= 0; j--) {
             if (j == velbloud.getIndexSkladu()) {
                 int cas = (int) (casAktualni + matice_vzdalenosti[i][j]/velbloud.getV() + 0.5);
-                Thread.sleep(1000);
+                if (!Main.sonic)Thread.sleep(1000);
                 System.out.printf("Cas: %d, Velbloud: %d, Navrat do skladu: %d\n", cas, velbloud.getPoradi(), velbloud.getIndexSkladu());
                 velbloud.setCasNavratu(cas + velbloud.getTd());
                 velbloud.setEnergie(velbloud.getD());
@@ -277,7 +277,7 @@ public class Graph1 {
             else misto = "Sklad";
             casAktualni += matice_vzdalenosti[i][j]/velbloud.getV();
 
-            Thread.sleep(1000);
+            if (!Main.sonic)Thread.sleep(1000);
             int indexOazy = j;
             if( misto.equals("Oaza")) indexOazy = j - sklady.length +1;
             if (velbloud.getEnergie() <= 0) { // bloud se jde napit na danem miste
