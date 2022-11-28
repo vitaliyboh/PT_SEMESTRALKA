@@ -10,6 +10,11 @@ public class Graph1 {
 
     public Graph1(int pocetVrcholu, Sklad[] sklady, Oaza[] oazy) {
         this.matice = new double[pocetVrcholu][pocetVrcholu];
+        for (int i = 0; i < pocetVrcholu; i++) {
+            for (int j = 0; j < pocetVrcholu; j++) {
+                matice[i][j] = -1;
+            }
+        }
         this.sklady = sklady;
         this.oazy = oazy;
     }
@@ -74,7 +79,7 @@ public class Graph1 {
         for (i = 0; i < nV; i++) {
             for (j = 0; j < nV; j++) {
                 if (i!=j){
-                    if (matice[i][j] == 0){
+                    if (matice[i][j] == -1){
                         matice_vzdalenosti[i][j] = Double.POSITIVE_INFINITY;
                     }
                     else matice_vzdalenosti[i][j] = matice[i][j];
@@ -104,24 +109,25 @@ public class Graph1 {
         }
     }
 
-    public ArrayList<Integer> cesta(int a, int b) {
-       // b += sklady.length-1;
-        ArrayList<Integer> cesta = new ArrayList<>();
-        Stack<Integer> stack = new Stack<>();
-        stack.add(b);
+    public void vratIndex(int a, int b, Stack<Integer> stack) {
+        //ArrayList<Integer> result = new ArrayList<>();
         if (naslednici[a][b] == a) {
-            cesta.add(stack.pop());
-            return cesta;
+            stack.add(b);
+            return;
         }
         int c = (int)naslednici[a][b];
-        //stack.add(c);
-        while (naslednici[c][a] != c) {    /////////
-           //cesta.add(c);
-            stack.add(c);
-            c = (int)naslednici[c][a];      ////////
-        }
-        //cesta.add(c);
-        stack.add(c);
+
+        vratIndex(c,b,stack);
+        vratIndex(a, c, stack);
+    }
+
+    public ArrayList<Integer> cesta(int a, int b) {
+        // b += sklady.length-1;
+        ArrayList<Integer> cesta = new ArrayList<>();
+        Stack<Integer> stack = new Stack<>();
+
+        vratIndex(a, b, stack);
+
         while (!stack.isEmpty()) {
             cesta.add(stack.pop());
         }
@@ -267,9 +273,9 @@ public class Graph1 {
         int i = pozadavek.getOp()+ sklady.length - 1;
 
         for (int j = cesta.size()-1; j >= 0; j--) {
-            int index = cesta.get(j);
-            if (index == velbloud.getIndexSkladu()) {
-                int cas = (int) (casAktualni + matice_vzdalenosti[i][index]/velbloud.getV() + 0.5);
+            int indexDo = cesta.get(j);
+            if (indexDo == velbloud.getIndexSkladu()) {
+                int cas = (int) (casAktualni + matice_vzdalenosti[i][indexDo]/velbloud.getV() + 0.5);
                 if (!Main.sonic)Thread.sleep(1000);
                 System.out.printf("Cas: %d, Velbloud: %d, Navrat do skladu: %d\n", cas, velbloud.getPoradi(), velbloud.getIndexSkladu());
                 velbloud.setCasNavratu(cas + velbloud.getTd());
@@ -278,13 +284,13 @@ public class Graph1 {
             }
             String misto = "";
 
-            if (index > sklady.length - 1) misto = "Oaza";
+            if (indexDo > sklady.length - 1) misto = "Oaza";
             else misto = "Sklad";
-            casAktualni += matice_vzdalenosti[i][index]/velbloud.getV();
+            casAktualni += matice_vzdalenosti[i][indexDo]/velbloud.getV();
 
             if (!Main.sonic)Thread.sleep(1000);
-            int indexOazy = index;
-            if( misto.equals("Oaza")) indexOazy = index - sklady.length +1;
+            int indexOazy = indexDo;
+            if( misto.equals("Oaza")) indexOazy = indexDo - sklady.length +1;
             if (velbloud.getEnergie() <= 0) { // bloud se jde napit na danem miste
                 System.out.printf("Cas: %d, Velbloud: %d, %s: %d, Ziznivy %s, Pokracovani mozne v: %d\n",
                         (int)(casAktualni +0.5), velbloud.getPoradi(),
@@ -296,7 +302,7 @@ public class Graph1 {
                 System.out.printf("Cas: %d, Velbloud: %d, %s: %d, Kuk na velblouda\n",
                         (int)(casAktualni+0.5), velbloud.getPoradi(), misto, indexOazy);
             }
-            i = index;
+            i = indexDo;
 
         }
     }
