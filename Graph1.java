@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.PriorityQueue;
 import java.util.Stack;
 
 public class Graph1 {
@@ -9,6 +10,7 @@ public class Graph1 {
     double[][] matice_vzdalenosti;
 
     public Graph1(int pocetVrcholu, Sklad[] sklady, Oaza[] oazy) {
+        
         this.matice = new double[pocetVrcholu][pocetVrcholu];
         for (int i = 0; i < pocetVrcholu; i++) {
             for (int j = 0; j < pocetVrcholu; j++) {
@@ -56,8 +58,7 @@ public class Graph1 {
 
         setMaticiVzdalenosti(nV);
         setMaticiNasledniku(nV);
-
-
+        
         // Kontroluju zda neni cesta lepsi pres vrchol k
         for (k = 0; k < nV; k++) {
             for (i = 0; i < nV; i++) {
