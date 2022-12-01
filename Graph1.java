@@ -125,6 +125,10 @@ public class Graph1 {
     public ArrayList<Integer> cesta(int a, int b) {
         // b += sklady.length-1;
         ArrayList<Integer> cesta = new ArrayList<>();
+        if (a==b) {
+            cesta.add(a);
+            return cesta;
+        }
         Stack<Integer> stack = new Stack<>();
 
         vratIndex(a, b, stack);

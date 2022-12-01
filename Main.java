@@ -12,7 +12,7 @@ public class Main {
 
 
         r = new Random();
-        String fileName = "data/tutorial.txt";
+        String fileName = "data/centre_medium.txt";
         long start = System.nanoTime();
         Svet svet = reader(fileName);
         System.out.println(((System.nanoTime() - start)/1000000.0) + " ms\n\n");
@@ -307,26 +307,40 @@ public class Main {
         // Tvorba grafu
         int indexCest = (pocetOaz * 2 + indexOaza) + 1;
         int pocetCest = Integer.parseInt(allUdaje[indexCest]);
-        Graph1 graph = new Graph1(pocetOaz + pocetSkladu + 1, sklady, oazy);
+        //Graph1 graph = new Graph1(pocetOaz + pocetSkladu + 1, sklady, oazy);
         Graph graph2 = new Graph(pocetOaz + pocetSkladu + 1, sklady, oazy);
 
         for (int i = 0; i < pocetCest; i++) {
             int j = indexCest + 1 + 2 * i;
             graph2.addEdge(Integer.parseInt(allUdaje[j]), Integer.parseInt(allUdaje[j + 1]));
-            graph.addEdge(Integer.parseInt(allUdaje[j]), Integer.parseInt(allUdaje[j + 1]));
+            //graph.addEdge(Integer.parseInt(allUdaje[j]), Integer.parseInt(allUdaje[j + 1]));
         }
+       // long count = 0;
+       // long start = System.nanoTime();
+       // for (int i = 1; i < pocetOaz + pocetSkladu +1; i++) {
+            //graph2.nejblizsiVrcholy2(5);
+           // System.out.println(graph2.edges[i].poleVzdalenoti[i+1] + " Index" + i);
+            //count++;
+       // }
 
-        graph.floydWarshall();
+        //System.out.println(250000*((System.nanoTime() - start)/1000000000.0)/60 + "s");
 
-        for (int i = 1; i < pocetOaz + pocetSkladu + 1 ; i++) {
-            for (int j = 1; j < pocetOaz + pocetSkladu + 1; j++) {
-                System.out.println("Vzdalenost z " + i + " do " + j);
-                System.out.println("floyd-warshall: " +graph.matice_vzdalenosti[i][j] + " dijkstra: " + graph2.Dijkstra(i,j));
-
-            }
-        }
-
-        System.exit(1);
+        //graph.floydWarshall();
+//        long count = 0;
+//        for (int i = 1; i < pocetOaz + pocetSkladu + 1 ; i++) {
+//            for (int j = 1; j < pocetOaz + pocetSkladu + 1; j++) {
+//                //System.out.println("Vzdalenost z " + i + " do " + j);
+//                //System.out.println("floyd-warshall: " +graph.matice_vzdalenosti[i][j] + " dijkstra: " + graph2.Dijkstra(i,j));
+//                //System.out.println("Cesta z " + i + " do " + j);
+//                //System.out.println("floyd-warshall: "/* +graph.cesta(i,j)*/ + "\n dijkstra: " + graph2.cesta(i,j) +" Count:" + count);
+//                count++;
+//                //System.out.println();
+//
+//            }
+//        }
+//        System.out.println(count);
+//
+            //System.exit(1);
 
 
         // Velbloudy (druhy)
@@ -351,7 +365,8 @@ public class Main {
                     Integer.parseInt(allUdaje[j + 2]), Double.parseDouble(allUdaje[j + 3])));
         }
 
-        return new Svet(oazy, sklady, druhyVelblouda, pozadavky, graph);
+        return new Svet(oazy, sklady, druhyVelblouda, pozadavky, graph2);
+
     }
 
 }
