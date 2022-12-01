@@ -1,7 +1,9 @@
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.Stack;
-
+/*
+    Trida reprezentuje graf reprezentovany matici sousednosti
+ */
 public class Graph1 {
     double[][] matice; // matice sousednosti
     Sklad[] sklady;

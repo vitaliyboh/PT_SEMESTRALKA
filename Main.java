@@ -12,14 +12,11 @@ public class Main {
 
 
         r = new Random();
-        String fileName = "data/centre_medium.txt";
+        String fileName = "data/centre_large.txt";
         long start = System.nanoTime();
         Svet svet = reader(fileName);
         System.out.println(((System.nanoTime() - start)/1000000.0) + " ms\n\n");
         double casPredchozihoPozadavku = 0;
-//        System.out.println("Nacteno, chcete spustit sonic rezim? {true,false} :)");
-//        Scanner sc = new Scanner(System.in);
-//        sonic = sc.nextBoolean();
         sonic = true;
 
         /////////////////////////// VYRIZOVANI POZADAVKU  /////////////////////////////
@@ -98,18 +95,26 @@ public class Main {
                 }
             }
 
+
+
             Velbloud velbloudFinalni = null; // finalni bloud, ktery vyrazi na cestu
             ArrayList<Velbloud> finalniBloudi = new ArrayList<>();
             double cas = -1; // nejrychlejsi mozny cas, za ktery to dany velbloud ujde
             int pocetKosu = aktualni.getKp();
+
+
             // projizdim sklady a jejich (jiz existujici)velbloudy
+            // TENTO WHILE ZABIRAL POKAZDY 12 SEC, upravil jsem ho
             while (pocetKosu > 0) {
 
                 for (Integer indexSkladu : list) {
 
+                    // tuhle podminku posunul na uplne nahoru a pridal pokud je list empty tak continue
+                    // aby to skiplo ty sklady kde nejsou zadny bloudi
+                    if (svet.sklady[indexSkladu].getVelboudi() == null
+                            || svet.sklady[indexSkladu].getVelboudi().isEmpty()) continue;
                     ArrayList<Integer> cesta = svet.mapa.cesta(indexSkladu, aktualni.getOp() + svet.sklady.length - 1);
                     double pomocna = Double.POSITIVE_INFINITY;
-                    if (svet.sklady[indexSkladu].getVelboudi() == null) continue;
 
                     for (Velbloud velbloud : svet.sklady[indexSkladu].getVelboudi()) {
 
@@ -139,6 +144,8 @@ public class Main {
                 }
                 finalniBloudi.add(velbloudFinalni);
             }
+
+            // tento while zabiral 15 sec v centre_medium
 
 
             int pomocna = 0; // kolik zbytecnych bloudu(pro tento pozadavek) se vygenerovalo

@@ -2,6 +2,9 @@ import org.w3c.dom.Node;
 
 import java.util.*;
 
+/*
+    Trida reprezentuje graf reprezentovany seznamem sousedu
+ */
 public class Graph {
     Link[] edges;
     Sklad[] sklady;
@@ -82,6 +85,7 @@ public class Graph {
     }
 
     ArrayList<Integer> cesta(int s, int d) {
+        long start = System.nanoTime();
         int[] arr = new int[edges.length];
         ArrayList<Integer> cesta = new ArrayList<>();
         if (s == d) {
@@ -143,12 +147,15 @@ public class Graph {
         while (!stack.isEmpty()) {
             cesta.add(stack.pop());
         }
-
+        double casmetody = (System.nanoTime()-start)/1000000000.0;
+        if (casmetody > 1) System.out.println("metoda <cesta> trvala: " + casmetody+ " s");
         return cesta;
     }
 
 
     ArrayList<Integer> nejblizsiVrcholy(int s) {
+        // v centre_medium pokazdy zabere 12 sec, v centre_large se ani jednou nedokoncila
+
         ArrayList<Integer> vrcholy = new ArrayList<>();
         int[] mark = new int[edges.length]; // pocet vrcholu!
         mark[s] = 1;
@@ -191,9 +198,11 @@ public class Graph {
             }
             mark[v] = 2;
 
+
         }
 
         //edges[s].poleVzdalenoti = result;
+
 
         double pomocna1 = Double.MAX_VALUE;
         for (int i = 1; i < result.length; i++) {
@@ -204,21 +213,37 @@ public class Graph {
             }
         }
 
+
         int n = vrcholy.size();
         int temp = 0;
-        for(int i=0; i < n; i++) {
-            for (int j = 1; j < (n - i); j++) {
-                if (result[j - 1] > result[j]) {
-                    //swap elements
-                    temp = vrcholy.get(j - 1);
-                    vrcholy.add(j - 1, vrcholy.get(j));
-                    vrcholy.remove(j);
-                    vrcholy.add(j, temp);
-                    vrcholy.remove(j+1);
-                }
+        long start = System.nanoTime();
 
+        // toto je stastnejsi metoda razeni, konkretne z 12s trvani jsme na 0.02s
+        vrcholy.sort(new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return (int)(result[o1] - result[o2]);
             }
-        }
+        });
+//        for(int i=0; i < n; i++) {
+//            for (int j = 1; j < (n - i); j++) {
+//                if (result[j - 1] > result[j]) {
+//                    //swap elements
+//                    temp = vrcholy.get(j - 1);
+//                    vrcholy.add(j - 1, vrcholy.get(j));
+//                    vrcholy.remove(j);
+//                    vrcholy.add(j, temp);
+//                    vrcholy.remove(j+1);
+//                }
+//
+//            }
+//        }
+
+//        double casmetody = (System.nanoTime()-start)/1000000000.0;
+//        System.out.println("metoda <nejblizsiVrcholy> trvala: " + casmetody + " s");
+
+
+
         
         return vrcholy;
     }
