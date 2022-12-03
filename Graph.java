@@ -1,9 +1,10 @@
-import org.w3c.dom.Node;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.PriorityQueue;
+import java.util.Stack;
 
 /*
-    Trida reprezentuje graf reprezentovany seznamem sousedu
+    Trida predstavuje graf reprezentovany seznamem sousedu
  */
 public class Graph {
     Link[] edges;
@@ -37,6 +38,7 @@ public class Graph {
         edges[i] = link;
     }
 
+    /*
     double Dijkstra(int s, int d) {
         int[] mark = new int[edges.length]; // pocet vrcholu!
         mark[s] = 1;
@@ -45,7 +47,7 @@ public class Graph {
             result[i] = Double.POSITIVE_INFINITY;
         result[s] = 0;
 
-        PriorityQueue<PQNode> q = new PriorityQueue<>(new Comparator<PQNode>() {
+        PriorityQueue<PQNode> q = new PriorityQueue<>(new Comparator<>() {
             @Override
             public int compare(PQNode o1, PQNode o2) {
                 return Double.compare(o1.vzdalenost,o2.vzdalenost);
@@ -83,9 +85,9 @@ public class Graph {
         }
         return result[d];
     }
+    */
 
     ArrayList<Integer> cesta(int s, int d) {
-        long start = System.nanoTime();
         int[] arr = new int[edges.length];
         ArrayList<Integer> cesta = new ArrayList<>();
         if (s == d) {
@@ -96,18 +98,20 @@ public class Graph {
         int[] mark = new int[edges.length]; // pocet vrcholu!
         mark[s] = 1;
         double[] result = new double[edges.length];
-        for (int i = 0; i < result.length; i++)
-            result[i] = Double.POSITIVE_INFINITY;
+
+        for (int i = 0; i < result.length; i++) result[i] = Double.POSITIVE_INFINITY;
+
         result[s] = 0;
 
-        PriorityQueue<PQNode> q = new PriorityQueue<>(new Comparator<PQNode>() {
+
+        PriorityQueue<PQNode> q = new PriorityQueue<>(new Comparator<>() {
             @Override
             public int compare(PQNode o1, PQNode o2) {
-                return Double.compare(o1.vzdalenost,o2.vzdalenost);
+                return Double.compare(o1.vzdalenost, o2.vzdalenost);
             }
         });
 
-        q.add(new PQNode(s,0));
+        q.add(new PQNode(s, 0));
 
         while(q.peek() != null && q.peek().vzdalenost>=0) {
             int v = q.peek().index;
@@ -147,24 +151,23 @@ public class Graph {
         while (!stack.isEmpty()) {
             cesta.add(stack.pop());
         }
-        double casmetody = (System.nanoTime()-start)/1000000000.0;
-        if (casmetody > 1) System.out.println("metoda <cesta> trvala: " + casmetody+ " s");
+
         return cesta;
     }
 
 
     ArrayList<Integer> nejblizsiVrcholy(int s) {
-        // v centre_medium pokazdy zabere 12 sec, v centre_large se ani jednou nedokoncila
+
 
         ArrayList<Integer> vrcholy = new ArrayList<>();
-        int[] mark = new int[edges.length]; // pocet vrcholu!
+        int[] mark = new int[edges.length]; // pocet vrcholu
         mark[s] = 1;
         double[] result = new double[edges.length];
         for (int i = 0; i < result.length; i++)
             result[i] = Double.POSITIVE_INFINITY;
         result[s] = 0;
 
-        PriorityQueue<PQNode> q = new PriorityQueue<>(new Comparator<PQNode>() {
+        PriorityQueue<PQNode> q = new PriorityQueue<>(new Comparator<>() {
             @Override
             public int compare(PQNode o1, PQNode o2) {
                 return Double.compare(o1.vzdalenost,o2.vzdalenost);
@@ -213,34 +216,31 @@ public class Graph {
             }
         }
 
-
-        int n = vrcholy.size();
-        int temp = 0;
-        long start = System.nanoTime();
-
-        // toto je stastnejsi metoda razeni, konkretne z 12s trvani jsme na 0.02s
-        vrcholy.sort(new Comparator<Integer>() {
+        vrcholy.sort(new Comparator<>() {
             @Override
             public int compare(Integer o1, Integer o2) {
                 return (int)(result[o1] - result[o2]);
             }
         });
-//        for(int i=0; i < n; i++) {
-//            for (int j = 1; j < (n - i); j++) {
-//                if (result[j - 1] > result[j]) {
-//                    //swap elements
-//                    temp = vrcholy.get(j - 1);
-//                    vrcholy.add(j - 1, vrcholy.get(j));
-//                    vrcholy.remove(j);
-//                    vrcholy.add(j, temp);
-//                    vrcholy.remove(j+1);
-//                }
-//
-//            }
-//        }
 
-//        double casmetody = (System.nanoTime()-start)/1000000000.0;
-//        System.out.println("metoda <nejblizsiVrcholy> trvala: " + casmetody + " s");
+        /* Puvodni bubblesort rucne napsany
+        int n = vrcholy.size();
+        int temp = 0;
+        for(int i=0; i < n; i++) {
+            for (int j = 1; j < (n - i); j++) {
+                if (result[j - 1] > result[j]) {
+                    //swap elements
+                    temp = vrcholy.get(j - 1);
+                    vrcholy.add(j - 1, vrcholy.get(j));
+                    vrcholy.remove(j);
+                    vrcholy.add(j, temp);
+                    vrcholy.remove(j+1);
+                }
+
+            }
+        }
+        */
+
 
 
 
@@ -248,55 +248,7 @@ public class Graph {
         return vrcholy;
     }
 
-    void nejblizsiVrcholy2(int s) {
-        //ArrayList<Integer> vrcholy = new ArrayList<>();
-        int[] mark = new int[edges.length]; // pocet vrcholu!
-        mark[s] = 1;
-        double[] result = new double[edges.length];
-        for (int i = 0; i < result.length; i++)
-            result[i] = Double.POSITIVE_INFINITY;
-        result[s] = 0;
 
-        PriorityQueue<PQNode> q = new PriorityQueue<>(new Comparator<PQNode>() {
-            @Override
-            public int compare(PQNode o1, PQNode o2) {
-                return Double.compare(o1.vzdalenost,o2.vzdalenost);
-            }
-        });
-
-        q.add(new PQNode(s,0));
-
-        while(q.peek() != null && q.peek().vzdalenost>=0) {
-            int v = q.peek().index;
-            q.remove();
-            Link nbLink = edges[v];
-            while(nbLink!=null) {
-                int n = nbLink.neighbour;
-                if (mark[n] != 2) {
-                    double newDistance = result[v] + nbLink.edgeValue;
-                    PQNode node = new PQNode(n, newDistance);
-                    if (mark[n] == 0) {
-                        mark[n] = 1;
-                        result[n] = newDistance;
-                        q.add(node);
-                    }
-                    else if (newDistance<result[n]) {
-                        result[n] = newDistance;
-                        q.remove(node);
-                        node.vzdalenost = newDistance;
-                        q.add(node);
-                    }
-                }
-                nbLink = nbLink.next;
-            }
-            mark[v] = 2;
-
-        }
-
-        edges[s].poleVzdalenoti = result;
-
-        return;
-    }
 
     public double cestaVelblouda (Velbloud velbloud, ArrayList<Integer> cesta, Pozadavek pozadavek) {
         int i = velbloud.getIndexSkladu();

@@ -58,4 +58,9 @@ public class DruhVelblouda {
     public int getPocet() {
         return pocet;
     }
+
+    @Override
+    public String toString() {
+        return "Druh velblouda: " + jmeno + ", pocet = " + pocet + ", pomer: " + pd;
+    }
 }
