@@ -111,4 +111,8 @@ public class Velbloud {
     public void setKd(int kd) {
         this.kd = kd;
     }
+    public void makeSuper(){
+        this.v = druh.getV_max();
+        this.d = druh.getD_max();
+    }
 }

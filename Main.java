@@ -11,7 +11,7 @@ public class Main {
 
 
         r = new Random();
-        String fileName = "data/dense_huge.txt";
+        String fileName = "data/centre_large.txt";
         long start = System.nanoTime();
         Svet svet = reader(fileName);
         System.out.println(((System.nanoTime() - start) / 1000000.0) + " ms\n\n");
@@ -85,13 +85,15 @@ public class Main {
             // tento while zabiral 15 sec v centre_medium
 
 
-            int pomocna = 0; // kolik zbytecnych bloudu(pro tento pozadavek) se vygenerovalo
+            
 
-
-            generovaniBloudu(svet, aktualni, list, finalniBloudi, pocetKosu, pomocna);
+            int err = 0;
+            if (pocetKosu > 0) {
+                err = generovaniBloudu(svet, aktualni, list, finalniBloudi, pocetKosu);
+            }
 
             // pokud nejrychlejsi cas, ktery lze ujit je -1 -> pozadavek nelze splnit
-            if (finalniBloudi.isEmpty()) {
+            if (err == 1 || finalniBloudi.isEmpty()) {
                 System.out.printf("Cas: %d, Oaza: %d, Vsichni vymreli, Harpagon zkrachoval, Konec simulace\n",
                         (int) (aktualni.getTz() + 0.5), aktualni.getOp());
                 System.out.println("Duvod: Nenasel se vhodny velbloud");
@@ -133,11 +135,35 @@ public class Main {
         }
     }
 
-    private static void generovaniBloudu(Svet svet, Pozadavek aktualni, ArrayList<Integer> list, ArrayList<Velbloud> finalniBloudi, int pocetKosu, int pomocna) {
+    private static int generovaniBloudu(Svet svet, Pozadavek aktualni, ArrayList<Integer> list, ArrayList<Velbloud> finalniBloudi, int pocetKosu) {
         Velbloud velbloudFinalni;
         double cas;
+        int pomocna = 0;
+
+
+        // kontrola, zda vubec bloud s maximalnimi atributy zvladne ujit cestu
+        boolean zvladne = false;
+        for (DruhVelblouda druh : svet.druhyVelbloudu) {
+
+            Velbloud superBloud = new Velbloud(druh, list.get(0), r);
+            superBloud.makeSuper();
+
+            cas = svet.mapa.cestaVelblouda(superBloud, svet.mapa.cesta(superBloud.getIndexSkladu(),
+                    aktualni.getOp() + svet.sklady.length - 1), aktualni);
+            if (cas != -1) {
+                zvladne = true;
+                break;
+            }
+        }
+
+        if (!zvladne) {
+            return 1;
+        }; // pokud ani super bloud nezvladne cestu - nema cenu generovat
+            
+        
+        
         while (pocetKosu > 0) {
-            if (pomocna > 1000) break; // pokud vygenerujem 1000 zbytecnych bloudu -> konec
+//            if (pomocna > 1000) break; // pokud vygenerujem 1000 zbytecnych bloudu -> konec
             int celkovyPocetBloudu = Velbloud.getPocet();
             // generovani bloudu
 
@@ -148,9 +174,7 @@ public class Main {
 
                     cas = svet.mapa.cestaVelblouda(velbloudFinalni, svet.mapa.cesta(velbloudFinalni.getIndexSkladu(),
                             aktualni.getOp() + svet.sklady.length - 1), aktualni);
-                    if (cas == -1) {
-                        pomocna++;
-                    } else {
+                    if (cas != -1) {
                         if ((pocetKosu - velbloudFinalni.getDruh().getKd()) >= 0) {
                             velbloudFinalni.setKd(velbloudFinalni.getDruh().getKd());
                             pocetKosu -= velbloudFinalni.getKd();
@@ -167,6 +191,7 @@ public class Main {
                 // pokud je vetsi => jedem dal
             }
         }
+        return 0;
     }
 
     private static int kontrolaExisBloudu(Svet svet, Pozadavek aktualni, ArrayList<Integer> list,
