@@ -11,7 +11,7 @@ public class Main {
 
 
         r = new Random();
-        String fileName = "data/centre_large.txt";
+        String fileName = "data/dense_huge.txt";
         long start = System.nanoTime();
         Svet svet = reader(fileName);
         System.out.println(((System.nanoTime() - start) / 1000000.0) + " ms\n\n");
@@ -295,13 +295,21 @@ public class Main {
 
                 int iBloud = line.indexOf("\uD83D\uDC2A");
                 int iPoust = line.indexOf("\uD83C\uDFDC");
-                if (bloudi != 0 && iBloud == -1) { // bloudi>0 => jsem v blokovym komentari a zaroven indexBlouda neni na aktualni radce
-                    while (iPoust != -1) { // jedem pres indexy pouste
+                if (bloudi != 0 ) {// bloudi>0 => jsem v blokovym komentari a zaroven indexBlouda neni na aktualni radce
+                    if (iPoust == -1 && iBloud == -1) continue;
+                    while (iPoust != -1 && bloudi != 0) { // jedem pres indexy pouste
                         bloudi--;
+                        bloudi += (int)line.substring(0, iPoust).chars().filter(ch -> ch == '\uD83D').count();
                         line = line.substring(iPoust + 2);
                         iPoust = line.indexOf("\uD83C\uDFDC");
                     }
                 }
+
+                iBloud = line.indexOf("\uD83D\uDC2A");
+
+                if (bloudi!= 0  && iBloud == -1) continue;
+
+
                 int iBloudPomocna = iBloud;
                 while (iBloud != -1) { // jedem dokud na radce jsou bloudi
                     bloudi++;
@@ -309,8 +317,20 @@ public class Main {
                     if (iPoust != -1) bloudi--; // pokud jsem nasel poust odstranim jednoho blouda
 
                     iBloudPomocna = iBloud;
+                    if (iBloudPomocna+2 < iPoust) {
+                        String dummy = line.substring(iBloudPomocna + 2, iPoust);
+                        bloudi += (int) dummy.chars().filter(ch -> ch == '\uD83D').count();
+                    }
+                    else if(iPoust == -1){
+                        String dummy = line.substring(iBloudPomocna + 2);
+                        bloudi += (int) dummy.chars().filter(ch -> ch == '\uD83D').count();
+                    }
 
-                    line = line.substring(0, iBloudPomocna) + " " + line.substring(iPoust + 2);
+                    int countPoust = (int) line.chars().filter(ch -> ch == '\uD83C').count();
+                    int res = bloudi-countPoust;
+
+                    if (res > 0)  line = line.substring(0, iBloudPomocna);
+                    else line = line.substring(0, iBloudPomocna) + " " + line.substring(iPoust + 2);
 
                     int indexPousteNovyString = line.indexOf("\uD83C\uDFDC");
                     if (indexPousteNovyString != -1) { //tenhle if to vyresil :D
@@ -318,13 +338,14 @@ public class Main {
                         if (indexBloudaNovyString < indexPousteNovyString && indexBloudaNovyString != -1) {
                             iBloud = indexBloudaNovyString;
                         }
+                        else bloudi--;
                         continue;
                     }
                     iBloud = line.indexOf("\uD83D\uDC2A");
 
                 }
 
-                if (bloudi == 0 && !line.isBlank()) { // v line je(jsou) validni udaj(e)
+                if (!line.isBlank()) { // v line je(jsou) validni udaj(e)
                     String str = line.replaceAll("[\\s|\\u00A0]+", " "); // nahradi vsechny whitespaces jednou mezerou
                     String[] split = str.split(" "); // nasoupe hodnoty do pole
 

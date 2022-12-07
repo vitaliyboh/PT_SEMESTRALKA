@@ -124,8 +124,9 @@ public class Graph {
                     PQNode node = new PQNode(n, newDistance);
                     if (mark[n] == 0) {
                         mark[n] = 1;
-                        arr[n] = v;
+
                         if (nbLink.edgeValue <= velbloud.getD()) {
+                            arr[n] = v;
                             result[n] = newDistance;
                             q.add(node);
                         }
