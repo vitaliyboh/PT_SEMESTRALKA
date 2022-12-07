@@ -11,7 +11,7 @@ public class Main {
 
 
         r = new Random();
-        String fileName = "data/centre_medium.txt";
+        String fileName = "data/centre_large.txt";
         long start = System.nanoTime();
         Svet svet = reader(fileName);
         System.out.println(((System.nanoTime() - start) / 1000000.0) + " ms\n\n");
@@ -148,7 +148,8 @@ public class Main {
             Velbloud superBloud = new Velbloud(druh, list.get(0), r);
             superBloud.makeSuper();
 
-            cas = svet.mapa.cestaVelblouda(superBloud, svet.mapa.cesta(superBloud.getIndexSkladu(),
+            cas = svet.mapa.cestaVelblouda(superBloud,
+                    svet.mapa.cesta(superBloud.getIndexSkladu(),
                     aktualni.getOp() + svet.sklady.length - 1, superBloud), aktualni);
             if (cas != -1) {
                 zvladne = true;

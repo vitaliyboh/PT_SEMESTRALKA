@@ -143,6 +143,7 @@ public class Graph {
             mark[v] = 2;
             //if(v == d) break;
         }
+        if (Double.isInfinite(result[d])) return null;
 
         int pomocna = d;
         stack.add(pomocna);
@@ -254,6 +255,7 @@ public class Graph {
 
 
     public double cestaVelblouda (Velbloud velbloud, ArrayList<Integer> cesta, Pozadavek pozadavek) {
+        if (cesta == null) return -1;
         int i = velbloud.getIndexSkladu();
         double cas = 0;
 
