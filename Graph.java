@@ -87,7 +87,7 @@ public class Graph {
     }
     */
 
-    ArrayList<Integer> cesta(int s, int d) {
+    ArrayList<Integer> cesta(int s, int d, Velbloud velbloud) {
         int[] arr = new int[edges.length];
         ArrayList<Integer> cesta = new ArrayList<>();
         if (s == d) {
@@ -125,10 +125,12 @@ public class Graph {
                     if (mark[n] == 0) {
                         mark[n] = 1;
                         arr[n] = v;
-                        result[n] = newDistance;
-                        q.add(node);
+                        if (nbLink.edgeValue <= velbloud.getD()) {
+                            result[n] = newDistance;
+                            q.add(node);
+                        }
                     }
-                    else if (newDistance<result[n]) {
+                    else if (newDistance<result[n] && velbloud.getD() >= nbLink.edgeValue) {
                         result[n] = newDistance;
                         arr[n] = v;
                         q.remove(node);
@@ -139,6 +141,7 @@ public class Graph {
                 nbLink = nbLink.next;
             }
             mark[v] = 2;
+            //if(v == d) break;
         }
 
         int pomocna = d;

@@ -11,7 +11,7 @@ public class Main {
 
 
         r = new Random();
-        String fileName = "data/centre_large.txt";
+        String fileName = "data/centre_medium.txt";
         long start = System.nanoTime();
         Svet svet = reader(fileName);
         System.out.println(((System.nanoTime() - start) / 1000000.0) + " ms\n\n");
@@ -119,7 +119,7 @@ public class Main {
 
 
             ArrayList<Integer> finalniCesta = svet.mapa.cesta(velbloud.getIndexSkladu(),
-                    aktualni.getOp() + svet.sklady.length - 1);
+                    aktualni.getOp() + svet.sklady.length - 1, velbloud);
 
             System.out.printf("Cas: %d, Velbloud: %d, Sklad: %d, Nalozeno kosu: %d, Odchod v: %d\n",
                     (int) (aktualni.getTz() + 0.5), velbloud.getPoradi(),
@@ -149,7 +149,7 @@ public class Main {
             superBloud.makeSuper();
 
             cas = svet.mapa.cestaVelblouda(superBloud, svet.mapa.cesta(superBloud.getIndexSkladu(),
-                    aktualni.getOp() + svet.sklady.length - 1), aktualni);
+                    aktualni.getOp() + svet.sklady.length - 1, superBloud), aktualni);
             if (cas != -1) {
                 zvladne = true;
                 break;
@@ -172,8 +172,15 @@ public class Main {
                     velbloudFinalni = new Velbloud(druh, list.get(0), r);
                     svet.sklady[list.get(0)].getVelboudi().add(velbloudFinalni);
 
+                    if (svet.sklady[list.get(0)].getMaxVzdalenostBloud() == null) {
+                        svet.sklady[list.get(0)].setMaxVzdalenostBloud(velbloudFinalni);
+                    }
+                    else if (svet.sklady[list.get(0)].getMaxVzdalenostBloud().getD() < velbloudFinalni.getD()) {
+                            svet.sklady[list.get(0)].setMaxVzdalenostBloud(velbloudFinalni);
+                    }
+
                     cas = svet.mapa.cestaVelblouda(velbloudFinalni, svet.mapa.cesta(velbloudFinalni.getIndexSkladu(),
-                            aktualni.getOp() + svet.sklady.length - 1), aktualni);
+                            aktualni.getOp() + svet.sklady.length - 1, velbloudFinalni), aktualni);
                     if (cas != -1) {
                         if ((pocetKosu - velbloudFinalni.getDruh().getKd()) >= 0) {
                             velbloudFinalni.setKd(velbloudFinalni.getDruh().getKd());
@@ -205,10 +212,11 @@ public class Main {
                 // aby to skiplo ty sklady kde nejsou zadny bloudi
                 if (svet.sklady[indexSkladu].getVelboudi() == null
                         || svet.sklady[indexSkladu].getVelboudi().isEmpty()) continue;
-                ArrayList<Integer> cesta = svet.mapa.cesta(indexSkladu, aktualni.getOp() + svet.sklady.length - 1);
+                ArrayList<Integer> cesta = svet.mapa.cesta(indexSkladu, aktualni.getOp() + svet.sklady.length - 1, svet.sklady[indexSkladu].getMaxVzdalenostBloud());
                 double pomocna = Double.POSITIVE_INFINITY;
 
                 for (Velbloud velbloud : svet.sklady[indexSkladu].getVelboudi()) {
+                    //ArrayList<Integer> cesta = svet.mapa.cesta(indexSkladu, aktualni.getOp() + svet.sklady.length - 1, velbloud);
 
                     if (finalniBloudi.contains(velbloud)) continue;
                     cas = svet.mapa.cestaVelblouda(velbloud, cesta, aktualni);

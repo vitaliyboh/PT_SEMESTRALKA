@@ -7,6 +7,7 @@ public class Sklad{
     private double tn; // doba nalozeni/vylozeni kose
     private ArrayList<Velbloud> velboudi; // list velbloudu, ktere maji tento sklad jako domovsky
 
+    Velbloud maxVzdalenostBloud;
     private int aktualniPocetKosu;
 
     private int nasobek;
@@ -66,5 +67,25 @@ public class Sklad{
 
     public ArrayList<Velbloud> getVelboudi() {
         return velboudi;
+    }
+
+    public Velbloud getTheBestBloud() {
+        Velbloud finalniVelbloud = null;
+        double pomocna = 0;
+        for (Velbloud velbloud: this.velboudi) {
+            if (velbloud.getD()> pomocna) {
+                pomocna = velbloud.getD();
+                finalniVelbloud = velbloud;
+            }
+        }
+        return finalniVelbloud;
+    }
+
+    public void setMaxVzdalenostBloud(Velbloud maxVzdalenostBloud) {
+        this.maxVzdalenostBloud = maxVzdalenostBloud;
+    }
+
+    public Velbloud getMaxVzdalenostBloud() {
+        return maxVzdalenostBloud;
     }
 }
