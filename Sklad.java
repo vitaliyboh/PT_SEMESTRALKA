@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Trida reprezentujici skald
  * @author Vitaliy Bohera, Martin Dobrovsky
@@ -13,7 +15,7 @@ public class Sklad{
     /** doba nalozeni/vylozeni 1 kose */
     private final double tn;
     /** list velbloudu, ktere maji tento sklad jako domovsky */
-    private final ArrayList<Velbloud> velboudi;
+    private final List<Velbloud> velboudi;
     /** velboud z daneho skladu ktery ma maximalni vzdalenost kterou ujde na jedno napiti */
     Velbloud maxVzdalenostBloud;
     /** aktualni pocet kosu na sklade */
@@ -105,7 +107,7 @@ public class Sklad{
      * Vrati list vsehc velbloudu, kteri patri tomuto skladu
      * @return list velbloudu, kteri patri tomuto skladu
      */
-    public ArrayList<Velbloud> getVelboudi() {
+    public List<Velbloud> getVelboudi() {
         return velboudi;
     }
 

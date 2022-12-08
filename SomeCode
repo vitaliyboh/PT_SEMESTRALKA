@@ -366,3 +366,16 @@ double Dijkstra(int s, int d) {
         }
         return result[d];
     }
+------------------------------------------------- VYPIS DRUHU VELBLOUDU --------------------------------------------------
+/**
+     * Vypise informace o vsech druzich velbloudu
+     * @param svet svet
+     */
+    private static void vypisDruhuVelbloudu(Svet svet) {
+        int celkem = 0;
+        for (DruhVelblouda d : svet.druhyVelbloudu){
+            celkem += d.pocet;
+            System.out.println(d);
+        }
+        System.out.println("Celkem: " + celkem + "\n");
+    }

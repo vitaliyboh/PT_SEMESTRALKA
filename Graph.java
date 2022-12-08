@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.PriorityQueue;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * Trida predstavuje graf reprezentovany seznamem sousedu
@@ -59,9 +56,9 @@ public class Graph {
      * @param velbloud velbloud pro kteryho hledame nejkratsi cestu
      * @return seznam vsech vrcholu pres ktere vede cesta, nebo null pokud jsme nenasli cestu kterou ujde dany velbloud
      */
-    ArrayList<Integer> cesta(int s, int d, Velbloud velbloud) {
+    List<Integer> cesta(int s, int d, Velbloud velbloud) {
         int[] arr = new int[edges.length];
-        ArrayList<Integer> cesta = new ArrayList<>();
+        List<Integer> cesta = new ArrayList<>();
         if (s == d) {
             cesta.add(s);
             return cesta;
@@ -71,7 +68,9 @@ public class Graph {
         mark[s] = 1;
         double[] result = new double[edges.length];
 
-        for (int i = 0; i < result.length; i++) result[i] = Double.POSITIVE_INFINITY;
+        for (int i = 0; i < result.length; i++) {
+            result[i] = Double.POSITIVE_INFINITY;
+        }
 
         result[s] = 0;
 
@@ -114,7 +113,9 @@ public class Graph {
             }
             mark[v] = 2;
         }
-        if (Double.isInfinite(result[d])) return null;
+        if (Double.isInfinite(result[d])) {
+            return cesta;
+        }
 
         int pomocna = d;
         stack.add(pomocna);
@@ -134,14 +135,15 @@ public class Graph {
      * @param s index oazy pro kterou hledame nejblizsi sklady
      * @return seznam indexu vsech skladu od nejblizsich po nejvzdalenejsi
      */
-    ArrayList<Integer> nejblizsiVrcholy(int s) {
+    List<Integer> nejblizsiVrcholy(int s) {
 
         ArrayList<Integer> vrcholy = new ArrayList<>();
         int[] mark = new int[edges.length]; // pocet vrcholu
         mark[s] = 1;
         double[] result = new double[edges.length];
-        for (int i = 0; i < result.length; i++)
+        for (int i = 0; i < result.length; i++) {
             result[i] = Double.POSITIVE_INFINITY;
+        }
         result[s] = 0;
 
         PriorityQueue<PQNode> q = new PriorityQueue<>(new Comparator<>() {
@@ -181,7 +183,9 @@ public class Graph {
 
         double pomocna1 = Double.MAX_VALUE;
         for (int i = 1; i < result.length; i++) {
-            if (s == i) continue;
+            if (s == i) {
+                continue;
+            }
             double pomocna = result[i];
             if ((pomocna < pomocna1 && i <= sklady.length - 1)) {
                 vrcholy.add(i);
@@ -205,13 +209,17 @@ public class Graph {
      * @param pozadavek pozadavek, ktery ma velbloud obslouzit
      * @return cas, jak dlouho bude trvat velbloudovi obslouzit dany pozadavek, nebo -1 pokud pozadavek nestihne obslouzit vcas
      */
-    public double cestaVelblouda (Velbloud velbloud, ArrayList<Integer> cesta, Pozadavek pozadavek) {
-        if (cesta == null) return -1;
+    public double cestaVelblouda (Velbloud velbloud, List<Integer> cesta, Pozadavek pozadavek) {
+        if (cesta.isEmpty()) {
+            return -1;
+        }
         int i = velbloud.getIndexSkladu();
         double cas = 0;
 
         for (Integer j: cesta) {
-            if (i==j) continue;
+            if (i==j) {
+                continue;
+            }
             Link n = edges[i];
             while (n.neighbour != j) {
                 n = n.next;
@@ -241,7 +249,7 @@ public class Graph {
      * @param pozadavek pozadavek, ktery ma velbloud obslouzit
      * @throws InterruptedException vyhozeni vyjimky pri chybe uspani vlakna
      */
-    public void vypisCestyVelblouda (Velbloud velbloud, ArrayList<Integer> cesta,
+    public void vypisCestyVelblouda (Velbloud velbloud, List<Integer> cesta,
                                      Pozadavek pozadavek) throws InterruptedException {
         int i = velbloud.getIndexSkladu();
         velbloud.setNaCeste(true);
@@ -260,7 +268,9 @@ public class Graph {
                 int casDorazu = (int) (casAktualni + vzdalenost/velbloud.getV() + 0.5);
                 int casVylozeni = (int) (casDorazu + sklady[velbloud.getIndexSkladu()].getTn() * velbloud.getKd() + 0.5);
                 int casovaRezerva = (int) (pozadavek.getTp() - casVylozeni + 0.5);
-                if (!Main.sonic) Thread.sleep(1000);
+                if (!Main.sonic) {
+                    Thread.sleep(1000);
+                }
                 System.out.printf("Cas: %d, Velbloud: %d, Oaza: %d, Vylozeno kosu: %d, Vylozeno v: %d, Casova rezerva: %d\n",
                         casDorazu, velbloud.getPoradi(), pozadavek.getOp(), velbloud.getKd(), casVylozeni, casovaRezerva);
                 cestaVelbloudaZpet(velbloud,cesta, pozadavek, casVylozeni);
@@ -268,13 +278,21 @@ public class Graph {
             }
             String misto = "";
 
-            if (j > sklady.length - 1) misto = "Oaza";
-            else misto = "Sklad";
+            if (j > sklady.length - 1) {
+                misto = "Oaza";
+            }
+            else {
+                misto = "Sklad";
+            }
             casAktualni += vzdalenost/velbloud.getV();
 
-            if (!Main.sonic)Thread.sleep(1000);
+            if (!Main.sonic){
+                Thread.sleep(1000);
+            }
             int indexOazy = j;
-            if( misto.equals("Oaza")) indexOazy = j - sklady.length +1;
+            if( misto.equals("Oaza")) {
+                indexOazy = j - sklady.length +1;
+            }
             if (velbloud.getEnergie() <= 0) { // bloud se jde napit na danem miste
                 System.out.printf("Cas: %d, Velbloud: %d, %s: %d, Ziznivy %s, Pokracovani mozne v: %d\n",
                         (int)(casAktualni +0.5), velbloud.getPoradi(),
@@ -295,11 +313,12 @@ public class Graph {
      * @param velbloud velbloud, ktery obsluhuje pozadavek
      * @param cesta cesta, kterou ma velbloud ujit
      * @param pozadavek pozadavek, ktery ma velbloud obslouzit
-     * @param casAktualni cas kdy velbloud splnil pozadavek a muze jit zpatky
+     * @param casAktualni1 cas kdy velbloud splnil pozadavek a muze jit zpatky
      * @throws InterruptedException vyhozeni vyjimky pri chybe uspani vlakna
      */
-    public void cestaVelbloudaZpet(Velbloud velbloud, ArrayList<Integer> cesta,
-                                   Pozadavek pozadavek, double casAktualni) throws InterruptedException {
+    public void cestaVelbloudaZpet(Velbloud velbloud, List<Integer> cesta,
+                                   Pozadavek pozadavek, double casAktualni1) throws InterruptedException {
+        double casAktualni = casAktualni1;
         cesta.add(0, velbloud.getIndexSkladu());
         cesta.remove(cesta.size()-1);
         int i = pozadavek.getOp()+ sklady.length - 1;
@@ -312,8 +331,10 @@ public class Graph {
             double vzdalenost = n.edgeValue;
             int indexDo = cesta.get(j);
             if (indexDo == velbloud.getIndexSkladu()) {
-                int cas = (int) (casAktualni + vzdalenost/velbloud.getV() + 0.5);
-                if (!Main.sonic)Thread.sleep(1000);
+                int cas = (int) (casAktualni + vzdalenost / velbloud.getV() + 0.5);
+                if (!Main.sonic) {
+                    Thread.sleep(1000);
+                }
                 System.out.printf("Cas: %d, Velbloud: %d, Navrat do skladu: %d\n", cas, velbloud.getPoradi(), velbloud.getIndexSkladu());
                 velbloud.setCasNavratu(cas + velbloud.getTd());
                 velbloud.setEnergie(velbloud.getD());
@@ -321,13 +342,21 @@ public class Graph {
             }
             String misto = "";
 
-            if (indexDo > sklady.length - 1) misto = "Oaza";
-            else misto = "Sklad";
-            casAktualni += vzdalenost/velbloud.getV();
+            if (indexDo > sklady.length - 1) {
+                misto = "Oaza";
+            }
+            else {
+                misto = "Sklad";
+            }
+            casAktualni += vzdalenost / velbloud.getV();
 
-            if (!Main.sonic)Thread.sleep(1000);
+            if (!Main.sonic) {
+                Thread.sleep(1000);
+            }
             int indexOazy = indexDo;
-            if( misto.equals("Oaza")) indexOazy = indexDo - sklady.length +1;
+            if( misto.equals("Oaza")) {
+                indexOazy = indexDo - sklady.length +1;
+            }
             if (velbloud.getEnergie() <= 0) { // bloud se jde napit na danem miste
                 System.out.printf("Cas: %d, Velbloud: %d, %s: %d, Ziznivy %s, Pokracovani mozne v: %d\n",
                         (int)(casAktualni +0.5), velbloud.getPoradi(),

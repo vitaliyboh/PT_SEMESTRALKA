@@ -28,7 +28,7 @@ public class Velbloud {
     /** celkovy pocet velbloudu (pocitame dohromady i velbloudy ruznych druhu) */
     private static int pocet = 0;
     /** poradi velblouda */
-    private final int poradi;
+    private final int poradi = ++pocet;
     /** generator nahodnych cisel */
     Random r;
     /** aktualni zatizeni velblouda(tj kolik ma na sobe nalozeno kosu, nemusi byt vzdy rovno max hodnote) */
@@ -49,9 +49,7 @@ public class Velbloud {
         this.v = generateV(); // vygenerujeme rychlost
         this.d = generateD(); // vygenerujeme vzdalenost na jedno napiti
         this.td = druh.getTd();
-        pocet++;
         druh.pocet++;
-        poradi = pocet;
         this.jmeno = generateName();
         this.indexSkladu = indexSkladu;
         this.energie = d;
@@ -61,7 +59,7 @@ public class Velbloud {
      * Metoda vygeneruje rychlost velblouda v rozsahu min a max hodnoty jeho druhu
      * @return vygenerovana rychlost
      */
-    public double generateV() {
+    public final double generateV() {
         if (druh.getV_min() == druh.getV_max()) {
             return druh.getV_min();
         }
@@ -72,7 +70,7 @@ public class Velbloud {
      * Metoda vygeneruje vzdalenost velblouda na jedno napiti v rozsahu min a max hodnoty jeho druhu
      * @return vygenerovana vzdalenost na jedno napiti
      */
-    public double generateD() {
+    public final double generateD() {
         return r.nextGaussian((druh.getD_min() + druh.getD_max())/2.0,(druh.getD_max() - druh.getD_min())/4.0);
     }
 
@@ -81,7 +79,7 @@ public class Velbloud {
      * jmeno je ve formatu Velbloud_(poradi daneho velblouda)
      * @return nazev velblouda
      */
-    public String generateName() {
+    public final String generateName() {
         return "Velboud_" + pocet;
     }
 
