@@ -3,21 +3,35 @@ import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.Stack;
 
-/*
-    Trida predstavuje graf reprezentovany seznamem sousedu
+/**
+ * Trida predstavuje graf reprezentovany seznamem sousedu
+ * @author Vitaliy Bohera, Martin Dobrovsky
  */
 public class Graph {
+    /** pole seznamu sousedu pro kazdy vrchol */
     Link[] edges;
+    /** pole skladu */
     Sklad[] sklady;
+    /** pole oaz */
     Oaza[] oazy;
 
-
+    /**
+     * Konstruktor vytvori instanci grafu
+     * @param delka pocet vsech vrcholu
+     * @param sklady pole skladu
+     * @param oazy pole oaz
+     */
     public Graph(int delka, Sklad[] sklady, Oaza[] oazy) {
         this.sklady = sklady;
         this.oazy = oazy;
         edges = new Link[delka];
     }
 
+    /**
+     * Metoda prida hranu z vrcholu i do vrcholu j (a obracene, mame neorientovany graf)
+     * @param i index vrcholu
+     * @param j index sousedniho vrcholu
+     */
     public void addEdge(int i, int j) {
         double value;
         if (j >= sklady.length && i >= sklady.length) {
@@ -38,55 +52,13 @@ public class Graph {
         edges[i] = link;
     }
 
-    /*
-    double Dijkstra(int s, int d) {
-        int[] mark = new int[edges.length]; // pocet vrcholu!
-        mark[s] = 1;
-        double[] result = new double[edges.length];
-        for (int i = 0; i < result.length; i++)
-            result[i] = Double.POSITIVE_INFINITY;
-        result[s] = 0;
-
-        PriorityQueue<PQNode> q = new PriorityQueue<>(new Comparator<>() {
-            @Override
-            public int compare(PQNode o1, PQNode o2) {
-                return Double.compare(o1.vzdalenost,o2.vzdalenost);
-            }
-        });
-
-        q.add(new PQNode(s,0));
-
-        while(q.peek() != null && q.peek().vzdalenost>=0) {
-            int v = q.peek().index;
-            if(v == d) return result[d];
-            q.remove();
-            Link nbLink = edges[v];
-            while(nbLink!=null) {
-                int n = nbLink.neighbour;
-                if (mark[n] != 2) {
-                    double newDistance = result[v] + nbLink.edgeValue;
-                    PQNode node = new PQNode(n, newDistance);
-                    if (mark[n] == 0) {
-                        mark[n] = 1;
-                        result[n] = newDistance;
-                        q.add(node);
-                    }
-                    else if (newDistance<result[n]) {
-                        result[n] = newDistance;
-                        q.remove(node);
-                        node.vzdalenost = newDistance;
-                        q.add(node);
-                    }
-                }
-                nbLink = nbLink.next;
-            }
-            mark[v] = 2;
-
-        }
-        return result[d];
-    }
-    */
-
+    /**
+     * Metoda najde nejkratsi cestu kterou ujde dany velbloud z vrcholu s do vrchlo d
+     * @param s pocatecni vrchol
+     * @param d koncovy vrchol
+     * @param velbloud velbloud pro kteryho hledame nejkratsi cestu
+     * @return seznam vsech vrcholu pres ktere vede cesta, nebo null pokud jsme nenasli cestu kterou ujde dany velbloud
+     */
     ArrayList<Integer> cesta(int s, int d, Velbloud velbloud) {
         int[] arr = new int[edges.length];
         ArrayList<Integer> cesta = new ArrayList<>();
@@ -102,7 +74,6 @@ public class Graph {
         for (int i = 0; i < result.length; i++) result[i] = Double.POSITIVE_INFINITY;
 
         result[s] = 0;
-
 
         PriorityQueue<PQNode> q = new PriorityQueue<>(new Comparator<>() {
             @Override
@@ -142,7 +113,6 @@ public class Graph {
                 nbLink = nbLink.next;
             }
             mark[v] = 2;
-            //if(v == d) break;
         }
         if (Double.isInfinite(result[d])) return null;
 
@@ -156,13 +126,15 @@ public class Graph {
         while (!stack.isEmpty()) {
             cesta.add(stack.pop());
         }
-
         return cesta;
     }
 
-
+    /**
+     * Metoda najde a seradi vsechny sklady od nejblizsich po nejvzdalenejsi od vrcholu s
+     * @param s index oazy pro kterou hledame nejblizsi sklady
+     * @return seznam indexu vsech skladu od nejblizsich po nejvzdalenejsi
+     */
     ArrayList<Integer> nejblizsiVrcholy(int s) {
-
 
         ArrayList<Integer> vrcholy = new ArrayList<>();
         int[] mark = new int[edges.length]; // pocet vrcholu
@@ -205,12 +177,7 @@ public class Graph {
                 nbLink = nbLink.next;
             }
             mark[v] = 2;
-
-
         }
-
-        //edges[s].poleVzdalenoti = result;
-
 
         double pomocna1 = Double.MAX_VALUE;
         for (int i = 1; i < result.length; i++) {
@@ -228,33 +195,16 @@ public class Graph {
             }
         });
 
-        /* Puvodni bubblesort rucne napsany
-        int n = vrcholy.size();
-        int temp = 0;
-        for(int i=0; i < n; i++) {
-            for (int j = 1; j < (n - i); j++) {
-                if (result[j - 1] > result[j]) {
-                    //swap elements
-                    temp = vrcholy.get(j - 1);
-                    vrcholy.add(j - 1, vrcholy.get(j));
-                    vrcholy.remove(j);
-                    vrcholy.add(j, temp);
-                    vrcholy.remove(j+1);
-                }
-
-            }
-        }
-        */
-
-
-
-
-        
         return vrcholy;
     }
 
-
-
+    /**
+     * Metoda spocita cas, jak dlouho  bude trvat danemu velbloudovi obslouzit dany pozadavek
+     * @param velbloud zkoumany velbloud
+     * @param cesta cesta kterou ma velbloud ujit
+     * @param pozadavek pozadavek, ktery ma velbloud obslouzit
+     * @return cas, jak dlouho bude trvat velbloudovi obslouzit dany pozadavek, nebo -1 pokud pozadavek nestihne obslouzit vcas
+     */
     public double cestaVelblouda (Velbloud velbloud, ArrayList<Integer> cesta, Pozadavek pozadavek) {
         if (cesta == null) return -1;
         int i = velbloud.getIndexSkladu();
@@ -272,7 +222,6 @@ public class Graph {
             }
             cas += vzdalenost/velbloud.getV();
 
-            // cas += velbloud.getV()*vzdalenost;
             velbloud.setEnergie(velbloud.getEnergie() - vzdalenost);
             if (velbloud.getEnergie() <= 0) {
                 cas += velbloud.getTd();
@@ -285,6 +234,13 @@ public class Graph {
         return (cas + pozadavek.getTz()) > (pozadavek.getTp() + pozadavek.getTz()) ? -1 : cas;
     }
 
+    /**
+     * Metoda prubezne vypisuje cestu velblouda podle zadaneho formatu (tj pres ktere oazy/sklady prochazi, kde se musi napit atd)
+     * @param velbloud velbloud, ktery obsluhuje pozadavek
+     * @param cesta cesta, kterou ma velbloud ujit
+     * @param pozadavek pozadavek, ktery ma velbloud obslouzit
+     * @throws InterruptedException vyhozeni vyjimky pri chybe uspani vlakna
+     */
     public void vypisCestyVelblouda (Velbloud velbloud, ArrayList<Integer> cesta,
                                      Pozadavek pozadavek) throws InterruptedException {
         int i = velbloud.getIndexSkladu();
@@ -334,6 +290,14 @@ public class Graph {
         }
     }
 
+    /**
+     * Metoda vypisuje cestu velblouda zpet v danem formatu
+     * @param velbloud velbloud, ktery obsluhuje pozadavek
+     * @param cesta cesta, kterou ma velbloud ujit
+     * @param pozadavek pozadavek, ktery ma velbloud obslouzit
+     * @param casAktualni cas kdy velbloud splnil pozadavek a muze jit zpatky
+     * @throws InterruptedException vyhozeni vyjimky pri chybe uspani vlakna
+     */
     public void cestaVelbloudaZpet(Velbloud velbloud, ArrayList<Integer> cesta,
                                    Pozadavek pozadavek, double casAktualni) throws InterruptedException {
         cesta.add(0, velbloud.getIndexSkladu());

@@ -2,16 +2,27 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
-
+/**
+ * Hlavni trida simulace obsahujici main
+ * @author Vitaliy Bohera
+ */
 public class Main {
+    /** generator nahodnych cisel */
     static Random r;
+    /** promena pro zrychleni simulace
+     * sonic=true - neprovadime uspani mezi vypisy cesty
+     * sonic=false - mezi vypisy je uspani 1sec
+     */
     static boolean sonic;
 
+    /**
+     * Vstupni bod programu, spusteni simulace
+     * @param args parametry prikazove radky (nevyuzito)
+     */
     public static void main(String[] args) {
 
-
         r = new Random();
-        String fileName = "data/dense_huge.txt";
+        String fileName = "data/tutorial.txt";
         long start = System.nanoTime();
         Svet svet = reader(fileName);
         System.out.println(((System.nanoTime() - start) / 1000000.0) + " ms\n\n");
@@ -109,6 +120,12 @@ public class Main {
 
     }
 
+    /**
+     * Metoda zajisti vypis obsluhovani pozadavku
+     * @param svet svet
+     * @param aktualni pozadavek, ktery musime obslouzit
+     * @param finalniBloudi vsechny velbloudy, ktere budou obsluhovat dany pozadavek
+     */
     private static void finalniCestaBlouda(Svet svet, Pozadavek aktualni, ArrayList<Velbloud> finalniBloudi) {
         for (Velbloud velbloud : finalniBloudi) {
             if (velbloud.isNaCeste()) aktualni.setTz(velbloud.getCasNavratu());
@@ -135,11 +152,19 @@ public class Main {
         }
     }
 
+    /**
+     * Metoda zajisti generovani velbloudu
+     * @param svet svet
+     * @param aktualni pozadavek, ktery potrebujeme obslouzit
+     * @param list list indexu skladu, ktere jsou serazene od nejblizsich po nejvzdalenejsi od dane oazy z pozadvku
+     * @param finalniBloudi list vsech velbloudu, kteri budou dany pozadavek obsluhovat
+     * @param pocetKosu pocet kosu, ktere potrebujeme jeste dorucit
+     * @return 1 - pokud nemuzeme vygenerovat velblouda, ktery oblsouzi pozadavek,
+     *         0 - pokud vygenerujeme velblouda, ktery zvladne oblouzit pozadavek
+     */
     private static int generovaniBloudu(Svet svet, Pozadavek aktualni, ArrayList<Integer> list, ArrayList<Velbloud> finalniBloudi, int pocetKosu) {
         Velbloud velbloudFinalni;
         double cas;
-        int pomocna = 0;
-
 
         // kontrola, zda vubec bloud s maximalnimi atributy zvladne ujit cestu
         boolean zvladne = false;
@@ -164,7 +189,6 @@ public class Main {
         
         
         while (pocetKosu > 0) {
-//            if (pomocna > 1000) break; // pokud vygenerujem 1000 zbytecnych bloudu -> konec
             int celkovyPocetBloudu = Velbloud.getPocet();
             // generovani bloudu
 
@@ -202,6 +226,17 @@ public class Main {
         return 0;
     }
 
+    /**
+     * Metoda kontroluje zda pozadavek muze oblouzit jiz existujici velbloud
+     * @param svet svet
+     * @param aktualni pozadavek, ktery musime olouzit
+     * @param list list indexu skladu, ktere jsou serazene od nejblizsich po nejvzdalenejsi od dane oazy z pozadvku
+     * @param velbloudFinalni list vsech velbloudu, kteri budou dany pozadavek obsluhovat
+     * @param finalniBloudi
+     * @param pocetKosu pocet kosu, ktere potrebujeme dorucit
+     * @return 0 - pokud existujici velbloudi muzou dorucit vsechny kose, ktere potrebuje oaza
+     *         pocetKosu - pocet kosu, ktery jeste potrebujeme dorucit(tj dorucili jsme bud 0 nebo nejakou cast kosu, ktere potrebuje oaza)
+     */
     private static int kontrolaExisBloudu(Svet svet, Pozadavek aktualni, ArrayList<Integer> list,
                                           Velbloud velbloudFinalni, ArrayList<Velbloud> finalniBloudi,
                                           int pocetKosu) {
@@ -247,6 +282,14 @@ public class Main {
         return pocetKosu;
     }
 
+    /**
+     * Metoda ceka na obnoveni kosu ve skladech,
+     * pokud se nestihnou obnovit vcas(tj nestihnem obslouzit pozadavek) koncime simulaci
+     * @param svet svet
+     * @param aktualni pozadavek, ktery potrebujeme obslouzit
+     * @param list list indexu skladu, ktere jsou serazene od nejblizsich po nejvzdalenejsi od dane oazy z pozadvku
+     * @param pomocnyList pomocny list, stejny jako list
+     */
     private static void cekaniNaObnovuSkladu(Svet svet, Pozadavek aktualni, ArrayList<Integer> list,
                                              ArrayList<Integer> pomocnyList) {
         for (Integer indexSkladu : pomocnyList) {
@@ -274,7 +317,11 @@ public class Main {
         }
     }
 
-    private static void vypisVelbloudu(Svet svet) {
+    /**
+     * Vypise informace o vsech druzich velbloudu
+     * @param svet svet
+     */
+    private static void vypisDruhuVelbloudu(Svet svet) {
         int celkem = 0;
         for (DruhVelblouda d : svet.druhyVelbloudu){
             celkem += d.pocet;
@@ -282,7 +329,6 @@ public class Main {
         }
         System.out.println("Celkem: " + celkem + "\n");
     }
-
 
     public static Svet reader(String fileName) {
         ArrayList<String> allUdaje1 = null;
