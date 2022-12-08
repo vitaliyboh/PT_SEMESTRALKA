@@ -4,7 +4,7 @@ import java.nio.file.Paths;
 import java.util.*;
 /**
  * Hlavni trida simulace obsahujici main
- * @author Vitaliy Bohera
+ * @author Vitaliy Bohera, Martin Dobrovsky
  */
 public class Main {
     /** generator nahodnych cisel */
@@ -22,7 +22,7 @@ public class Main {
     public static void main(String[] args) {
 
         r = new Random();
-        String fileName = "data/tutorial.txt";
+        String fileName = "data/parser.txt";
         long start = System.nanoTime();
         Svet svet = reader(fileName);
         System.out.println(((System.nanoTime() - start) / 1000000.0) + " ms\n\n");
@@ -330,6 +330,11 @@ public class Main {
         System.out.println("Celkem: " + celkem + "\n");
     }
 
+    /**
+     * Metoda nacte data ze souboru
+     * @param fileName nazev souboru
+     * @return Svet     Obsahuje informace o aktualni simulaci (oazy, sklady, velbloudy...)
+     */
     public static Svet reader(String fileName) {
         ArrayList<String> allUdaje1 = null;
         try {
@@ -339,12 +344,14 @@ public class Main {
             int bloudi = 0;
             for (String line : list) { // for each pres vsechny radky v seznamu
 
-                int iBloud = line.indexOf("\uD83D\uDC2A");
-                int iPoust = line.indexOf("\uD83C\uDFDC");
-                if (bloudi != 0 ) {// bloudi>0 => jsem v blokovym komentari a zaroven indexBlouda neni na aktualni radce
+                int iBloud = line.indexOf("\uD83D\uDC2A"); // index blouda
+                int iPoust = line.indexOf("\uD83C\uDFDC"); // index pouste
+                if (bloudi != 0 ) {// bloudi>0 => jsem v blokovym komentari 
+                    // pokud jsem v blok komentari a na radce neni ani bloud ani poust = preskakuju radku
                     if (iPoust == -1 && iBloud == -1) continue;
-                    while (iPoust != -1 && bloudi != 0) { // jedem pres indexy pouste
+                    while (iPoust != -1 && bloudi != 0) { // osekavam radku dokud tam jsou pouste a jsem v blok.kom.
                         bloudi--;
+                        // pokud v casti kterou useknu jsou bloudi, prictu je do citace
                         bloudi += (int)line.substring(0, iPoust).chars().filter(ch -> ch == '\uD83D').count();
                         line = line.substring(iPoust + 2);
                         iPoust = line.indexOf("\uD83C\uDFDC");
@@ -352,42 +359,48 @@ public class Main {
                 }
 
                 iBloud = line.indexOf("\uD83D\uDC2A");
-
+                
+                // pokud jsem v blok komentari a na radce neni ani bloud ani poust = preskakuju radku
                 if (bloudi!= 0  && iBloud == -1) continue;
 
 
-                int iBloudPomocna = iBloud;
+                
                 while (iBloud != -1) { // jedem dokud na radce jsou bloudi
                     bloudi++;
                     iPoust = line.indexOf("\uD83C\uDFDC");
                     if (iPoust != -1) bloudi--; // pokud jsem nasel poust odstranim jednoho blouda
 
-                    iBloudPomocna = iBloud;
-                    if (iBloudPomocna+2 < iPoust) {
-                        String dummy = line.substring(iBloudPomocna + 2, iPoust);
+                    // pokud cast kterou osekavam je ohranicena bloudem a pousti
+                    // spoctu kolik bloudu je v osekavany casti a prictu je do citace
+                    if (iBloud+2 < iPoust) {
+                        String dummy = line.substring(iBloud + 2, iPoust);
                         bloudi += (int) dummy.chars().filter(ch -> ch == '\uD83D').count();
                     }
+                    // pokud cast kterou osekavam je ohranicena bloudem a blok.kom. pokracuje na dalsi radce
+                    // spoctu kolik bloudu je v osekavany casti a prictu je do citace
                     else if(iPoust == -1){
-                        String dummy = line.substring(iBloudPomocna + 2);
+                        String dummy = line.substring(iBloud + 2);
                         bloudi += (int) dummy.chars().filter(ch -> ch == '\uD83D').count();
                     }
 
-                    int countPoust = (int) line.chars().filter(ch -> ch == '\uD83C').count();
-                    int res = bloudi-countPoust;
+                    int pocetPousti = (int) line.chars().filter(ch -> ch == '\uD83C').count();
+                    int res = bloudi-pocetPousti;
 
-                    if (res > 0)  line = line.substring(0, iBloudPomocna);
-                    else line = line.substring(0, iBloudPomocna) + " " + line.substring(iPoust + 2);
+                    // pocetBloudi-pocetPousti > 0, tak po odstraneni komentare jsem stale v blok.kom.
+                    if (res > 0)  line = line.substring(0, iBloud);
+                    // normalni pripad - vsechny komentare se vyrusi v jedne radce
+                    else line = line.substring(0, iBloud) + " " + line.substring(iPoust + 2);
 
+                    // vnorene komentare
                     int indexPousteNovyString = line.indexOf("\uD83C\uDFDC");
-                    if (indexPousteNovyString != -1) { //tenhle if to vyresil :D
+                    if (indexPousteNovyString != -1) {
                         int indexBloudaNovyString = line.indexOf("\uD83D\uDC2A");
                         if (indexBloudaNovyString < indexPousteNovyString && indexBloudaNovyString != -1) {
                             iBloud = indexBloudaNovyString;
                         }
                         else bloudi--;
-                        continue;
                     }
-                    iBloud = line.indexOf("\uD83D\uDC2A");
+                    else iBloud = line.indexOf("\uD83D\uDC2A");
 
                 }
 
