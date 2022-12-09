@@ -22,7 +22,7 @@ public class Main {
     public static void main(String[] args) {
 
         r = new Random();
-        String fileName = "data/centre_large.txt";
+        String fileName = "data/tutorial.txt";
         long start = System.nanoTime();
         Svet svet = reader(fileName);
         System.out.println(((System.nanoTime() - start) / 1000000.0) + " ms\n\n");
@@ -34,6 +34,11 @@ public class Main {
         while (!svet.pozadavky.isEmpty()) { // jeden pozadavek bude zpracovan v jednom pruchodu while
             Pozadavek aktualni = svet.pozadavky.poll();
 
+            InfoOazy infoOazy = new InfoOazy();
+            svet.oazy[aktualni.getOp()].getInfo().add(infoOazy);
+            infoOazy.setCasPozadavku((int)(aktualni.getTz()+0.5));
+            infoOazy.setPocetKosu(aktualni.getKp());
+            infoOazy.setDeadline((int)(aktualni.getTz() + aktualni.getTp() + 0.5));
 
             System.out.printf("Cas: %d, Pozadavek: %d, Oaza: %d, Pocet kosu: %d, Deadline: %d%n",
                     ((int) (aktualni.getTz() + 0.5)), aktualni.getPoradi(),
@@ -45,18 +50,22 @@ public class Main {
             ArrayList<Integer> pomocnyList = new ArrayList<>(list);
 
             // obnoveni kosu
-            for (Integer skladyIndex : list) {
+            /*for (Integer skladyIndex : list) {
                 Sklad sklad = svet.sklady[skladyIndex];
                 if (aktualni.getTz() < sklad.getTs() || sklad.getAktualniPocetKosu() == sklad.getKs()) {
                     continue;
                 }
                 int nasobek1 = (int) (aktualni.getTz() / sklad.getTs());
                 if (casPredchozihoPozadavku <= sklad.getTs() * nasobek1 && sklad.getTs() * nasobek1 <= aktualni.getTz()) {
+                    sklad.getInfo().add(new InfoSklad());
+                    sklad.getInfo().peek().setPocetKosuPredDoplnenim(sklad.getAktualniPocetKosu());
+                    sklad.getInfo().peek().setDobyDoplneni((int)(nasobek1*sklad.getTs()+0.5));
                     sklad.setAktualniPocetKosu(sklad.getKs());
                     sklad.setNasobek(nasobek1);
                 }
-            }
+            }*/
             casPredchozihoPozadavku = aktualni.getTz();
+
 
             // z listu sklad odeberu, pokud nema dostatecny pocet kosu
             for (int i = list.size() - 1; i >= 0; i--) {
@@ -116,6 +125,18 @@ public class Main {
         }
 
         System.out.println("Simulace probehla uspesne :) *dab*");
+
+        for (int i = 1; i < svet.oazy.length; i++) {
+            if (!svet.oazy[i].getInfo().isEmpty()) {
+                System.out.println("Oaza_" + i + "\t" + svet.oazy[i].toString());
+            }
+        }
+
+        for (int i = 1; i < svet.sklady.length; i++) {
+            if (!svet.sklady[i].getInfo().isEmpty()) {
+                System.out.println("Sklad_" + i + "\n" + svet.sklady[i].toString());
+            }
+        }
 
     }
 
@@ -302,20 +323,26 @@ public class Main {
     private static void cekaniNaObnovuSkladu(Svet svet, Pozadavek aktualni, List<Integer> list,
                                              List<Integer> pomocnyList) {
         for (Integer indexSkladu : pomocnyList) {
-            if (svet.sklady[indexSkladu].getKs() == 0) {
+            Sklad sklad = svet.sklady[indexSkladu];
+            aktualni.setTz(sklad.getTs() * sklad.getNasobek());
+            if (sklad.getKs() == 0) {
                 continue; // nema cenu obnovovat kose u skladu s poctem kosu 0
             }
-            int nasobek = (int) (aktualni.getTz() / svet.sklady[indexSkladu].getTs() + 1);
-            if (nasobek == svet.sklady[indexSkladu].getNasobek()) {
+            int nasobek = (int) (aktualni.getTz() / sklad.getTs() + 1);
+            if (nasobek == sklad.getNasobek()) {
                 nasobek++;
             }
-            if (aktualni.getTp() + aktualni.getTz() <= svet.sklady[indexSkladu].getTs() * nasobek) {
+            if (aktualni.getTp() + aktualni.getTz() <= sklad.getTs() * nasobek) {
                 continue;
             }
             list.add(indexSkladu);
-            aktualni.setTz(svet.sklady[indexSkladu].getTs() * nasobek);
-            svet.sklady[indexSkladu].setNasobek(nasobek);
-            svet.sklady[indexSkladu].setAktualniPocetKosu(svet.sklady[indexSkladu].getKs());
+
+
+            sklad.getInfo().push(new InfoSklad((int)(nasobek*sklad.getTs()+0.5),sklad.getAktualniPocetKosu(),sklad.getKs()));
+            System.out.println(new InfoSklad((int)(nasobek*sklad.getTs()+0.5),sklad.getAktualniPocetKosu(),sklad.getKs()));
+            //aktualni.setTz(sklad.getTs() * nasobek);
+            sklad.setNasobek(nasobek);
+            sklad.setAktualniPocetKosu(sklad.getKs());
             break;
         }
         // pokud i presto je seznam prazdny, nenalezli jsme vhodny sklad

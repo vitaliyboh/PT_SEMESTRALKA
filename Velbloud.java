@@ -1,4 +1,6 @@
 import java.util.Random;
+import java.util.Stack;
+
 /**
  * Trida reprezentujici velblouda
  * @author Vitaliy Bohera, Martin Dobrovsky
@@ -33,6 +35,8 @@ public class Velbloud {
     Random r;
     /** aktualni zatizeni velblouda(tj kolik ma na sobe nalozeno kosu, nemusi byt vzdy rovno max hodnote) */
     private int kd;
+    /** info velblouda */
+    private Stack<Trasa> info = new Stack<>();
 
     /**
      * Konstruktor vytvori novou instanci velblouda
@@ -220,4 +224,9 @@ public class Velbloud {
         this.v = druh.getV_max();
         this.d = druh.getD_max();
     }
+
+    public Stack<Trasa> getInfo() {
+        return info;
+    }
+
 }

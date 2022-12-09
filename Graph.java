@@ -274,6 +274,10 @@ public class Graph {
                 System.out.printf("Cas: %d, Velbloud: %d, Oaza: %d, Vylozeno kosu: %d, Vylozeno v: %d, Casova rezerva: %d\n",
                         casDorazu, velbloud.getPoradi(), pozadavek.getOp(), velbloud.getKd(), casVylozeni, casovaRezerva);
                 cestaVelbloudaZpet(velbloud,cesta, pozadavek, casVylozeni);
+                oazy[pozadavek.getOp()].getInfo().peek().getListVelbloudu().add(velbloud);
+                if (oazy[pozadavek.getOp()].getInfo().peek().getCasDoruceni() < casVylozeni) {
+                    oazy[pozadavek.getOp()].getInfo().peek().setCasDoruceni(casVylozeni);
+                }
                 return;
             }
             String misto = "";

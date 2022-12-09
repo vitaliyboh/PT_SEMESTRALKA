@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 /**
  * Trida reprezentujici skald
@@ -22,6 +23,8 @@ public class Sklad{
     private int aktualniPocetKosu;
     /** pocet, kolikrat se doplnoval sklad */
     private int nasobek;
+    /** info skladu */
+    private final Stack<InfoSklad> info = new Stack<>();
 
     /**
      * Konstruktor vytvori novou instanci skladu
@@ -125,5 +128,19 @@ public class Sklad{
      */
     public Velbloud getMaxVzdalenostBloud() {
         return maxVzdalenostBloud;
+    }
+
+    public Stack<InfoSklad> getInfo() {
+        return info;
+    }
+
+    @Override
+    public String toString() {
+        String vypis = "";
+        while(!info.empty()) {
+            vypis += info.pop().toString();
+        }
+        vypis += "\n";
+        return vypis;
     }
 }
