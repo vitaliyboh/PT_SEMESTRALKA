@@ -249,8 +249,9 @@ public class Graph {
      * @param pozadavek pozadavek, ktery ma velbloud obslouzit
      * @throws InterruptedException vyhozeni vyjimky pri chybe uspani vlakna
      */
-    public void vypisCestyVelblouda (Velbloud velbloud, List<Integer> cesta,
+    public int vypisCestyVelblouda (Velbloud velbloud, List<Integer> cesta,
                                      Pozadavek pozadavek) throws InterruptedException {
+        int result = 0;
         int i = velbloud.getIndexSkladu();
         velbloud.setNaCeste(true);
         double casAktualni = pozadavek.getTz() + velbloud.getKd()*sklady[i].getTn();// zaciname simulovat cestu - zaciname v Tz
@@ -275,14 +276,14 @@ public class Graph {
                 }
                 System.out.printf("Cas: %d, Velbloud: %d, Oaza: %d, Vylozeno kosu: %d, Vylozeno v: %d, Casova rezerva: %d\n",
                         casDorazu, velbloud.getPoradi(), pozadavek.getOp(), velbloud.getKd(), casVylozeni, casovaRezerva);
-                cestaVelbloudaZpet(velbloud,cesta, pozadavek, casVylozeni);
+                result = cestaVelbloudaZpet(velbloud,cesta, pozadavek, casVylozeni);
                 oazy[pozadavek.getOp()].getInfo().peek().getListVelbloudu().add(velbloud);
                 if (oazy[pozadavek.getOp()].getInfo().peek().getCasDoruceni() < casVylozeni) {
                     oazy[pozadavek.getOp()].getInfo().peek().setCasDoruceni(casVylozeni);
                 }
                 velbloud.getInfo().peek().setCasDoruceni(casVylozeni);
                 velbloud.addToCelkVzdalnost(celkVzdalenost);
-                return;
+                return result;
             }
             String misto = "";
 
@@ -317,6 +318,7 @@ public class Graph {
             }
             i = j;
         }
+        return result;
 
     }
 
@@ -328,8 +330,9 @@ public class Graph {
      * @param casAktualni1 cas kdy velbloud splnil pozadavek a muze jit zpatky
      * @throws InterruptedException vyhozeni vyjimky pri chybe uspani vlakna
      */
-    public void cestaVelbloudaZpet(Velbloud velbloud, List<Integer> cesta,
+    public int cestaVelbloudaZpet(Velbloud velbloud, List<Integer> cesta,
                                    Pozadavek pozadavek, double casAktualni1) throws InterruptedException {
+        int result = 0;
         double casAktualni = casAktualni1;
         cesta.add(0, velbloud.getIndexSkladu());
         cesta.remove(cesta.size()-1);
@@ -351,7 +354,8 @@ public class Graph {
                 velbloud.setCasNavratu(cas + velbloud.getTd());
                 velbloud.getInfo().peek().setCasNavratu((int)(velbloud.getCasNavratu()+0.5));
                 velbloud.setEnergie(velbloud.getD());
-                return;
+                result = cas;
+                return result;
             }
             String misto = "";
 
@@ -386,5 +390,6 @@ public class Graph {
             i = indexDo;
 
         }
+        return result;
     }
 }

@@ -39,6 +39,7 @@ public class Velbloud {
     /** info velblouda */
     private Stack<Trasa> info = new Stack<>();
     private double celkVzdalenost;
+    private static double casPoslednihoPozadavku;
 
 
     /**
@@ -143,6 +144,10 @@ public class Velbloud {
      */
     public DruhVelblouda getDruh() {
         return druh;
+    }
+
+    public static void setCasPoslednihoPozadavku(double casPoslednihoPozadavku) {
+        Velbloud.casPoslednihoPozadavku = casPoslednihoPozadavku;
     }
 
     /**

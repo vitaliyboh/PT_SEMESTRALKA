@@ -23,12 +23,13 @@ public class Main {
     public static void main(String[] args) {
 
         r = new Random();
-        String fileName = "data/tutorial.txt";
+        String fileName = "data/sparse_very_small.txt";
         long start = System.nanoTime();
         Svet svet = reader(fileName);
         System.out.println(((System.nanoTime() - start) / 1000000.0) + " ms\n\n");
         double casPredchozihoPozadavku = 0;
         sonic = true;
+        int casPoslednihoPozadavku = 0;
 
         /////////////////////////// VYRIZOVANI POZADAVKU  /////////////////////////////
 
@@ -121,10 +122,10 @@ public class Main {
             }
 
             
-            finalniCestaBlouda(svet, aktualni, finalniBloudi);
+            casPoslednihoPozadavku = finalniCestaBlouda(svet, aktualni, finalniBloudi);
             System.out.println();
         }
-
+        Velbloud.setCasPoslednihoPozadavku(casPoslednihoPozadavku);
         System.out.println("\nSimulace probehla uspesne :) *dab*");
 
 
@@ -144,7 +145,8 @@ public class Main {
      * @param aktualni pozadavek, ktery musime obslouzit
      * @param finalniBloudi vsechny velbloudy, ktere budou obsluhovat dany pozadavek
      */
-    private static void finalniCestaBlouda(Svet svet, Pozadavek aktualni, List<Velbloud> finalniBloudi) {
+    private static int finalniCestaBlouda(Svet svet, Pozadavek aktualni, List<Velbloud> finalniBloudi) {
+        int result = 0;
         for (Velbloud velbloud : finalniBloudi) {
 
             if (velbloud.isNaCeste()) {
@@ -169,12 +171,13 @@ public class Main {
                     velbloud.getIndexSkladu(), velbloud.getKd(), casOdchodu);
 
             try {
-                svet.mapa.vypisCestyVelblouda(velbloud, finalniCesta, aktualni);
+                result = svet.mapa.vypisCestyVelblouda(velbloud, finalniCesta, aktualni);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
 
         }
+        return result;
     }
 
     /**
