@@ -351,7 +351,7 @@ public class Graph {
                     Thread.sleep(1000);
                 }
                 System.out.printf("Cas: %d, Velbloud: %d, Navrat do skladu: %d\n", cas, velbloud.getPoradi(), velbloud.getIndexSkladu());
-                velbloud.setCasNavratu(cas + velbloud.getTd());
+                velbloud.setCasNavratu(cas /*+ velbloud.getTd()*/);
                 velbloud.getInfo().peek().setCasNavratu((int)(velbloud.getCasNavratu()+0.5));
                 velbloud.setEnergie(velbloud.getD());
                 result = cas;

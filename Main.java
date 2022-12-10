@@ -24,7 +24,7 @@ public class Main {
     public static void main(String[] args) {
 
         r = new Random();
-        String fileName = "data/centre_large.txt";
+        String fileName = "data/tutorial.txt";
         long start = System.nanoTime();
         Svet svet = reader(fileName);
         System.out.println(((System.nanoTime() - start) / 1000000.0) + " ms\n\n");
@@ -356,8 +356,8 @@ public class Main {
 
 
             sklad.getInfo().push(new InfoSklad((int)(nasobek*sklad.getTs()+0.5),sklad.getAktualniPocetKosu(),sklad.getKs()));
-            System.out.println(new InfoSklad((int)(nasobek*sklad.getTs()+0.5),sklad.getAktualniPocetKosu(),sklad.getKs()));
-            //aktualni.setTz(sklad.getTs() * nasobek);
+            //System.out.println(new InfoSklad((int)(nasobek*sklad.getTs()+0.5),sklad.getAktualniPocetKosu(),sklad.getKs()));
+            aktualni.setTz(sklad.getTs() * nasobek);
             sklad.setNasobek(nasobek);
             sklad.setAktualniPocetKosu(sklad.getKs());
             break;
