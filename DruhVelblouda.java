@@ -129,6 +129,10 @@ public class DruhVelblouda {
         return pocet;
     }
 
+    public void setPocet(int pocet) {
+        this.pocet = pocet;
+    }
+
     /**
      * Metoda zajisti srozumitelny popis druhu velblouda
      *

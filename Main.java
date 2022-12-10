@@ -23,7 +23,7 @@ public class Main {
     public static void main(String[] args) {
 
         r = new Random();
-        String fileName = "data/centre_small.txt";
+        String fileName = "data/tutorial.txt";
         long start = System.nanoTime();
         Svet svet = reader(fileName);
         System.out.println(((System.nanoTime() - start) / 1000000.0) + " ms\n\n");
@@ -197,6 +197,8 @@ public class Main {
         for (DruhVelblouda druh : svet.druhyVelbloudu) {
 
             Velbloud superBloud = new Velbloud(druh, list.get(0), r);
+            Velbloud.pocet -= 1;
+            druh.setPocet(druh.getPocet()-1);
             superBloud.makeSuper();
 
             cas = svet.mapa.cestaVelblouda(superBloud,

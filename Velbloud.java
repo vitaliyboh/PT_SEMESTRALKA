@@ -28,7 +28,7 @@ public class Velbloud {
     /** cas navratu velblouda do domovskeho skladu po vykonani pozadavku */
     private double casNavratu;
     /** celkovy pocet velbloudu (pocitame dohromady i velbloudy ruznych druhu) */
-    private static int pocet = 0;
+    public static int pocet = 0;
     /** poradi velblouda */
     private final int poradi = ++pocet;
     /** generator nahodnych cisel */
@@ -103,7 +103,7 @@ public class Velbloud {
      * @return nazev velblouda
      */
     public final String generateName() {
-        return "Velboud_" + pocet;
+        return "Velboud_" + poradi;
     }
 
     /**
@@ -250,6 +250,7 @@ public class Velbloud {
     public void setKd(int kd) {
         this.kd = kd;
     }
+
 
     /**
      * Udela z velblouda tzv superVelblouda,
