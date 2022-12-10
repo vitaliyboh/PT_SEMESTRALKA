@@ -256,12 +256,14 @@ public class Graph {
         double casAktualni = pozadavek.getTz() + velbloud.getKd()*sklady[i].getTn();// zaciname simulovat cestu - zaciname v Tz
         // a postupne po vypisech pricitame do tohohle casu cas cesty, dobu napiti atd
 
+        double celkVzdalenost = 0;
         for (Integer j: cesta) {
             Link n = edges[i];
             while (n.neighbour != j) {
                 n = n.next;
             }
             double vzdalenost = n.edgeValue;
+            celkVzdalenost += vzdalenost;
             velbloud.setEnergie(velbloud.getEnergie() - vzdalenost);
 
             if (j == pozadavek.getOp()+ sklady.length-1){
@@ -279,6 +281,7 @@ public class Graph {
                     oazy[pozadavek.getOp()].getInfo().peek().setCasDoruceni(casVylozeni);
                 }
                 velbloud.getInfo().peek().setCasDoruceni(casVylozeni);
+                velbloud.addToCelkVzdalnost(celkVzdalenost);
                 return;
             }
             String misto = "";
@@ -304,6 +307,7 @@ public class Graph {
                         misto, indexOazy, velbloud.getDruh().getJmeno(), (int)(casAktualni + velbloud.getTd()+0.5));
                 velbloud.getInfo().peek().getZastavky().add(misto+"_" + indexOazy);
                 velbloud.getInfo().peek().getCasyZastavek().add((int)(casAktualni +0.5));
+
                 casAktualni += velbloud.getTd();
                 velbloud.setEnergie(velbloud.getD());
             }
@@ -313,6 +317,7 @@ public class Graph {
             }
             i = j;
         }
+
     }
 
     /**

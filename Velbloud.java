@@ -1,3 +1,4 @@
+import java.util.Locale;
 import java.util.Random;
 import java.util.Stack;
 
@@ -37,6 +38,8 @@ public class Velbloud {
     private int kd;
     /** info velblouda */
     private Stack<Trasa> info = new Stack<>();
+    private double celkVzdalenost;
+
 
     /**
      * Konstruktor vytvori novou instanci velblouda
@@ -58,6 +61,7 @@ public class Velbloud {
         this.jmeno = generateName();
         this.indexSkladu = indexSkladu;
         this.energie = d;
+        this.celkVzdalenost = 0;
     }
 
     @Override
@@ -71,12 +75,15 @@ public class Velbloud {
         else {
             double pomocna = info.peek().getCasNavratu();
             while (!info.isEmpty()) {
-                casOdpocinku += pomocna - info.peek().getCasNavratu(); //TODO pripocitat cas nakladani kosu
-                pomocna = info.peek().getCasOpusteni();
-                vypis += info.pop() + "\n";
+                Trasa t = info.pop();
+                casOdpocinku += pomocna - t.getCasNavratu(); //TODO pripocitat cas nakladani kosu
+                pomocna = t.getCasOpusteni();
+                vypis += t + "\n";
             }
         }
-        vypis += "Celkova doba odpocinku: " + casOdpocinku;
+        vypis += "Celkova doba odpocinku: " + casOdpocinku + "\tCelkem usla vzdalenost: " +
+                String.format(Locale.US,"%.2f",celkVzdalenost);
+
         return vypis;
     }
 
@@ -256,6 +263,13 @@ public class Velbloud {
         this.kd = kd;
     }
 
+    public double getCelkVzdalenost() {
+        return celkVzdalenost;
+    }
+
+    public void addToCelkVzdalnost(double vz){
+        this.celkVzdalenost += vz;
+    }
 
     /**
      * Udela z velblouda tzv superVelblouda,
