@@ -62,16 +62,21 @@ public class Velbloud {
 
     @Override
     public String toString() {
+        int casOdpocinku = 0;
         String vypis = "Nazev: " + jmeno + "\tDruh: " + druh.getJmeno() + "\tDomovsky sklad: " + indexSkladu
                 + "\tRychlost: " + v + "\tMax. vzdalenost: " + d + "\nUskutecnene trasy: \n";
         if (info.isEmpty()) {
             vypis += "-zadne uskutecnene trasy-";
         }
         else {
+            double pomocna = info.peek().getCasNavratu();
             while (!info.isEmpty()) {
+                casOdpocinku += pomocna - info.peek().getCasNavratu(); //TODO pripocitat cas nakladani kosu
+                pomocna = info.peek().getCasOpusteni();
                 vypis += info.pop() + "\n";
             }
         }
+        vypis += "Celkova doba odpocinku: " + casOdpocinku;
         return vypis;
     }
 
