@@ -94,7 +94,7 @@ public class Trasa {
         }
         else {
             for (int i = 0; i < zastavky.size(); i++) {
-                vypis += zastavky.get(i) + " - " + casyZastavek.get(i) + " [j], ";
+                vypis += zastavky.get(i) + " - " + casyZastavek.get(i) + "[j], ";
             }
         }
         vypis+="] \n Cas navratu: " + casNavratu;

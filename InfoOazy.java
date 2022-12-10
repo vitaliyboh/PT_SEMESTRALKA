@@ -57,7 +57,7 @@ public class InfoOazy {
         String vypis = "Cas prichodu pozadavku: " + casPozadavku + "\t Pocet kosu: " + pocetKosu + "\t Deadline: " + deadline +
                 "\t Cas doruceni: " + casDoruceni + "\t Velbloudi: [";
         for (Velbloud velbloud: listVelbloudu) {
-            vypis += velbloud.getJmeno()+ ",";
+            vypis += velbloud.getJmeno()+ "(S" + velbloud.getIndexSkladu() + "),";
         }
         vypis+= "]";
         return vypis;
