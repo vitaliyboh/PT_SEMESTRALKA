@@ -10,7 +10,8 @@ public class PQNode {
 
     /**
      * Konstruktor vytvori novou instanci
-     * @param index index vrcholu
+     *
+     * @param index      index vrcholu
      * @param vzdalenost priorita
      */
     public PQNode(int index, double vzdalenost) {

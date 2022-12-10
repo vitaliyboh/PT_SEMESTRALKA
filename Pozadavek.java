@@ -18,6 +18,7 @@ public class Pozadavek {
 
     /**
      * Konstruktor vytvori instanci pozadavku
+     *
      * @param tz cas prichodu pozadavku
      * @param op index oazy
      * @param kp pocet kosu
@@ -34,6 +35,7 @@ public class Pozadavek {
 
     /**
      * Vrati cas prichodu pozadavku
+     *
      * @return cas prichodu pozadavku
      */
     public double getTz() {
@@ -42,6 +44,7 @@ public class Pozadavek {
 
     /**
      * Vrati index oazy
+     *
      * @return index oazy
      */
     public int getOp() {
@@ -50,6 +53,7 @@ public class Pozadavek {
 
     /**
      * Vrati pocet kosu
+     *
      * @return pocet kosu
      */
     public int getKp() {
@@ -58,6 +62,7 @@ public class Pozadavek {
 
     /**
      * Vrati cas, za jak dlouho od prichodu pozadavku musi byt kose doruceny
+     *
      * @return cas, za jak dlouho od prichodu pozadavku musi byt kose doruceny
      */
     public double getTp() {
@@ -66,6 +71,7 @@ public class Pozadavek {
 
     /**
      * Vrati poradi pozadavku
+     *
      * @return poradi pozadavku
      */
     public int getPoradi() {
@@ -74,6 +80,7 @@ public class Pozadavek {
 
     /**
      * Nastavi cas prichodu pozadavku
+     *
      * @param tz cas prichodu pozadavku
      */
     public void setTz(double tz) {

@@ -278,6 +278,7 @@ public class Graph {
                 if (oazy[pozadavek.getOp()].getInfo().peek().getCasDoruceni() < casVylozeni) {
                     oazy[pozadavek.getOp()].getInfo().peek().setCasDoruceni(casVylozeni);
                 }
+                velbloud.getInfo().peek().setCasDoruceni(casVylozeni);
                 return;
             }
             String misto = "";
@@ -301,6 +302,8 @@ public class Graph {
                 System.out.printf("Cas: %d, Velbloud: %d, %s: %d, Ziznivy %s, Pokracovani mozne v: %d\n",
                         (int)(casAktualni +0.5), velbloud.getPoradi(),
                         misto, indexOazy, velbloud.getDruh().getJmeno(), (int)(casAktualni + velbloud.getTd()+0.5));
+                velbloud.getInfo().peek().getZastavky().add(misto+"_" + indexOazy);
+                velbloud.getInfo().peek().getCasyZastavek().add((int)(casAktualni +0.5));
                 casAktualni += velbloud.getTd();
                 velbloud.setEnergie(velbloud.getD());
             }

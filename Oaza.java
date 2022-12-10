@@ -37,8 +37,13 @@ public class Oaza {
     @Override
     public String toString() {
         String vypis = "";
-        while(!info.empty()) {
-            vypis += info.pop().toString();
+        if (info.isEmpty()){
+            vypis += "-oaza nemela zadny pozadavek-";
+        }
+        else {
+            while (!info.empty()) {
+                vypis += info.pop().toString();
+            }
         }
         vypis += "\n";
         return vypis;

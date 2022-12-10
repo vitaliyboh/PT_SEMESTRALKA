@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public class Trasa {
@@ -6,23 +7,15 @@ public class Trasa {
     int pocetKosu;
     int indexOazy;
     int casDoruceni;
-    List<String> zastavky;
-    List<Integer> casyZastavek;
+    List<String> zastavky = new ArrayList<>();
+    List<Integer> casyZastavek = new ArrayList<>();
     int casNavratu;
 
-
-    @Override
-    public String toString() {
-        String vypis = "Cas odchodu: " + casOpusteni + "\t Cesta pres: [";
-        for (String misto: cesta) {
-            vypis+= misto + ", ";
-        }
-        vypis += "] \n Pocet kosu: " + pocetKosu + "\t Index oazy: " + indexOazy + "\t Cas doruceni: " + casDoruceni + "\n Zastavky na piti: [ ";
-        for (int i = 0; i < zastavky.size(); i++) {
-            vypis+= zastavky.get(i) + " - " +  casyZastavek.get(i) + " j, ";
-        }
-        vypis+="] \n Cas navratu: " + casNavratu;
-        return vypis;
+    public Trasa(int casOpusteni, List<String> cesta, int pocetKosu, int indexOazy) {
+        this.casOpusteni = casOpusteni;
+        this.cesta = cesta;
+        this.pocetKosu = pocetKosu;
+        this.indexOazy = indexOazy;
     }
 
     public int getCasOpusteni() {
@@ -87,6 +80,25 @@ public class Trasa {
 
     public void setCasNavratu(int casNavratu) {
         this.casNavratu = casNavratu;
+    }
+
+    @Override
+    public String toString() {
+        String vypis = " <> Cas odchodu: " + casOpusteni + "\t Cesta pres: [";
+        for (String misto: cesta) {
+            vypis+= misto + ", ";
+        }
+        vypis += "] \n Pocet kosu: " + pocetKosu + "\t Index oazy: " + indexOazy + "\t Cas doruceni: " + casDoruceni + "\n Zastavky na piti: [ ";
+        if (zastavky.isEmpty()){
+            vypis += "-zadne zastavky na piti-";
+        }
+        else {
+            for (int i = 0; i < zastavky.size(); i++) {
+                vypis += zastavky.get(i) + " - " + casyZastavek.get(i) + " [j], ";
+            }
+        }
+        vypis+="] \n Cas navratu: " + casNavratu;
+        return vypis;
     }
 
 

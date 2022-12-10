@@ -28,10 +28,11 @@ public class Sklad{
 
     /**
      * Konstruktor vytvori novou instanci skladu
+     *
      * @param pozice pozice skladu
-     * @param ks pocet kosu na sklade
-     * @param ts doba potrebna pro doblneni kosu
-     * @param tn doba nalozeni/vylozeni 1 kose
+     * @param ks     pocet kosu na sklade
+     * @param ts     doba potrebna pro doblneni kosu
+     * @param tn     doba nalozeni/vylozeni 1 kose
      */
     public Sklad(Pozice pozice, int ks, double ts, double tn) {
         this.pozice = pozice;
@@ -44,6 +45,7 @@ public class Sklad{
 
     /**
      * Vrati pozici skladu
+     *
      * @return pozice skladu
      */
     public Pozice getPozice() {
@@ -52,6 +54,7 @@ public class Sklad{
 
     /**
      * Vrati pocet kosu na sklade
+     *
      * @return pocet kosu na sklade
      */
     public int getKs() {
@@ -60,6 +63,7 @@ public class Sklad{
 
     /**
      * Vrati pocet, kolikrat se doplnoval sklad
+     *
      * @return pocet, kolikrat se doplnoval sklad
      */
     public int getNasobek() {
@@ -68,6 +72,7 @@ public class Sklad{
 
     /**
      * Nastavi pocet, kolikrat se doplnoval skald
+     *
      * @param nasobek dany pocet
      */
     public void setNasobek(int nasobek) {
@@ -76,6 +81,7 @@ public class Sklad{
 
     /**
      * Nastavi aktualni pocet kosu na sklade
+     *
      * @param aktualniPocetKosu pocet kosu na sklade
      */
     public void setAktualniPocetKosu(int aktualniPocetKosu) {
@@ -84,6 +90,7 @@ public class Sklad{
 
     /**
      * Vrati aktualni pocet kosu na sklade
+     *
      * @return aktualni pocet kosu na sklade
      */
     public int getAktualniPocetKosu() {
@@ -92,6 +99,7 @@ public class Sklad{
 
     /**
      * Vrati dobu potrebnu na doplneni skladu
+     *
      * @return doba potrebna na doplneni skladu
      */
     public double getTs() {
@@ -100,6 +108,7 @@ public class Sklad{
 
     /**
      * Vrati dobu nalozeni/vylozeni 1 kose
+     *
      * @return doba nalozeni/vylozeni 1 kose
      */
     public double getTn() {
@@ -108,6 +117,7 @@ public class Sklad{
 
     /**
      * Vrati list vsehc velbloudu, kteri patri tomuto skladu
+     *
      * @return list velbloudu, kteri patri tomuto skladu
      */
     public List<Velbloud> getVelboudi() {
@@ -116,6 +126,7 @@ public class Sklad{
 
     /**
      * Nastavi velblouda, ktery ma maximalni vzdalenost kterou ujde na jedno napiti
+     *
      * @param maxVzdalenostBloud velbloud, ktery ma maximalni vzdalenost kterou ujde na jedno napiti
      */
     public void setMaxVzdalenostBloud(Velbloud maxVzdalenostBloud) {
@@ -124,6 +135,7 @@ public class Sklad{
 
     /**
      * Vrati velblouda, ktery ma maximalni vzdalenost kterou ujde na jedno napiti
+     *
      * @return velbloud, ktery ma maximalni vzdalenost kterou ujde na jedno napiti
      */
     public Velbloud getMaxVzdalenostBloud() {
@@ -137,8 +149,13 @@ public class Sklad{
     @Override
     public String toString() {
         String vypis = "";
-        while(!info.empty()) {
-            vypis += info.pop().toString();
+        if (info.isEmpty()){
+            vypis += "-nedoslo k zadnemu doplneni skladu-";
+        }
+        else {
+            while (!info.empty()) {
+                vypis += info.pop().toString();
+            }
         }
         vypis += "\n";
         return vypis;

@@ -24,14 +24,15 @@ public class DruhVelblouda {
 
     /**
      * Konstruktor vytvori instanci druhu velblouda
+     *
      * @param jmeno jmeno druhu
      * @param v_min min rychlost
      * @param v_max max rychlost
      * @param d_min min vzdalenost na jedno napiti
      * @param d_max max vzdalenost na jedno napiti
-     * @param td doba na piti
-     * @param kd max pocet kosu, ktere velbloud unese
-     * @param pd pomerne zastoupeni druhu
+     * @param td    doba na piti
+     * @param kd    max pocet kosu, ktere velbloud unese
+     * @param pd    pomerne zastoupeni druhu
      */
     public DruhVelblouda(String jmeno, double v_min, double v_max,
                          double d_min, double d_max, double td,
@@ -49,6 +50,7 @@ public class DruhVelblouda {
 
     /**
      * Vrati jmeno druhu
+     *
      * @return jmeno druhu
      */
     public String getJmeno() {
@@ -57,6 +59,7 @@ public class DruhVelblouda {
 
     /**
      * Vrati min rychlost
+     *
      * @return min rychlost
      */
     public double getV_min() {
@@ -65,6 +68,7 @@ public class DruhVelblouda {
 
     /**
      * Vrati max rychlost
+     *
      * @return max rychlost
      */
     public double getV_max() {
@@ -73,6 +77,7 @@ public class DruhVelblouda {
 
     /**
      * Vrati min vzdalenost
+     *
      * @return min vzdalenost
      */
     public double getD_min() {
@@ -81,6 +86,7 @@ public class DruhVelblouda {
 
     /**
      * Vrati max vzdalenost
+     *
      * @return max vzdalenost
      */
     public double getD_max() {
@@ -89,6 +95,7 @@ public class DruhVelblouda {
 
     /**
      * Vrati dobu na piti
+     *
      * @return doba na piti
      */
     public double getTd() {
@@ -97,6 +104,7 @@ public class DruhVelblouda {
 
     /**
      * Vrati max pocet kosu, ktere unese
+     *
      * @return max pocet kosu, ktere unese
      */
     public int getKd() {
@@ -105,6 +113,7 @@ public class DruhVelblouda {
 
     /**
      * Vrati pomerne zastoupeni druhu
+     *
      * @return pomerne zastoupeni druhu
      */
     public double getPd() {
@@ -113,6 +122,7 @@ public class DruhVelblouda {
 
     /**
      * Vrati pocet vytvorenych velbloudu daneho druhu
+     *
      * @return pocet vytvorenych velbloudu daneho druhu
      */
     public int getPocet() {
@@ -121,6 +131,7 @@ public class DruhVelblouda {
 
     /**
      * Metoda zajisti srozumitelny popis druhu velblouda
+     *
      * @return retezcova reprezentace instance
      */
     @Override

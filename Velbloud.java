@@ -43,9 +43,10 @@ public class Velbloud {
      * nastavi druh a index skladu
      * dale vygeneruje podle druhu jeho rychlost a vzdalenost kterou ujd na jedno napiti,
      * vygeneruje jeho jmeno a zvysi pocet velboudu daneho druhu a zaroven celkovy pocet velbloudu
-     * @param druh druh velblouda
+     *
+     * @param druh        druh velblouda
      * @param indexSkladu index skladu kde byl velbloud vytvoreny
-     * @param r generator nahodnych cisel
+     * @param r           generator nahodnych cisel
      */
     public Velbloud(DruhVelblouda druh, int indexSkladu, Random r) {
         this.druh = druh;
@@ -59,8 +60,24 @@ public class Velbloud {
         this.energie = d;
     }
 
+    @Override
+    public String toString() {
+        String vypis = "Nazev: " + jmeno + "\tDruh: " + druh.getJmeno() + "\tDomovsky sklad: " + indexSkladu
+                + "\tRychlost: " + v + "\tMax. vzdalenost: " + d + "\nUskutecnene trasy: \n";
+        if (info.isEmpty()) {
+            vypis += "-zadne uskutecnene trasy-";
+        }
+        else {
+            while (!info.isEmpty()) {
+                vypis += info.pop() + "\n";
+            }
+        }
+        return vypis;
+    }
+
     /**
      * Metoda vygeneruje rychlost velblouda v rozsahu min a max hodnoty jeho druhu
+     *
      * @return vygenerovana rychlost
      */
     public final double generateV() {
@@ -72,15 +89,17 @@ public class Velbloud {
 
     /**
      * Metoda vygeneruje vzdalenost velblouda na jedno napiti v rozsahu min a max hodnoty jeho druhu
+     *
      * @return vygenerovana vzdalenost na jedno napiti
      */
     public final double generateD() {
-        return r.nextGaussian((druh.getD_min() + druh.getD_max())/2.0,(druh.getD_max() - druh.getD_min())/4.0);
+        return r.nextGaussian((druh.getD_min() + druh.getD_max()) / 2.0, (druh.getD_max() - druh.getD_min()) / 4.0);
     }
 
     /**
      * Metoda vygeneruej jmeno velblouda
      * jmeno je ve formatu Velbloud_(poradi daneho velblouda)
+     *
      * @return nazev velblouda
      */
     public final String generateName() {
@@ -89,6 +108,7 @@ public class Velbloud {
 
     /**
      * Vrati celkovy pocet velbloudu
+     *
      * @return pocet velbloudu
      */
     public static int getPocet() {
@@ -97,6 +117,7 @@ public class Velbloud {
 
     /**
      * Vrati jmeno velblouda
+     *
      * @return jmeno velblouda
      */
     public String getJmeno() {
@@ -105,6 +126,7 @@ public class Velbloud {
 
     /**
      * Vrati druh velblouda
+     *
      * @return druh velblouda
      */
     public DruhVelblouda getDruh() {
@@ -113,6 +135,7 @@ public class Velbloud {
 
     /**
      * Vrati rychlost velblouda
+     *
      * @return rychlost velblouda
      */
     public double getV() {
@@ -121,6 +144,7 @@ public class Velbloud {
 
     /**
      * Metoda zjisti jestli je velbloud na ceste
+     *
      * @return true - je na ceste, false - neni na ceste(je ve svem domovskym skladu)
      */
     public boolean isNaCeste() {
@@ -129,6 +153,7 @@ public class Velbloud {
 
     /**
      * Vrati poradi velblouda
+     *
      * @return poradi velblouda
      */
     public int getPoradi() {
@@ -137,6 +162,7 @@ public class Velbloud {
 
     /**
      * Nastavi booleovskou promennou indikujici zda je velbloud na ceste nebo ne
+     *
      * @param naCeste bud true - je na ceste, nebo false - neni na ceste
      */
     public void setNaCeste(boolean naCeste) {
@@ -145,6 +171,7 @@ public class Velbloud {
 
     /**
      * Vrati vzdalenost velblouda kterou ujde na jedno napiti
+     *
      * @return vzdalenost na jedno napiti
      */
     public double getD() {
@@ -153,6 +180,7 @@ public class Velbloud {
 
     /**
      * Vrati cas na piti
+     *
      * @return cas na piti
      */
     public double getTd() {
@@ -161,6 +189,7 @@ public class Velbloud {
 
     /**
      * Vrati aktualni zatizeni velblouda (tj kolik ma na sobe nalozeno kosu, nemusi byt max pocet kosu ktery unese)
+     *
      * @return aktualni zatizeni velblouda
      */
     public int getKd() {
@@ -169,6 +198,7 @@ public class Velbloud {
 
     /**
      * Vrati index domovskeho skladu
+     *
      * @return index domovskeho skladu
      */
     public int getIndexSkladu() {
@@ -178,6 +208,7 @@ public class Velbloud {
     /**
      * Nastavi energii velblouda na danou hodnotu
      * nastavime v pripade kdy velbloud usel nejakou cestu, to znamena ze jeho energie se zmensila
+     *
      * @param energie pozadovana hodnota energie
      */
     public void setEnergie(double energie) {
@@ -186,6 +217,7 @@ public class Velbloud {
 
     /**
      * Vrati aktualni energii velblouda
+     *
      * @return aktualni energie velblouda
      */
     public double getEnergie() {
@@ -194,6 +226,7 @@ public class Velbloud {
 
     /**
      * Nastavi atribut kdy se velbloud vrati do sveho skladu na danou hodnotu
+     *
      * @param casNavratu cas kdy se velbloud vrati do skladu
      */
     public void setCasNavratu(double casNavratu) {
@@ -202,6 +235,7 @@ public class Velbloud {
 
     /**
      * Vrati cas navratu velblouda do skladu
+     *
      * @return cas navratu velblouda do skladu
      */
     public double getCasNavratu() {
@@ -210,6 +244,7 @@ public class Velbloud {
 
     /**
      * Nastavi aktualni zatizeni velblouda (tj pocet kosu ktery byl na nej nalozen)
+     *
      * @param kd pocet kosu nalozeny na velblouda
      */
     public void setKd(int kd) {
@@ -220,7 +255,7 @@ public class Velbloud {
      * Udela z velblouda tzv superVelblouda,
      * tj nastavi jeho rychlost a vzdalenost kterou ujde na jedno napiti na maximalni mozne hodnoty
      */
-    public void makeSuper(){
+    public void makeSuper() {
         this.v = druh.getV_max();
         this.d = druh.getD_max();
     }

@@ -10,16 +10,18 @@ public class Pozice {
 
     /**
      * Konstruktor vytvori novou instanci
+     *
      * @param x x-ova souradnice
      * @param y y-ova souradnice
      */
-    public Pozice(double x, double y){
+    public Pozice(double x, double y) {
         this.x = x;
         this.y = y;
     }
 
     /**
      * Nastavi x-vou souradnici
+     *
      * @param x x-ova souradnice
      */
     public void setX(double x) {
@@ -28,6 +30,7 @@ public class Pozice {
 
     /**
      * Nastavi y-ovu souradnici
+     *
      * @param y y-ova souradnice
      */
     public void setY(double y) {
@@ -36,10 +39,11 @@ public class Pozice {
 
     /**
      * Metoda spocita vzdalenost dvou pozic
+     *
      * @param other pozice, ke ktery chceme spocitat vzdalenost
      * @return vzdalenost k dane pozici
      */
-    public double getDistance(Pozice other){
-        return Math.sqrt((this.x - other.x)*(this.x - other.x) + (this.y - other.y)*(this.y - other.y));
+    public double getDistance(Pozice other) {
+        return Math.sqrt((this.x - other.x) * (this.x - other.x) + (this.y - other.y) * (this.y - other.y));
     }
 }

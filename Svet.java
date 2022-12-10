@@ -17,11 +17,12 @@ public class Svet {
 
     /**
      * Konstruktor vytvori novou instanci sveta
-     * @param oazy existujuiici oazy
-     * @param sklady  existujici sklady
+     *
+     * @param oazy           existujuiici oazy
+     * @param sklady         existujici sklady
      * @param druhyVelbloudu vsechny druhy velbloudu
-     * @param pozadavky fronta pozadavku
-     * @param mapa graf cest mezi oazami a sklady
+     * @param pozadavky      fronta pozadavku
+     * @param mapa           graf cest mezi oazami a sklady
      */
     public Svet(Oaza[] oazy, Sklad[] sklady, DruhVelblouda[] druhyVelbloudu, Queue<Pozadavek> pozadavky, Graph mapa) {
         this.oazy = oazy;

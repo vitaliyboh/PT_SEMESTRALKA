@@ -1,3 +1,4 @@
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -22,7 +23,7 @@ public class Main {
     public static void main(String[] args) {
 
         r = new Random();
-        String fileName = "data/tutorial.txt";
+        String fileName = "data/centre_small.txt";
         long start = System.nanoTime();
         Svet svet = reader(fileName);
         System.out.println(((System.nanoTime() - start) / 1000000.0) + " ms\n\n");
@@ -124,18 +125,15 @@ public class Main {
             System.out.println();
         }
 
-        System.out.println("Simulace probehla uspesne :) *dab*");
+        System.out.println("\nSimulace probehla uspesne :) *dab*");
 
-        for (int i = 1; i < svet.oazy.length; i++) {
-            if (!svet.oazy[i].getInfo().isEmpty()) {
-                System.out.println("Oaza_" + i + "\t" + svet.oazy[i].toString());
-            }
-        }
 
-        for (int i = 1; i < svet.sklady.length; i++) {
-            if (!svet.sklady[i].getInfo().isEmpty()) {
-                System.out.println("Sklad_" + i + "\n" + svet.sklady[i].toString());
-            }
+
+        Zapisovac zapisovac = new Zapisovac(svet.sklady, svet.oazy);
+        try {
+            zapisovac.zapisVse();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
         }
 
     }
@@ -148,6 +146,7 @@ public class Main {
      */
     private static void finalniCestaBlouda(Svet svet, Pozadavek aktualni, List<Velbloud> finalniBloudi) {
         for (Velbloud velbloud : finalniBloudi) {
+
             if (velbloud.isNaCeste()) {
                 aktualni.setTz(velbloud.getCasNavratu());
             }
@@ -159,11 +158,15 @@ public class Main {
 
             List<Integer> finalniCesta = svet.mapa.cesta(velbloud.getIndexSkladu(),
                     aktualni.getOp() + svet.sklady.length - 1, velbloud);
+            List<String> pojmCesta = vratPojmenovanouCestu(finalniCesta,svet);
+            int casOdchodu = (int) (aktualni.getTz() + velbloud.getKd() * svet.sklady[velbloud.getIndexSkladu()].getTn() + 0.5);
+            Trasa trasa = new Trasa(casOdchodu, pojmCesta,
+                    velbloud.getKd(), (finalniCesta.get(finalniCesta.size() - 1) - svet.sklady.length + 1));
+            velbloud.getInfo().push(trasa);
 
             System.out.printf("Cas: %d, Velbloud: %d, Sklad: %d, Nalozeno kosu: %d, Odchod v: %d\n",
                     (int) (aktualni.getTz() + 0.5), velbloud.getPoradi(),
-                    velbloud.getIndexSkladu(), velbloud.getKd(),
-                    (int) (aktualni.getTz() + velbloud.getKd() * svet.sklady[velbloud.getIndexSkladu()].getTn() + 0.5));
+                    velbloud.getIndexSkladu(), velbloud.getKd(), casOdchodu);
 
             try {
                 svet.mapa.vypisCestyVelblouda(velbloud, finalniCesta, aktualni);
@@ -535,6 +538,18 @@ public class Main {
         }
     }
 
+    private static List<String> vratPojmenovanouCestu(List<Integer> cesta, Svet svet){
+        List<String> pojmCesta = new ArrayList<>();
+        for(Integer i:cesta){
+            if(i < svet.sklady.length){
+                pojmCesta.add("Sklad_" + i);
+            }
+            else {
+                pojmCesta.add("Oaza_" + (i - svet.sklady.length + 1));
+            }
+        }
+        return pojmCesta;
+    }
 }
 
 
