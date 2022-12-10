@@ -69,7 +69,7 @@ public class Velbloud {
     public String toString() {
         int casOdpocinku = 0;
         String vypis = "Nazev: " + jmeno + "\tDruh: " + druh.getJmeno() + "\tDomovsky sklad: " + indexSkladu
-                + "\tRychlost: " + v + "\tMax. vzdalenost: " + d + "\nUskutecnene trasy: \n";
+                + "\tRychlost: " + String.format(Locale.US,"%.2f",v) + "\tMax. vzdalenost: " + String.format(Locale.US,"%.2f",d) + "\nUskutecnene trasy: \n";
         if (info.isEmpty()) {
             vypis += "-zadne uskutecnene trasy-";
         }

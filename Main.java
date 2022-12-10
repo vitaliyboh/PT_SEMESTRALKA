@@ -15,6 +15,7 @@ public class Main {
      * sonic=false - mezi vypisy je uspani 1sec
      */
     static boolean sonic;
+    static Zapisovac zapisovac;
 
     /**
      * Vstupni bod programu, spusteni simulace
@@ -23,11 +24,12 @@ public class Main {
     public static void main(String[] args) {
 
         r = new Random();
-        String fileName = "data/centre_small.txt";
+        String fileName = "data/centre_large.txt";
         long start = System.nanoTime();
         Svet svet = reader(fileName);
         System.out.println(((System.nanoTime() - start) / 1000000.0) + " ms\n\n");
         double casPredchozihoPozadavku = 0;
+        zapisovac = new Zapisovac(svet.sklady, svet.oazy, svet.druhyVelbloudu);
         sonic = true;
         int casPoslednihoPozadavku = 0;
 
@@ -118,6 +120,11 @@ public class Main {
                 System.out.printf("Cas: %d, Oaza: %d, Vsichni vymreli, Harpagon zkrachoval, Konec simulace\n",
                         (int) (aktualni.getTz() + 0.5), aktualni.getOp());
                 System.out.println("Duvod: Nenasel se vhodny velbloud");
+                try {
+                    zapisovac.zapisVse();
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
                 System.exit(1);
             }
 
@@ -133,7 +140,6 @@ public class Main {
 
 
 
-        Zapisovac zapisovac = new Zapisovac(svet.sklady, svet.oazy);
         try {
             zapisovac.zapisVse();
         } catch (FileNotFoundException e) {
@@ -361,6 +367,12 @@ public class Main {
             System.out.printf("Cas: %d, Oaza: %d, Vsichni vymreli, Harpagon zkrachoval, Konec simulace\n",
                     (int) (aktualni.getTz() + 0.5), aktualni.getOp());
             System.out.println("Duvod: Nenasel se vhodny sklad");
+            try {
+                zapisovac.zapisVse();
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+
             System.exit(1);
         }
     }
