@@ -74,7 +74,7 @@ public class Velbloud {
             vypis += "-zadne uskutecnene trasy-";
         }
         else {
-            double pomocna = info.peek().getCasNavratu();
+            double pomocna = casPoslednihoPozadavku;
             while (!info.isEmpty()) {
                 Trasa t = info.pop();
                 casOdpocinku += pomocna - t.getCasNavratu(); //TODO pripocitat cas nakladani kosu
