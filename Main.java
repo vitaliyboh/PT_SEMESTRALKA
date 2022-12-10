@@ -122,10 +122,13 @@ public class Main {
             }
 
             
-            casPoslednihoPozadavku = finalniCestaBlouda(svet, aktualni, finalniBloudi);
+            int casPozadavku = finalniCestaBlouda(svet, aktualni, finalniBloudi);
+            if(casPozadavku>casPoslednihoPozadavku) {
+                Velbloud.setCasPoslednihoPozadavku(casPozadavku);
+                casPoslednihoPozadavku = casPozadavku;
+            }
             System.out.println();
         }
-        Velbloud.setCasPoslednihoPozadavku(casPoslednihoPozadavku);
         System.out.println("\nSimulace probehla uspesne :) *dab*");
 
 

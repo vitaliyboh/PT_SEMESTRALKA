@@ -20,7 +20,6 @@ public class Zapisovac {
         }
         pw.close();
 
-
     }
 
     void zapisInfoSkladu() throws FileNotFoundException {
