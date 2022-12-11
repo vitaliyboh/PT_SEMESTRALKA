@@ -366,16 +366,20 @@ double Dijkstra(int s, int d) {
         }
         return result[d];
     }
-------------------------------------------------- VYPIS DRUHU VELBLOUDU --------------------------------------------------
-/**
-     * Vypise informace o vsech druzich velbloudu
-     * @param svet svet
-     */
-    private static void vypisDruhuVelbloudu(Svet svet) {
-        int celkem = 0;
-        for (DruhVelblouda d : svet.druhyVelbloudu){
-            celkem += d.pocet;
-            System.out.println(d);
-        }
-        System.out.println("Celkem: " + celkem + "\n");
-    }
+
+    -----------------------------Nejaky doplneni kosu wtf---------------------------
+    // obnoveni kosu
+                for (Integer skladyIndex : list) {
+                    Sklad sklad = svet.sklady[skladyIndex];
+                    if (aktualni.getTz() < sklad.getTs() || sklad.getAktualniPocetKosu() == sklad.getKs()) {
+                        continue;
+                    }
+                    int nasobek1 = (int) (aktualni.getTz() / sklad.getTs());
+                    if (casPredchozihoPozadavku <= sklad.getTs() * nasobek1 && sklad.getTs() * nasobek1 <= aktualni.getTz()) {
+                        sklad.getInfo().add(new InfoSklad());
+                        sklad.getInfo().peek().setPocetKosuPredDoplnenim(sklad.getAktualniPocetKosu());
+                        sklad.getInfo().peek().setDobyDoplneni((int)(nasobek1*sklad.getTs()+0.5));
+                        sklad.setAktualniPocetKosu(sklad.getKs());
+                        sklad.setNasobek(nasobek1);
+                    }
+                }

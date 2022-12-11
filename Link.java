@@ -12,8 +12,9 @@ public class Link {
 
     /**
      * Konstruktor vytvori instanci spojoveho prvku
+     *
      * @param neighbour index sousedniho vrcholu
-     * @param next odkaz na dalsi prvek
+     * @param next      odkaz na dalsi prvek
      * @param edgeValue vzdalenost k vrcholu
      */
     public Link(int neighbour, Link next, double edgeValue) {

@@ -37,7 +37,7 @@ public class Velbloud {
     /** aktualni zatizeni velblouda(tj kolik ma na sobe nalozeno kosu, nemusi byt vzdy rovno max hodnote) */
     private int kd;
     /** info velblouda */
-    private Stack<Trasa> info = new Stack<>();
+    private final Stack<Trasa> info = new Stack<>();
     private double celkVzdalenost;
     private static double casPoslednihoPozadavku;
     private int casOdpocinku = 0;
@@ -69,25 +69,24 @@ public class Velbloud {
     @Override
     public String toString() {
         //int casOdpocinku = 0;
-        String vypis = "Nazev: " + jmeno + "\tDruh: " + druh.getJmeno() + "\tDomovsky sklad: " + indexSkladu
-                + "\tRychlost: " + String.format(Locale.US,"%.2f",v) + "\tMax. vzdalenost: " + String.format(Locale.US,"%.2f",d) + "\nUskutecnene trasy: \n";
+        StringBuilder vypis = new StringBuilder("Nazev: " + jmeno + "\tDruh: " + druh.getJmeno() + "\tDomovsky sklad: " + indexSkladu
+                + "\tRychlost: " + String.format(Locale.US, "%.2f", v) + "\tMax. vzdalenost: " + String.format(Locale.US, "%.2f", d) + "\nUskutecnene trasy: \n");
         if (info.isEmpty()) {
-            vypis += "-zadne uskutecnene trasy-";
-        }
-        else {
+            vypis.append("-zadne uskutecnene trasy-");
+        } else {
             double pomocna = casPoslednihoPozadavku;
             while (!info.isEmpty()) {
                 Trasa t = info.pop();
                 casOdpocinku += pomocna - t.getCasNavratu();
                 pomocna = t.getCasOpusteni();
-                vypis += t + "\n";
+                vypis.append(t).append("\n");
             }
         }
-        vypis += "Celkova doba odpocinku: " + casOdpocinku + "\tCelkem usla vzdalenost: " +
-                String.format(Locale.US,"%.2f",celkVzdalenost);
-                String.format(Locale.US,"%.2f",celkVzdalenost);
+        vypis.append("Celkova doba odpocinku: ")
+                .append(casOdpocinku).append("\tCelkem usla vzdalenost: ")
+                .append(String.format(Locale.US, "%.2f", celkVzdalenost));
 
-        return vypis;
+        return vypis.toString();
     }
 
     /**
@@ -278,8 +277,8 @@ public class Velbloud {
         return celkVzdalenost;
     }
 
-    public void addToCelkVzdalnost(double vz){
-        this.celkVzdalenost += 2*vz;
+    public void addToCelkVzdalnost(double vz) {
+        this.celkVzdalenost += 2 * vz;
     }
 
     /**

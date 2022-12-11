@@ -12,6 +12,7 @@ public class Oaza {
 
     /**
      * Konstruktor vytvori novou instanci oazy
+     *
      * @param pozice pozice oazy
      */
     public Oaza(Pozice pozice) {
@@ -20,6 +21,7 @@ public class Oaza {
 
     /**
      * Vrati pozici oazy
+     *
      * @return pozice oazy
      */
     public Pozice getPozice() {
@@ -28,6 +30,7 @@ public class Oaza {
 
     /**
      * Vrati instanci infa o oaze
+     *
      * @return info pro statistiku
      */
     public Stack<InfoOazy> getInfo() {
@@ -36,16 +39,15 @@ public class Oaza {
 
     @Override
     public String toString() {
-        String vypis = "";
-        if (info.isEmpty()){
-            vypis += "-oaza nemela zadny pozadavek-";
-        }
-        else {
+        StringBuilder vypis = new StringBuilder();
+        if (info.isEmpty()) {
+            vypis.append("-oaza nemela zadny pozadavek-");
+        } else {
             while (!info.empty()) {
-                vypis += info.pop().toString();
+                vypis.append(info.pop().toString());
             }
         }
-        vypis += "\n";
-        return vypis;
+        vypis.append("\n");
+        return vypis.toString();
     }
 }

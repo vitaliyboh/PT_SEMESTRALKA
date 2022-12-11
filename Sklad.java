@@ -148,16 +148,15 @@ public class Sklad{
 
     @Override
     public String toString() {
-        String vypis = "";
-        if (info.isEmpty()){
-            vypis += "-nedoslo k zadnemu doplneni skladu-";
-        }
-        else {
+        StringBuilder vypis = new StringBuilder();
+        if (info.isEmpty()) {
+            vypis.append("-nedoslo k zadnemu doplneni skladu-");
+        } else {
             while (!info.empty()) {
-                vypis += info.pop().toString();
+                vypis.append(info.pop().toString());
             }
         }
-        vypis += "\n";
-        return vypis;
+        vypis.append("\n");
+        return vypis.toString();
     }
 }

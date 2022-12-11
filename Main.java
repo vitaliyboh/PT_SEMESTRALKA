@@ -20,16 +20,16 @@ public class Main {
 
     /**
      * Vstupni bod programu, spusteni simulace
+     *
      * @param args parametry prikazove radky (nevyuzito)
      */
     public static void main(String[] args) {
 
         r = new Random();
-        String fileName = "data/centre_large.txt";
+        String fileName = "data/sparse_bit_medium.txt";
         long start = System.nanoTime();
         Svet svet = reader(fileName);
         System.out.println(((System.nanoTime() - start) / 1000000.0) + " ms\n\n");
-        double casPredchozihoPozadavku = 0;
         zapisovac = new Zapisovac(svet.sklady, svet.oazy, svet.druhyVelbloudu);
         sonic = true;
         int casPoslednihoPozadavku = 0;
@@ -41,9 +41,9 @@ public class Main {
 
             InfoOazy infoOazy = new InfoOazy();
             svet.oazy[aktualni.getOp()].getInfo().add(infoOazy);
-            infoOazy.setCasPozadavku((int)(aktualni.getTz()+0.5));
+            infoOazy.setCasPozadavku((int) (aktualni.getTz() + 0.5));
             infoOazy.setPocetKosu(aktualni.getKp());
-            infoOazy.setDeadline((int)(aktualni.getTz() + aktualni.getTp() + 0.5));
+            infoOazy.setDeadline((int) (aktualni.getTz() + aktualni.getTp() + 0.5));
 
             System.out.printf("Cas: %d, Pozadavek: %d, Oaza: %d, Pocet kosu: %d, Deadline: %d%n",
                     ((int) (aktualni.getTz() + 0.5)), aktualni.getPoradi(),
@@ -53,24 +53,6 @@ public class Main {
             List<Integer> list = svet.mapa.nejblizsiVrcholy(aktualni.getOp() + svet.sklady.length - 1);
 
             ArrayList<Integer> pomocnyList = new ArrayList<>(list);
-
-            // obnoveni kosu
-            /*for (Integer skladyIndex : list) {
-                Sklad sklad = svet.sklady[skladyIndex];
-                if (aktualni.getTz() < sklad.getTs() || sklad.getAktualniPocetKosu() == sklad.getKs()) {
-                    continue;
-                }
-                int nasobek1 = (int) (aktualni.getTz() / sklad.getTs());
-                if (casPredchozihoPozadavku <= sklad.getTs() * nasobek1 && sklad.getTs() * nasobek1 <= aktualni.getTz()) {
-                    sklad.getInfo().add(new InfoSklad());
-                    sklad.getInfo().peek().setPocetKosuPredDoplnenim(sklad.getAktualniPocetKosu());
-                    sklad.getInfo().peek().setDobyDoplneni((int)(nasobek1*sklad.getTs()+0.5));
-                    sklad.setAktualniPocetKosu(sklad.getKs());
-                    sklad.setNasobek(nasobek1);
-                }
-            }*/
-            casPredchozihoPozadavku = aktualni.getTz();
-
 
             // z listu sklad odeberu, pokud nema dostatecny pocet kosu
             for (int i = list.size() - 1; i >= 0; i--) {
@@ -103,13 +85,8 @@ public class Main {
 
 
             // projizdim sklady a jejich (jiz existujici)velbloudy
-            // TENTO WHILE ZABIRAL POKAZDY 12 SEC, upravil jsem ho
             pocetKosu = kontrolaExisBloudu(svet, aktualni, list, velbloudFinalni, finalniBloudi, pocetKosu);
 
-            // tento while zabiral 15 sec v centre_medium
-
-
-            
 
             int err = 0;
             if (pocetKosu > 0) {
@@ -129,16 +106,15 @@ public class Main {
                 System.exit(1);
             }
 
-            
+
             int casPozadavku = finalniCestaBlouda(svet, aktualni, finalniBloudi);
-            if(casPozadavku>casPoslednihoPozadavku) {
+            if (casPozadavku > casPoslednihoPozadavku) {
                 Velbloud.setCasPoslednihoPozadavku(casPozadavku);
                 casPoslednihoPozadavku = casPozadavku;
             }
             System.out.println();
         }
         System.out.println("\nSimulace probehla uspesne :) *dab*");
-
 
 
         try {
@@ -151,8 +127,9 @@ public class Main {
 
     /**
      * Metoda zajisti vypis obsluhovani pozadavku
-     * @param svet svet
-     * @param aktualni pozadavek, ktery musime obslouzit
+     *
+     * @param svet          svet
+     * @param aktualni      pozadavek, ktery musime obslouzit
      * @param finalniBloudi vsechny velbloudy, ktere budou obsluhovat dany pozadavek
      */
     private static int finalniCestaBlouda(Svet svet, Pozadavek aktualni, List<Velbloud> finalniBloudi) {
@@ -170,7 +147,7 @@ public class Main {
 
             List<Integer> finalniCesta = svet.mapa.cesta(velbloud.getIndexSkladu(),
                     aktualni.getOp() + svet.sklady.length - 1, velbloud);
-            List<String> pojmCesta = vratPojmenovanouCestu(finalniCesta,svet);
+            List<String> pojmCesta = vratPojmenovanouCestu(finalniCesta, svet);
             int casOdchodu = (int) (aktualni.getTz() + velbloud.getKd() * svet.sklady[velbloud.getIndexSkladu()].getTn() + 0.5);
             Trasa trasa = new Trasa(casOdchodu, pojmCesta,
                     velbloud.getKd(), (finalniCesta.get(finalniCesta.size() - 1) - svet.sklady.length + 1));
@@ -192,13 +169,14 @@ public class Main {
 
     /**
      * Metoda zajisti generovani velbloudu
-     * @param svet svet
-     * @param aktualni pozadavek, ktery potrebujeme obslouzit
-     * @param list list indexu skladu, ktere jsou serazene od nejblizsich po nejvzdalenejsi od dane oazy z pozadvku
+     *
+     * @param svet          svet
+     * @param aktualni      pozadavek, ktery potrebujeme obslouzit
+     * @param list          list indexu skladu, ktere jsou serazene od nejblizsich po nejvzdalenejsi od dane oazy z pozadvku
      * @param finalniBloudi list vsech velbloudu, kteri budou dany pozadavek obsluhovat
-     * @param pocetKosu1 pocet kosu, ktere potrebujeme jeste dorucit
+     * @param pocetKosu1    pocet kosu, ktere potrebujeme jeste dorucit
      * @return 1 - pokud nemuzeme vygenerovat velblouda, ktery oblsouzi pozadavek,
-     *         0 - pokud vygenerujeme velblouda, ktery zvladne oblouzit pozadavek
+     * 0 - pokud vygenerujeme velblouda, ktery zvladne oblouzit pozadavek
      */
     private static int generovaniBloudu(Svet svet, Pozadavek aktualni, List<Integer> list, List<Velbloud> finalniBloudi, int pocetKosu1) {
         Velbloud velbloudFinalni;
@@ -211,12 +189,12 @@ public class Main {
 
             Velbloud superBloud = new Velbloud(druh, list.get(0), r);
             Velbloud.pocet -= 1;
-            druh.setPocet(druh.getPocet()-1);
+            druh.setPocet(druh.getPocet() - 1);
             superBloud.makeSuper();
 
             cas = svet.mapa.cestaVelblouda(superBloud,
                     svet.mapa.cesta(superBloud.getIndexSkladu(),
-                    aktualni.getOp() + svet.sklady.length - 1, superBloud), aktualni);
+                            aktualni.getOp() + svet.sklady.length - 1, superBloud), aktualni);
             if (cas != -1) {
                 zvladne = true;
                 break;
@@ -226,9 +204,8 @@ public class Main {
         if (!zvladne) {
             return 1;
         } // pokud ani super bloud nezvladne cestu - nema cenu generovat
-            
-        
-        
+
+
         while (pocetKosu > 0) {
             int celkovyPocetBloudu = Velbloud.getPocet();
             // generovani bloudu
@@ -240,9 +217,8 @@ public class Main {
 
                     if (svet.sklady[list.get(0)].getMaxVzdalenostBloud() == null) {
                         svet.sklady[list.get(0)].setMaxVzdalenostBloud(velbloudFinalni);
-                    }
-                    else if (svet.sklady[list.get(0)].getMaxVzdalenostBloud().getD() < velbloudFinalni.getD()) {
-                            svet.sklady[list.get(0)].setMaxVzdalenostBloud(velbloudFinalni);
+                    } else if (svet.sklady[list.get(0)].getMaxVzdalenostBloud().getD() < velbloudFinalni.getD()) {
+                        svet.sklady[list.get(0)].setMaxVzdalenostBloud(velbloudFinalni);
                     }
 
                     cas = svet.mapa.cestaVelblouda(velbloudFinalni, svet.mapa.cesta(velbloudFinalni.getIndexSkladu(),
@@ -269,14 +245,15 @@ public class Main {
 
     /**
      * Metoda kontroluje zda pozadavek muze oblouzit jiz existujici velbloud
-     * @param svet svet
-     * @param aktualni pozadavek, ktery musime olouzit
-     * @param list list indexu skladu, ktere jsou serazene od nejblizsich po nejvzdalenejsi od dane oazy z pozadvku
+     *
+     * @param svet             svet
+     * @param aktualni         pozadavek, ktery musime olouzit
+     * @param list             list indexu skladu, ktere jsou serazene od nejblizsich po nejvzdalenejsi od dane oazy z pozadvku
      * @param velbloudFinalni1 list vsech velbloudu, kteri budou dany pozadavek obsluhovat
-     * @param finalniBloudi list vsech velbloudu, kteri budou dany pozadavek obsluhovat
-     * @param pocetKosu1 pocet kosu, ktere potrebujeme dorucit
+     * @param finalniBloudi    list vsech velbloudu, kteri budou dany pozadavek obsluhovat
+     * @param pocetKosu1       pocet kosu, ktere potrebujeme dorucit
      * @return 0 - pokud existujici velbloudi muzou dorucit vsechny kose, ktere potrebuje oaza
-     *         pocetKosu - pocet kosu, ktery jeste potrebujeme dorucit(tj dorucili jsme bud 0 nebo nejakou cast kosu, ktere potrebuje oaza)
+     * pocetKosu - pocet kosu, ktery jeste potrebujeme dorucit(tj dorucili jsme bud 0 nebo nejakou cast kosu, ktere potrebuje oaza)
      */
     private static int kontrolaExisBloudu(Svet svet, Pozadavek aktualni, List<Integer> list,
                                           Velbloud velbloudFinalni1, List<Velbloud> finalniBloudi,
@@ -333,9 +310,10 @@ public class Main {
     /**
      * Metoda ceka na obnoveni kosu ve skladech,
      * pokud se nestihnou obnovit vcas(tj nestihnem obslouzit pozadavek) koncime simulaci
-     * @param svet svet
-     * @param aktualni pozadavek, ktery potrebujeme obslouzit
-     * @param list list indexu skladu, ktere jsou serazene od nejblizsich po nejvzdalenejsi od dane oazy z pozadvku
+     *
+     * @param svet        svet
+     * @param aktualni    pozadavek, ktery potrebujeme obslouzit
+     * @param list        list indexu skladu, ktere jsou serazene od nejblizsich po nejvzdalenejsi od dane oazy z pozadvku
      * @param pomocnyList pomocny list, stejny jako list
      */
     private static void cekaniNaObnovuSkladu(Svet svet, Pozadavek aktualni, List<Integer> list,
@@ -356,7 +334,7 @@ public class Main {
             list.add(indexSkladu);
 
 
-            sklad.getInfo().push(new InfoSklad((int)(nasobek*sklad.getTs()+0.5),sklad.getAktualniPocetKosu(),sklad.getKs()));
+            sklad.getInfo().push(new InfoSklad((int) (nasobek * sklad.getTs() + 0.5), sklad.getAktualniPocetKosu(), sklad.getKs()));
             //System.out.println(new InfoSklad((int)(nasobek*sklad.getTs()+0.5),sklad.getAktualniPocetKosu(),sklad.getKs()));
             aktualni.setTz(sklad.getTs() * nasobek);
             sklad.setNasobek(nasobek);
@@ -381,13 +359,14 @@ public class Main {
 
     /**
      * Metoda nacte data ze souboru
+     *
      * @param fileName nazev souboru
      * @return Svet     Obsahuje informace o aktualni simulaci (oazy, sklady, velbloudy...)
      */
     public static Svet reader(String fileName) {
         ArrayList<String> allUdaje1 = null;
         try {
-            allUdaje1 = new ArrayList<String>();
+            allUdaje1 = new ArrayList<>();
 
             List<String> list = Files.readAllLines(Paths.get(fileName));
             cteniUdaju(allUdaje1, list);
@@ -433,7 +412,6 @@ public class Main {
             int j = indexCest + 1 + 2 * i;
             graph.addEdge(Integer.parseInt(allUdaje[j]), Integer.parseInt(allUdaje[j + 1]));
         }
-        
 
 
         // Velbloudy (druhy)
@@ -464,8 +442,9 @@ public class Main {
 
     /**
      * Cteni udaju
+     *
      * @param allUdaje1 list vybranych validinich udaju
-     * @param list vstupni string
+     * @param list      vstupni string
      */
     private static void cteniUdaju(List<String> allUdaje1, List<String> list) {
         int bloudi = 0;
@@ -473,7 +452,7 @@ public class Main {
 
             int iBloud = line.indexOf("\uD83D\uDC2A"); // index blouda
             int iPoust = line.indexOf("\uD83C\uDFDC"); // index pouste
-            if (bloudi != 0 ) {// bloudi>0 => jsem v blokovym komentari
+            if (bloudi != 0) {// bloudi>0 => jsem v blokovym komentari
                 // pokud jsem v blok komentari a na radce neni ani bloud ani poust = preskakuju radku
                 if (iPoust == -1 && iBloud == -1) {
                     continue;
@@ -481,7 +460,7 @@ public class Main {
                 while (iPoust != -1 && bloudi != 0) { // osekavam radku dokud tam jsou pouste a jsem v blok.kom.
                     bloudi--;
                     // pokud v casti kterou useknu jsou bloudi, prictu je do citace
-                    bloudi += (int)line.substring(0, iPoust).chars().filter(ch -> ch == '\uD83D').count();
+                    bloudi += (int) line.substring(0, iPoust).chars().filter(ch -> ch == '\uD83D').count();
                     line = line.substring(iPoust + 2);
                     iPoust = line.indexOf("\uD83C\uDFDC");
                 }
@@ -490,10 +469,9 @@ public class Main {
             iBloud = line.indexOf("\uD83D\uDC2A");
 
             // pokud jsem v blok komentari a na radce neni ani bloud ani poust = preskakuju radku
-            if (bloudi != 0  && iBloud == -1) {
+            if (bloudi != 0 && iBloud == -1) {
                 continue;
             }
-
 
 
             while (iBloud != -1) { // jedem dokud na radce jsou bloudi
@@ -505,22 +483,22 @@ public class Main {
 
                 // pokud cast kterou osekavam je ohranicena bloudem a pousti
                 // spoctu kolik bloudu je v osekavany casti a prictu je do citace
-                if (iBloud+2 < iPoust) {
+                if (iBloud + 2 < iPoust) {
                     String dummy = line.substring(iBloud + 2, iPoust);
                     bloudi += (int) dummy.chars().filter(ch -> ch == '\uD83D').count();
                 }
                 // pokud cast kterou osekavam je ohranicena bloudem a blok.kom. pokracuje na dalsi radce
                 // spoctu kolik bloudu je v osekavany casti a prictu je do citace
-                else if(iPoust == -1){
+                else if (iPoust == -1) {
                     String dummy = line.substring(iBloud + 2);
                     bloudi += (int) dummy.chars().filter(ch -> ch == '\uD83D').count();
                 }
 
                 int pocetPousti = (int) line.chars().filter(ch -> ch == '\uD83C').count();
-                int res = bloudi -pocetPousti;
+                int res = bloudi - pocetPousti;
 
                 // pocetBloudi-pocetPousti > 0, tak po odstraneni komentare jsem stale v blok.kom.
-                if (res > 0)  {
+                if (res > 0) {
                     line = line.substring(0, iBloud);
                 }
                 // normalni pripad - vsechny komentare se vyrusi v jedne radce
@@ -534,12 +512,10 @@ public class Main {
                     int indexBloudaNovyString = line.indexOf("\uD83D\uDC2A");
                     if (indexBloudaNovyString < indexPousteNovyString && indexBloudaNovyString != -1) {
                         iBloud = indexBloudaNovyString;
-                    }
-                    else {
+                    } else {
                         bloudi--;
                     }
-                }
-                else {
+                } else {
                     iBloud = line.indexOf("\uD83D\uDC2A");
                 }
 
@@ -559,13 +535,19 @@ public class Main {
         }
     }
 
-    private static List<String> vratPojmenovanouCestu(List<Integer> cesta, Svet svet){
+    /**
+     * Vrati pojmenovanou cestu na zaklade indexu
+     *
+     * @param cesta cesta s indexy
+     * @param svet  svet
+     * @return pojmenovana cesta (napr.'Oaza_1' atd.)
+     */
+    private static List<String> vratPojmenovanouCestu(List<Integer> cesta, Svet svet) {
         List<String> pojmCesta = new ArrayList<>();
-        for(Integer i:cesta){
-            if(i < svet.sklady.length){
+        for (Integer i : cesta) {
+            if (i < svet.sklady.length) {
                 pojmCesta.add("Sklad_" + i);
-            }
-            else {
+            } else {
                 pojmCesta.add("Oaza_" + (i - svet.sklady.length + 1));
             }
         }
