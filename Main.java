@@ -24,12 +24,15 @@ public class Main {
      * @param args parametry prikazove radky (nevyuzito)
      */
     public static void main(String[] args) {
-
+        
+        if (args.length != 1){
+            System.out.println("Neplatny pocet parametru. " +
+                    "Zadejte jeden parametr jako nazev souboru ve tvaru '<nazev_souboru>.txt'");
+            System.exit(1);
+        }
         r = new Random();
-        String fileName = "data/sparse_bit_medium.txt";
-        long start = System.nanoTime();
+        String fileName = "data/" + args[0];
         Svet svet = reader(fileName);
-        System.out.println(((System.nanoTime() - start) / 1000000.0) + " ms\n\n");
         zapisovac = new Zapisovac(svet.sklady, svet.oazy, svet.druhyVelbloudu);
         sonic = true;
         int casPoslednihoPozadavku = 0;
@@ -360,7 +363,7 @@ public class Main {
     /**
      * Metoda nacte data ze souboru
      *
-     * @param fileName nazev souboru
+     * @param fileName  nazev souboru
      * @return Svet     Obsahuje informace o aktualni simulaci (oazy, sklady, velbloudy...)
      */
     public static Svet reader(String fileName) {

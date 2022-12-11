@@ -1,5 +1,6 @@
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.Locale;
 
 /**
  * Trida pro zapis do souboru statistik
@@ -107,7 +108,7 @@ public class Zapisovac {
         PrintWriter pw = new PrintWriter("Statistika/Obecne.txt");
         pw.println("Delka trvani cele simulace: " + (int) Velbloud.getCasPoslednihoPozadavku()
                 + "\nCelkova doba odpocinku pouzitych velbloudu: " + celkovaDobaOdpocinku);
-        pw.printf("Celkova usla vzdalenost: %.2f", celkovaVzdalenost);
+        pw.printf(Locale.US, "Celkova usla vzdalenost: %.2f", celkovaVzdalenost);
         pw.close();
     }
 
