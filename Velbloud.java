@@ -40,6 +40,7 @@ public class Velbloud {
     private Stack<Trasa> info = new Stack<>();
     private double celkVzdalenost;
     private static double casPoslednihoPozadavku;
+    private int casOdpocinku = 0;
 
 
     /**
@@ -67,7 +68,7 @@ public class Velbloud {
 
     @Override
     public String toString() {
-        int casOdpocinku = 0;
+        //int casOdpocinku = 0;
         String vypis = "Nazev: " + jmeno + "\tDruh: " + druh.getJmeno() + "\tDomovsky sklad: " + indexSkladu
                 + "\tRychlost: " + String.format(Locale.US,"%.2f",v) + "\tMax. vzdalenost: " + String.format(Locale.US,"%.2f",d) + "\nUskutecnene trasy: \n";
         if (info.isEmpty()) {
@@ -77,12 +78,13 @@ public class Velbloud {
             double pomocna = casPoslednihoPozadavku;
             while (!info.isEmpty()) {
                 Trasa t = info.pop();
-                casOdpocinku += pomocna - t.getCasNavratu(); //TODO pripocitat cas nakladani kosu
+                casOdpocinku += pomocna - t.getCasNavratu();
                 pomocna = t.getCasOpusteni();
                 vypis += t + "\n";
             }
         }
         vypis += "Celkova doba odpocinku: " + casOdpocinku + "\tCelkem usla vzdalenost: " +
+                String.format(Locale.US,"%.2f",celkVzdalenost);
                 String.format(Locale.US,"%.2f",celkVzdalenost);
 
         return vypis;
@@ -157,6 +159,10 @@ public class Velbloud {
      */
     public double getV() {
         return v;
+    }
+
+    public int getCasOdpocinku() {
+        return casOdpocinku;
     }
 
     /**
@@ -273,7 +279,7 @@ public class Velbloud {
     }
 
     public void addToCelkVzdalnost(double vz){
-        this.celkVzdalenost += vz;
+        this.celkVzdalenost += 2*vz;
     }
 
     /**
@@ -289,4 +295,7 @@ public class Velbloud {
         return info;
     }
 
+    public static double getCasPoslednihoPozadavku() {
+        return casPoslednihoPozadavku;
+    }
 }
