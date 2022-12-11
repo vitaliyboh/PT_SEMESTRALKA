@@ -21,7 +21,7 @@ public class Main {
     /**
      * Vstupni bod programu, spusteni simulace
      *
-     * @param args parametry prikazove radky (nevyuzito)
+     * @param args nazev souboru
      */
     public static void main(String[] args) {
         
