@@ -179,7 +179,7 @@ public class Main {
      * @param finalniBloudi list vsech velbloudu, kteri budou dany pozadavek obsluhovat
      * @param pocetKosu1    pocet kosu, ktere potrebujeme jeste dorucit
      * @return 1 - pokud nemuzeme vygenerovat velblouda, ktery oblsouzi pozadavek,
-     * 0 - pokud vygenerujeme velblouda, ktery zvladne oblouzit pozadavek
+     *          0 - pokud vygenerujeme velblouda, ktery zvladne oblouzit pozadavek
      */
     private static int generovaniBloudu(Svet svet, Pozadavek aktualni, List<Integer> list, List<Velbloud> finalniBloudi, int pocetKosu1) {
         Velbloud velbloudFinalni;

@@ -1,4 +1,6 @@
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.Locale;
 
@@ -118,6 +120,13 @@ public class Zapisovac {
      * @throws FileNotFoundException pokud nenajde dane soubory
      */
     public void zapisVse() throws FileNotFoundException {
+        File f = new File("Statistika");
+        if(!f.exists()){
+            if (!f.mkdir()){
+                System.out.println("Nepodarilo se vytvoril slozku 'Statistika'");
+                System.exit(1);
+            }
+        }
         zapisInfoOaz();
         zapisInfoBloudu();
         zapisInfoSkladu();
